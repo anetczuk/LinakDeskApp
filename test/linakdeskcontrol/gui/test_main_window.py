@@ -1,5 +1,3 @@
-#!/usr/bin/python2
-#
 # MIT License
 # 
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
@@ -24,35 +22,19 @@
 #
 
 
-import sys
-import os
-import time
-
-import daemon
-import lockfile
+import unittest
+# from linakdeskcontrol.gui.main_window import MainWindow
 
 
 
-try:
-    with daemon.DaemonContext(
-            chroot_directory=None,
-            working_directory='/tmp',
-            pidfile=lockfile.FileLock('/var/run/linakdeskd.pid'),
-            stdout=sys.stdout,
-            stderr=sys.stderr
-                              ):
-#         while True:
-        for _ in range(10):
-            print "Started"
-            print(os.getuid())
-            print(os.getgid())
-            print(os.getpid())
-            print(os.getcwd())
-            time.sleep(2)
-
-except lockfile.LockFailed as e:
-    print "Lock file failed:", e
-    
-finally:
-    print "Daemon died"
-
+class MainWindowTest(unittest.TestCase):
+    def setUp(self):
+        ## Called before testfunction is executed
+        pass
+ 
+    def tearDown(self):
+        ## Called after testfunction was executed
+        pass
+      
+    def test_equality(self):
+        self.assertTrue( True )
