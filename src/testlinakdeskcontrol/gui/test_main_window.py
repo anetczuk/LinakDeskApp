@@ -23,18 +23,20 @@
 
 
 import unittest
-# from linakdeskcontrol.gui.main_window import MainWindow
 
-
-
+# import linakdeskcontrol.gui.main_window as main_window
+ 
+ 
+ 
 class MainWindowTest(unittest.TestCase):
     def setUp(self):
         ## Called before testfunction is executed
         pass
- 
+  
     def tearDown(self):
         ## Called after testfunction was executed
         pass
-      
+       
     def test_equality(self):
+        #window = main_window.MainWindow()
         self.assertTrue( True )

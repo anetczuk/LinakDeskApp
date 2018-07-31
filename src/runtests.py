@@ -23,6 +23,15 @@
 # SOFTWARE.
 #
 
+# import sys
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+## do not have to add 'src' dir to path until script is in separate directory
+# src_dir = os.path.abspath(os.path.join(script_dir, "../src"))
+# sys.path.insert(0, src_dir)
+
 import unittest
 import argparse
 import cProfile
@@ -34,7 +43,6 @@ except ImportError:
     print "Missing coverage module. Try running 'pip install coverage'"
     raise
 
-import os
 import tempfile
 
 
@@ -66,7 +74,7 @@ if __name__ == '__main__':
     if len(args.runtest) > 0:
         suite = unittest.TestLoader().loadTestsFromName( args.runtest )
     else:
-        suite = unittest.TestLoader().discover('.')
+        suite = unittest.TestLoader().discover( script_dir )
         
 
     testsRepeats = int(args.repeat)

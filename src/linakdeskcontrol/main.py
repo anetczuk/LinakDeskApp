@@ -33,7 +33,8 @@ import cProfile
 
 
 #### append local library
-sys.path.append(os.path.join(os.path.dirname(__file__), "../lib/linak_bt_desk"))
+sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "..") ))
+sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../lib/linak_bt_desk") ))
 
 
 from bluepy.btle import Scanner
@@ -42,7 +43,7 @@ from bluepy.btle import Scanner
 # import linak_dpg_bt
 
 
-from gui import main_window# as main_window
+from gui import main_window #as main_window
 
 
 

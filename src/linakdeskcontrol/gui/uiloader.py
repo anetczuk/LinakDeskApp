@@ -31,7 +31,7 @@ except ImportError as e:
     print(e)
     exit(1)    
 
-import defs
+import linakdeskcontrol.defs as defs
 
 
 
