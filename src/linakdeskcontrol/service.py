@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 #
 # MIT License
 # 
@@ -28,9 +28,18 @@ import sys
 import os
 import time
 
-import daemon
-import lockfile
-
+try:
+    import daemon
+except ImportError:
+    print( "Missing coverage module. Try running 'pip install daemon'" )
+    print( "Python info:", sys.version )
+    raise
+try:
+    import lockfile
+except ImportError:
+    print( "Missing coverage module. Try running 'pip install lockfile'" )
+    print( "Python info:", sys.version )
+    raise
 
 
 try:
@@ -43,16 +52,16 @@ try:
                               ):
 #         while True:
         for _ in range(10):
-            print "Started"
-            print(os.getuid())
-            print(os.getgid())
-            print(os.getpid())
-            print(os.getcwd())
+            print( "Started" )
+            print( os.getuid() )
+            print( os.getgid() )
+            print( os.getpid() )
+            print( os.getcwd() )
             time.sleep(2)
 
 except lockfile.LockFailed as e:
-    print "Lock file failed:", e
+    print( "Lock file failed:", e )
     
 finally:
-    print "Daemon died"
+    print( "Daemon died" )
 

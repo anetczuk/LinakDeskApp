@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # MIT License
 # 
@@ -23,7 +23,7 @@
 # SOFTWARE.
 #
 
-# import sys
+import sys
 import os
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -40,7 +40,8 @@ import subprocess
 try:
     import coverage
 except ImportError:
-    print "Missing coverage module. Try running 'pip install coverage'"
+    print( "Missing coverage module. Try running 'pip install coverage'" )
+    print( "Python info:", sys.version )
     raise
 
 import tempfile
@@ -64,7 +65,7 @@ if __name__ == '__main__':
     coverageData = None
     ## start code coverage
     if args.coverage == True:
-        print "Executing code coverage"
+        print( "Executing code coverage" )
         currScript = os.path.realpath(__file__)
         coverageData = coverage.Coverage(branch=True, omit=currScript)
         ##coverageData.load()
@@ -85,7 +86,7 @@ if __name__ == '__main__':
         ## start code profiler
         profiler_outfile = args.pfile
         if args.profile == True or profiler_outfile != None:
-            print "Starting profiler"
+            print( "Starting profiler" )
             profiler = cProfile.Profile()
             profiler.enable()
             
@@ -93,19 +94,19 @@ if __name__ == '__main__':
         if args.untilfailure == True:
             counter = 1
             while True:
-                print "Tests iteration:", counter
+                print( "Tests iteration:", counter )
                 counter += 1
                 testResult = unittest.TextTestRunner().run(suite)
                 if testResult.wasSuccessful() == False:
                     break;
-                print "\n"
+                print( "\n" )
         elif testsRepeats > 0:
             for counter in xrange(1, testsRepeats+1):
-                print "Tests iteration:", counter
+                print( "Tests iteration:", counter )
                 testResult = unittest.TextTestRunner().run(suite)
                 if testResult.wasSuccessful() == False:
                     break;
-                print "\n"
+                print( "\n" )
         else:
             unittest.TextTestRunner().run(suite)
     
@@ -114,15 +115,15 @@ if __name__ == '__main__':
         if profiler != None:
             profiler.disable()
             if profiler_outfile == None:
-                print "Generating profiler data"
+                print( "Generating profiler data" )
                 profiler.print_stats(1)
             else:
-                print "Storing profiler data to", profiler_outfile
+                print( "Storing profiler data to", profiler_outfile )
                 profiler.dump_stats( profiler_outfile )
 
             if profiler_outfile != None:
                 ##pyprof2calltree -i $PROF_FILE -k
-                print "Launching: pyprof2calltree -i {} -k".format(profiler_outfile)
+                print( "Launching: pyprof2calltree -i {} -k".format(profiler_outfile) )
                 subprocess.call(["pyprof2calltree", "-i", profiler_outfile, "-k"])
         
         ## prepare coverage results
@@ -137,6 +138,6 @@ if __name__ == '__main__':
             coverageData.stop()
             coverageData.save()
             coverageData.html_report(directory=htmlcovdir)
-            print "\nCoverage HTML output:", (htmlcovdir+"/index.html")
+            print( "\nCoverage HTML output:", (htmlcovdir+"/index.html") )
 
         

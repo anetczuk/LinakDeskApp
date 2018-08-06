@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # MIT License
 # 
@@ -49,18 +49,18 @@ from gui import main_window #as main_window
 
 def scanDevices():
     if os.getuid() != 0:
-        print "Functionality needs root privileges"
+        print( "Functionality needs root privileges" )
         exit(1)
     
-    print "Scanning bluetooth devices"
+    print( "Scanning bluetooth devices" )
     
     scanner = Scanner()
     devices = scanner.scan(10.0)
     
     for dev in devices:
-        print "Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi)
+        print( "Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi) )
         for (adtype, desc, value) in dev.getScanData():
-            print "  %s = %s" % (desc, value)
+            print( "  %s = %s" % (desc, value) )
 
 
 
@@ -101,14 +101,14 @@ try:
  
     profiler_outfile = args.pfile
     if args.profile == True or profiler_outfile != None:
-        print "Starting profiler"
+        print( "Starting profiler" )
         profiler = cProfile.Profile()
         profiler.enable()
 
 
 #     scanDevices()
     
-    print "Connecting"
+    print( "Connecting" )
 
     ## desk: c6:e4:0a:57:2f:e0 DESK 2256
     ### services:
@@ -211,18 +211,17 @@ try:
 #     print "Error: ", e, " check if BT is powered on"
 
 finally:
-    print ""                    ## print new line
+    print( "" )                    ## print new line
     if profiler != None:
         profiler.disable()
         if profiler_outfile == None:
-            print "Generating profiler data"
+            print( "Generating profiler data" )
             profiler.print_stats(1)
         else:
-            print "Storing profiler data to", profiler_outfile
+            print( "Storing profiler data to", profiler_outfile )
             profiler.dump_stats( profiler_outfile )
-            print "pyprof2calltree -k -i", profiler_outfile
+            print( "pyprof2calltree -k -i", profiler_outfile )
          
     timeDiff = (time.time()-starttime)*1000.0
-    print "Calculation time: {:13.8f}ms".format(timeDiff)
-     
-     
+    print( "Calculation time: {:13.8f}ms".format(timeDiff) )
+    
