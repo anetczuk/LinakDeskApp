@@ -22,7 +22,7 @@
 #
 
 
-from linakdeskcontrol.gui.device_connector import DeviceConnector
+from linakdeskcontrol.device_connector import DeviceConnector
 
 
 
