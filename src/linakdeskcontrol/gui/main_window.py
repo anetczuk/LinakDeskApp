@@ -32,17 +32,18 @@ except ImportError as e:
     print(e)
     exit(1)
 
-import uiloader
+from . import uiloader
 
 
 
-Ui_TargetClass, QtBaseClass = uiloader.loadUi("main_window.ui")
+UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
+
 
 
 class MainWindow(QtBaseClass):
     def __init__(self):
         super(self.__class__, self).__init__()
-        self.ui = Ui_TargetClass()
+        self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
         # Make some local modifications.

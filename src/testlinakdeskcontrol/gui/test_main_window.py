@@ -22,21 +22,37 @@
 #
 
 
+import sys
 import unittest
 
-# import linakdeskcontrol.gui.main_window as main_window
- 
- 
- 
+from PyQt5.QtWidgets import QApplication
+# from PyQt5.QtWidgets import QWidget
+# from PyQt5.QtCore import QObject
+from PyQt5.QtTest import QTest
+from PyQt5.QtCore import Qt
+
+from linakdeskcontrol.gui.main_window import MainWindow as TestWidget
+
+
+
+app = QApplication(sys.argv)
+
+
+
 class MainWindowTest(unittest.TestCase):
     def setUp(self):
         ## Called before testfunction is executed
-        pass
+        self.widget = TestWidget()
   
     def tearDown(self):
         ## Called after testfunction was executed
-        pass
+        self.widget = None
        
-    def test_equality(self):
-        #window = main_window.MainWindow()
-        self.assertTrue( True )
+#     def test_pushButton(self):
+#         ## print dir(self.widget.ui)                    ### prints all members
+#         ## print self.widget.ui.__dict__                ### prints children
+#         ## print self.widget.findChildren( QObject )    ### find members of given type
+#         pButton = self.widget.ui.pushButton
+#         self.assertEqual(pButton.text(), "PushButton")
+#         QTest.mouseClick(pButton, Qt.LeftButton)
+
