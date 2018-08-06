@@ -48,7 +48,7 @@ class MainWindowTest(unittest.TestCase):
         ## Called after testfunction was executed
         self.widget = None
        
-    def test_test(self):
+    def test_unimplemented(self):
         self.fail("implement")
 #         ## print dir(self.widget.ui)                    ### prints all members
 #         ## print self.widget.ui.__dict__                ### prints children

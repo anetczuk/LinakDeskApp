@@ -37,7 +37,7 @@ class DeviceConnectorTest(unittest.TestCase):
         ## Called after testfunction was executed
         pass
        
-    def test_fail(self):
+    def test_unimplemented(self):
         self.fail("implement")
 #         ## print dir(self.widget.ui)                    ### prints all members
 #         ## print self.widget.ui.__dict__                ### prints children
