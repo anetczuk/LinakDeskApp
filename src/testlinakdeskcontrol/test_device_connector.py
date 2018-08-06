@@ -37,7 +37,8 @@ class DeviceConnectorTest(unittest.TestCase):
         ## Called after testfunction was executed
         pass
        
-#     def test_pushButton(self):
+    def test_fail(self):
+        self.fail("implement")
 #         ## print dir(self.widget.ui)                    ### prints all members
 #         ## print self.widget.ui.__dict__                ### prints children
 #         ## print self.widget.findChildren( QObject )    ### find members of given type
