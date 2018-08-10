@@ -29,11 +29,11 @@
 class DeviceConnector():
     
     def scanDevices(self):
-        raise NotImplementedError('You need to define a speak method!')
+        raise NotImplementedError('You need to define this method in derived class!')
     
     def connect(self, itemIndex):
-        raise NotImplementedError('You need to define a speak method!')
+        raise NotImplementedError('You need to define this method in derived class!')
     
     def isConnected(self):
-        raise NotImplementedError('You need to define a speak method!')
+        raise NotImplementedError('You need to define this method in derived class!')
 

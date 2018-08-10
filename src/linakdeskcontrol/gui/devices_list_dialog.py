@@ -32,7 +32,7 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 class DevicesListDialog(QtBaseClass):
     def __init__(self):
-        super(self.__class__, self).__init__()
+        super().__init__()
         self.connector = None
         self.finishedState = 0
         self.ui = UiTargetClass()

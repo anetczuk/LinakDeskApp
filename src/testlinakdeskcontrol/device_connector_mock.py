@@ -29,6 +29,7 @@ from linakdeskcontrol.device_connector import DeviceConnector
 class DeviceConnectorMock(DeviceConnector):
     
     def __init__(self):
+        super().__init__()
         self.itemIndex = -1
     
     def scanDevices(self):

@@ -42,7 +42,7 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 class MainWindow(QtBaseClass):
     def __init__(self):
-        super(self.__class__, self).__init__()
+        super().__init__()
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
