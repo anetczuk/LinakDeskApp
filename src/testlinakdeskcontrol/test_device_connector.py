@@ -23,25 +23,35 @@
 
 
 import unittest
-
-# from linakdeskcontrol.gui.device_connector import DeviceConnector as TestClass
+from testlinakdeskcontrol.device_connector_mock import DeviceConnectorMock
 
 
 
 class DeviceConnectorTest(unittest.TestCase):
     def setUp(self):
         ## Called before testfunction is executed
-        pass
+        self.connector = DeviceConnectorMock()
   
     def tearDown(self):
         ## Called after testfunction was executed
-        pass
+        self.connector = None
        
-    def test_unimplemented(self):
-        self.fail("implement")
-#         ## print dir(self.widget.ui)                    ### prints all members
-#         ## print self.widget.ui.__dict__                ### prints children
-#         ## print self.widget.findChildren( QObject )    ### find members of given type
-#         pButton = self.widget.ui.scanBTPB
-#         QTest.mouseClick(pButton, Qt.LeftButton)
-
+    def test_scanDevices(self):
+        devices = self.connector.scanDevices()
+        self.assertEqual(devices, ["Desk1", "Desk2"])
+        
+    def test_connect(self):
+        self.assertFalse( self.connector.isConnected() )
+        self.assertEqual(self.connector.getItemIndex(), -1)
+        
+        self.connector.connect(2)
+        
+        self.assertTrue( self.connector.isConnected() )
+        self.assertEqual(self.connector.getItemIndex(), 2)
+        
+        self.connector.scanDevices()
+        
+        self.assertFalse( self.connector.isConnected() )
+        self.assertEqual(self.connector.getItemIndex(), -1)
+        
+        
