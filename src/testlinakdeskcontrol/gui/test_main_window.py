@@ -28,8 +28,8 @@ import unittest
 from PyQt5.QtWidgets import QApplication
 # from PyQt5.QtWidgets import QWidget
 # from PyQt5.QtCore import QObject
-from PyQt5.QtTest import QTest
-from PyQt5.QtCore import Qt
+# from PyQt5.QtTest import QTest
+# from PyQt5.QtCore import Qt
 
 from linakdeskcontrol.gui.main_window import MainWindow as TestWidget
 
