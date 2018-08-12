@@ -52,6 +52,9 @@ class DeviceObjectMock(DeviceObject):
     def name(self):
         return self.deviceName
     
+    def favSlotsNumber(self):
+        return 5
+    
     def _connectionChanged(self, newConnection):
         self.connectionCounter += 1
         

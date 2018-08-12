@@ -49,3 +49,5 @@ class DeviceObject(QObject):
         self.position = newPosition
         self.positionChanged.emit()
 
+    def favSlotsNumber(self):
+        raise NotImplementedError('You need to define this method in derived class!')

@@ -31,8 +31,8 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
 class DeviceStatusWidget(QtBaseClass):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parentWidget = None):
+        super().__init__(parentWidget)
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
@@ -61,10 +61,12 @@ class DeviceStatusWidget(QtBaseClass):
             self.ui.statusLabel.setText("disconnected")
             self.ui.nameLabel.setText("")
             self.ui.positionLabel.setText("")
+            self.ui.favsNumLabel.setText("")
         else:
             self.ui.statusLabel.setText( "connected" )
             self.ui.nameLabel.setText( self.device.name() )
             self.ui.positionLabel.setText( self.device.positionCm() )
+            self.ui.favsNumLabel.setText( str( self.device.favSlotsNumber() ) )
         
     def _refreshPosition(self):
         self.ui.positionLabel.setText( self.device.positionCm() )
