@@ -37,7 +37,12 @@ sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "..") )
 sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../lib/linak_bt_desk") ))
 
 
-from bluepy.btle import Scanner
+try:
+    from bluepy.btle import Scanner
+except ImportError as e:
+    ### No module named <name>
+    print(e)
+    exit(1)
 
 # from linak_dpg_bt.linak_device import LinakDesk
 # import linak_dpg_bt

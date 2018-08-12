@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+#
 # MIT License
 # 
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
@@ -23,45 +25,24 @@
 
 
 import sys
-import signal
-
-try:
-    from PyQt5.QtWidgets import QApplication
-#     from PyQt5 import uic
-except ImportError as e:
-    ### No module named <name>
-    print(e)
-    exit(1)
-
-from . import uiloader
+import os
 
 
+#### append local library
+sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../..") ))
 
-signal.signal(signal.SIGINT, signal.SIG_DFL)            ## handles CTRL+C
 
+from PyQt5.QtWidgets import QApplication
 
-UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
+from linakdeskcontrol.gui.main_window import MainWindow
 
 
 
-class MainWindow(QtBaseClass):
-    def __init__(self):
-        super().__init__()
-        self.ui = UiTargetClass()
-        self.ui.setupUi(self)
-        
-        # Make some local modifications.
-#         self.ui.colorDepthCombo.addItem("2 colors (1 bit per pixel)")
-         
-        # Connect up the buttons.
-#         self.ui.okButton.clicked.connect(self.accept)
-#         self.ui.cancelButton.clicked.connect(self.reject)
-
-
-def execApp():
-    app = QApplication(sys.argv)
-    window = MainWindow()
+if __name__ != '__main__':
+    sys.exit(0)
     
-    window.show()
-    sys.exit(app.exec_())
+app = QApplication(sys.argv)
+window = MainWindow()
 
+window.show()
+sys.exit(app.exec_())
