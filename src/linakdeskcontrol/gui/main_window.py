@@ -35,6 +35,8 @@ except ImportError as e:
 
 from . import uiloader
 
+from linakdeskcontrol.gui.devices_list_dialog import DevicesListDialog
+
 
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)            ## handles CTRL+C
@@ -47,16 +49,30 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 class MainWindow(QtBaseClass):
     def __init__(self):
         super().__init__()
+        self.connector = None
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
-        
-        # Make some local modifications.
-#         self.ui.colorDepthCombo.addItem("2 colors (1 bit per pixel)")
-         
-        # Connect up the buttons.
-#         self.ui.okButton.clicked.connect(self.accept)
-#         self.ui.cancelButton.clicked.connect(self.reject)
 
+    def attachConnector(self, connector):
+        self.connector = connector
+
+    # =======================================
+
+    def closeApplication(self):
+        self.close()
+
+    def connectToDevice(self):
+        deviceDialog = DevicesListDialog(self)
+        deviceDialog.attachConnector(self.connector)
+        deviceDialog.exec_()                            ### modal mode
+        device = self.connector.getConnectedDevice()
+        if device == None:
+            return
+        self.ui.deviceControl.attachDevice( device )
+        
+    def disconnectFromDevice(self):
+        self.ui.deviceControl.attachDevice( None )
+        
 
 def execApp():
     app = QApplication(sys.argv)
