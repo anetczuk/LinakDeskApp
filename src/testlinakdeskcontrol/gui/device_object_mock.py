@@ -33,6 +33,9 @@ class DeviceObjectMock(DeviceObject):
         
         self.connectionCounter = 0
         self.positionCounter = 0
+        self.upCounter = 0
+        self.downCounter = 0
+        self.stopCounter = 0
         
         self.connectionChanged.connect( self._connectionChanged )
         self.positionChanged.connect( self._positionChanged )
@@ -60,5 +63,16 @@ class DeviceObjectMock(DeviceObject):
         
     def _positionChanged(self):
         self.positionCounter += 1
+        
+    def moveUp(self):
+        self.currPosition += 1
+        self.upCounter += 1
+        
+    def moveDown(self):
+        self.currPosition -= 1
+        self.downCounter += 1
+        
+    def stopMoving(self):
+        self.stopCounter += 1
     
     

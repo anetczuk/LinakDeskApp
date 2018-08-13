@@ -33,11 +33,13 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 class DeviceStatusWidget(QtBaseClass):
     def __init__(self, parentWidget = None):
         super().__init__(parentWidget)
+        
+        self.device = None
+        
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
-        self.device = None
-        self.attachDevice(None)
+        self.attachDevice(self.device)
  
     def attachDevice(self, device):
         if self.device != None:
@@ -53,8 +55,8 @@ class DeviceStatusWidget(QtBaseClass):
         self._refreshWidget(True)
         
         ## connect new device
-        self.device.connectionChanged.connect( self._refreshWidget )            
-        self.device.positionChanged.connect( self._refreshPosition )            
+        self.device.connectionChanged.connect( self._refreshWidget )
+        self.device.positionChanged.connect( self._refreshPosition )
  
     def _refreshWidget(self, connected):
         if connected == False:

@@ -34,7 +34,7 @@ class DeviceObject(QObject):
     
     def __init__(self):
         super().__init__()
-        self.position = None
+        self.currPosition = None
 
     def isConnected(self):
         raise NotImplementedError('You need to define this method in derived class!')
@@ -42,12 +42,24 @@ class DeviceObject(QObject):
     def name(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    def currentPosition(self):
+        return self.currPosition
+
     def positionCm(self):
-        return str(self.position) + " cm"
+        return str(self.currPosition) + " cm"
     
     def setPosition(self, newPosition):
-        self.position = newPosition
+        self.currPosition = newPosition
         self.positionChanged.emit()
 
     def favSlotsNumber(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
+    def moveUp(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+        
+    def moveDown(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+        
+    def stopMoving(self):
         raise NotImplementedError('You need to define this method in derived class!')
