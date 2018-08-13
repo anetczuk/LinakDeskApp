@@ -22,9 +22,9 @@
 #
 
 
-from linakdeskcontrol.device_connector import DeviceConnector
+from linakdeskcontrol.gui.device_connector import DeviceConnector
 
-from testlinakdeskcontrol.gui.device_object_mock import DeviceObjectMock
+from .device_object_mock import DeviceObjectMock
 
 
 

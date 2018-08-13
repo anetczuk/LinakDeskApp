@@ -23,7 +23,8 @@
 
 
 import unittest
-from testlinakdeskcontrol.device_connector_mock import DeviceConnectorMock
+
+from .device_connector_mock import DeviceConnectorMock
 
 
 

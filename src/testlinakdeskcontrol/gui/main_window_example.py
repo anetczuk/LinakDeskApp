@@ -35,7 +35,7 @@ sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../.."
 from PyQt5.QtWidgets import QApplication
 
 from linakdeskcontrol.gui.main_window import MainWindow
-from testlinakdeskcontrol.device_connector_mock import DeviceConnectorMock
+from testlinakdeskcontrol.gui.device_connector_mock import DeviceConnectorMock
 
 
 if __name__ != '__main__':
