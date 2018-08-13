@@ -47,5 +47,25 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>devicesView</sender>
+   <signal>itemSelectionChanged()</signal>
+   <receiver>devicesList</receiver>
+   <slot>_connectToSelected()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>199</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>_connectToSelected()</slot>
+ </slots>
 </ui>

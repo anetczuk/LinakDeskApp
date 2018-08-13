@@ -31,17 +31,15 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
 class DevicesListDialog(QtBaseClass):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parentWidget = None):
+        super().__init__(parentWidget)
+        
         self.connector = None
         self.finishedState = 0
+        
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
-        
-        # Make some local modifications.
-#         self.ui.colorDepthCombo.addItem("2 colors (1 bit per pixel)")
-         
-        ## Connect up the buttons.
+
         self.ui.scanBTPB.clicked.connect(self._scanDevices)
         self.ui.connectPB.clicked.connect(self._connectToSelected)
         self.finished.connect(self._setFinished)

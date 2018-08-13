@@ -73,4 +73,3 @@ class DevicesListDialogTest(unittest.TestCase):
         self.assertEqual( QDialog.Accepted, self.widget.getFinishedState() )
         
         
-
