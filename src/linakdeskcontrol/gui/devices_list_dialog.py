@@ -50,6 +50,10 @@ class DevicesListDialog(QtBaseClass):
     def getFinishedState(self):
         return self.finishedState
 
+    def itemDoubleClicked(self, modelIndex):
+        currRow = modelIndex.row()
+        self.connectToIndexedItem(currRow)
+        
     def _scanDevices(self):
 #         print "Scanning for devices"
         self.ui.devicesView.clear()
@@ -60,12 +64,14 @@ class DevicesListDialog(QtBaseClass):
         
     def _connectToSelected(self):
         currRow = self.ui.devicesView.currentRow()
-        if currRow < 0:
-            return
-#         print "Connecting to device nr", currRow
-        self.connector.connect(currRow)
-        self.accept()
+        self.connectToIndexedItem(currRow)
         
     def _setFinished(self, result):
         self.finishedState = result
 
+    def connectToIndexedItem(self, itemIndex):
+        if itemIndex < 0:
+            return
+        self.connector.connect(itemIndex)
+        self.accept()
+    

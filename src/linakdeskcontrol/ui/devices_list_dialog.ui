@@ -50,9 +50,9 @@
  <connections>
   <connection>
    <sender>devicesView</sender>
-   <signal>itemSelectionChanged()</signal>
+   <signal>doubleClicked(QModelIndex)</signal>
    <receiver>devicesList</receiver>
-   <slot>_connectToSelected()</slot>
+   <slot>itemDoubleClicked(QModelIndex)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>199</x>
@@ -67,5 +67,6 @@
  </connections>
  <slots>
   <slot>_connectToSelected()</slot>
+  <slot>itemDoubleClicked(QModelIndex)</slot>
  </slots>
 </ui>
