@@ -43,7 +43,9 @@ class DeviceObjectMock(DeviceObject):
         self.connected = True
         self.deviceName = name
         if position != None:
-            self.setPosition(position)
+            self.currPosition = position
+        else:
+            self.currPosition = 90
     
     def isConnected(self):
         return self.connected
@@ -65,12 +67,12 @@ class DeviceObjectMock(DeviceObject):
         self.positionCounter += 1
         
     def moveUp(self):
-        self.currPosition += 1
         self.upCounter += 1
+        self.setPosition( self.currPosition + 1 )
         
     def moveDown(self):
-        self.currPosition -= 1
         self.downCounter += 1
+        self.setPosition( self.currPosition - 1 )
         
     def stopMoving(self):
         self.stopCounter += 1

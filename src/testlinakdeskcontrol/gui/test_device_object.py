@@ -59,3 +59,12 @@ class DeviceObjectTest(unittest.TestCase):
         self.assertFalse( self.object.isConnected() )
         self.assertEqual( self.object.connectionCounter, 1)
 
+    def test_moveUp(self):
+        self.assertEqual( self.object.positionCounter, 0)
+        self.object.moveUp()
+        self.assertEqual( self.object.positionCounter, 1)
+        
+    def test_moveDown(self):
+        self.assertEqual( self.object.positionCounter, 0)
+        self.object.moveDown()
+        self.assertEqual( self.object.positionCounter, 1)
