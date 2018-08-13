@@ -43,13 +43,16 @@ class DeviceControlWidgetTest(unittest.TestCase):
     def setUp(self):
         ## Called before testfunction is executed
         self.widget = TestWidget()
-#         self.connector = DeviceConnectorMock()
-#         self.widget.attachConnector( self.connector )
 
     def tearDown(self):
         ## Called after testfunction was executed
-#         self.connector = None
         self.widget = None
+    
+    def test_disconnected(self):
+        upPB = self.widget.ui.upPB
+        self.assertFalse( upPB.isEnabled() )
+        downPB = self.widget.ui.downPB
+        self.assertFalse( downPB.isEnabled() )
        
     def test_upPB(self):
         device = DeviceObjectMock("Device#1", 83)

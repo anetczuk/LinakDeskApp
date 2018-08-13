@@ -31,74 +31,45 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
 class DeviceControlWidget(QtBaseClass):
-    def __init__(self):
-        super().__init__()
+    
+    def __init__(self, parentWidget = None):
+        super().__init__(parentWidget)
         
         self.device = None
         
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
+        self.ui.upPB.setEnabled(False)
+        self.ui.downPB.setEnabled(False)
+        
         self.ui.upPB.pressed.connect(self._goingUp)
         self.ui.upPB.released.connect(self._stopMoving)
         self.ui.downPB.pressed.connect(self._goingDown)
         self.ui.downPB.released.connect(self._stopMoving)
-        
-#         # Make some local modifications.
-# #         self.ui.colorDepthCombo.addItem("2 colors (1 bit per pixel)")
-#          
-#         ## Connect up the buttons.
-#         self.ui.connectPB.clicked.connect(self._connectToSelected)
-#         self.finished.connect(self._setFinished)
 
     def attachDevice(self, device):
+        self.ui.deviceStatus.attachDevice(device)
         self.device = device
-        
-#         if self.device != None:
-#             ## disconnect old device
-#             self.device.connectionChanged.disconnect( self._refreshWidget )
-#             self.device.positionChanged.disconnect( self._refreshPosition )
-#             
-#         self.device = device
-#         if self.device == None:
-#             self._refreshWidget(False)
-#             return
-#         
-#         self._refreshWidget(True)
-#         
-#         ## connect new device
-#         self.device.connectionChanged.connect( self._refreshWidget )
-#         self.device.positionChanged.connect( self._refreshPosition )
+        if self.device == None:
+            self.ui.upPB.setEnabled(False)
+            self.ui.downPB.setEnabled(False)
+            return
+        self.ui.upPB.setEnabled(True)
+        self.ui.downPB.setEnabled(True)
 
-#     def attachConnector(self, connector):
-#         self.connector = connector
-# 
-#     def getFinishedState(self):
-#         return self.finishedState
-# 
-#     def _scanDevices(self):
-# #         print "Scanning for devices"
-#         self.ui.devicesView.clear()
-#         foundItems = self.connector.scanDevices()
-# #         print "Found:", foundItems
-#         for item in foundItems:
-#             self.ui.devicesView.addItem(item)
-#         
-#     def _connectToSelected(self):
-#         currRow = self.ui.devicesView.currentRow()
-#         if currRow < 0:
-#             return
-# #         print "Connecting to device nr", currRow
-#         self.connector.connect(currRow)
-#         self.accept()
-         
     def _goingUp(self):
+        if self.device == None:
+            return
         self.device.moveUp()
     
     def _goingDown(self):
+        if self.device == None:
+            return
         self.device.moveDown()
         
     def _stopMoving(self):
+        if self.device == None:
+            return
         self.device.stopMoving()
         
-
