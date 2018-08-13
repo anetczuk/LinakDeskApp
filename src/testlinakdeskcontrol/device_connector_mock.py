@@ -24,6 +24,8 @@
 
 from linakdeskcontrol.device_connector import DeviceConnector
 
+from testlinakdeskcontrol.gui.device_object_mock import DeviceObjectMock
+
 
 
 class DeviceConnectorMock(DeviceConnector):
@@ -31,16 +33,29 @@ class DeviceConnectorMock(DeviceConnector):
     def __init__(self):
         super().__init__()
         self.itemIndex = -1
+        self.devList = ["Desk1", "Desk2"]
     
     def scanDevices(self):
         self.itemIndex = -1
-        return ["Desk1", "Desk2"]
+        return self.devList
     
     def connect(self, itemIndex):
         self.itemIndex = itemIndex
 
     def isConnected(self):
-        return (self.itemIndex >= 0)
+        if self.itemIndex < 0:
+            return False
+        if self.itemIndex >= len(self.devList):
+            return False
+        return True
     
     def getItemIndex(self):
         return self.itemIndex
+
+    def getConnectedDevice(self):
+        if self.isConnected() == False:
+            return None
+        devName = self.devList[self.itemIndex]
+        return DeviceObjectMock( devName )
+    
+    

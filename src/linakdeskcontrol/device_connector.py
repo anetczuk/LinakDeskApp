@@ -37,3 +37,6 @@ class DeviceConnector():
     def isConnected(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    def getConnectedDevice(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
