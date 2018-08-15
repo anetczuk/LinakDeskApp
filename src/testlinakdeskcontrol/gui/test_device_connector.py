@@ -44,16 +44,17 @@ class DeviceConnectorTest(unittest.TestCase):
     def test_connect(self):
         self.assertFalse( self.connector.isConnected() )
         self.assertEqual( self.connector.getItemIndex(), -1)
-        self.assertTrue( self.connector.getConnectedDevice() == None )
+        self.assertEqual( self.connector.connectionCounter, 0 )
         
         self.connector.connect(1)
         
         self.assertTrue( self.connector.isConnected() )
         self.assertEqual( self.connector.getItemIndex(), 1)
-        self.assertTrue( self.connector.getConnectedDevice() != None )
+        self.assertEqual( self.connector.connectionCounter, 1 )
         
         self.connector.scanDevices()
         
         self.assertFalse( self.connector.isConnected() )
         self.assertEqual( self.connector.getItemIndex(), -1)
-        self.assertTrue( self.connector.getConnectedDevice() == None )
+        self.assertEqual( self.connector.connectionCounter, 1 )
+

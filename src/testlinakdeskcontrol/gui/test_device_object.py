@@ -36,28 +36,18 @@ class DeviceObjectTest(unittest.TestCase):
     def tearDown(self):
         ## Called after testfunction was executed
         self.object = None
-       
-    def test_isConnected(self):
-        self.assertTrue( self.object.isConnected() )
-        self.object.disconnect()        
-        self.assertFalse( self.object.isConnected() )
-        
+    
     def test_name(self):
         devName = self.object.name()
         self.assertEqual( devName, "Device#1")
                 
     def test_positionCm(self):
-        self.assertEqual( self.object.connectionCounter, 0)
         self.assertEqual( self.object.positionCounter, 0)
         
         self.object.setPosition(33)
         position = self.object.positionCm()
         self.assertEqual( position, "33 cm")
         self.assertEqual( self.object.positionCounter, 1)
-        
-        self.object.disconnect()        
-        self.assertFalse( self.object.isConnected() )
-        self.assertEqual( self.object.connectionCounter, 1)
 
     def test_moveUp(self):
         self.assertEqual( self.object.positionCounter, 0)

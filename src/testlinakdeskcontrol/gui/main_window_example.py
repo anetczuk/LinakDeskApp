@@ -38,15 +38,13 @@ from linakdeskcontrol.gui.main_window import MainWindow
 from testlinakdeskcontrol.gui.device_connector_mock import DeviceConnectorMock
 
 
-if __name__ != '__main__':
-    sys.exit(0)
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = MainWindow()
     
-app = QApplication(sys.argv)
-window = MainWindow()
-
-connector = DeviceConnectorMock()
-
-window.attachConnector(connector)
-
-window.show()
-sys.exit(app.exec_())
+    connector = DeviceConnectorMock()
+    
+    window.attachConnector(connector)
+    
+    window.show()
+    sys.exit(app.exec_())

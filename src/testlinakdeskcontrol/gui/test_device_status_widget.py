@@ -86,30 +86,6 @@ class DeviceStatusWidgetTest(unittest.TestCase):
         devicePosition = self.widget.ui.positionLabel.text()
         self.assertEqual(devicePosition, "99 cm")
         
-    def test_labels_disconnect(self):
-        device = DeviceObjectMock("Device#1", 83)
-        self.widget.attachDevice( device )
-        
-        statusInfo = self.widget.ui.statusLabel.text()
-        deviceName = self.widget.ui.nameLabel.text()
-        devicePosition = self.widget.ui.positionLabel.text()
-        favsNumber = self.widget.ui.favsNumLabel.text()
-        self.assertEqual(statusInfo, "connected")
-        self.assertEqual(deviceName, "Device#1")
-        self.assertEqual(devicePosition, "83 cm")
-        self.assertEqual(favsNumber, "5")
-                
-        device.disconnect()
-        
-        statusInfo = self.widget.ui.statusLabel.text()
-        deviceName = self.widget.ui.nameLabel.text()
-        devicePosition = self.widget.ui.positionLabel.text()
-        favsNumber = self.widget.ui.favsNumLabel.text()
-        self.assertEqual(statusInfo, "disconnected")
-        self.assertEqual(deviceName, "")
-        self.assertEqual(devicePosition, "")
-        self.assertEqual(favsNumber, "")
-        
     def test_attach_None(self):
         device = DeviceObjectMock("Device#1", 83)
         self.widget.attachDevice( device )

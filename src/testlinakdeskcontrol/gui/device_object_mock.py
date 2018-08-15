@@ -31,13 +31,11 @@ class DeviceObjectMock(DeviceObject):
     def __init__(self, name, position = None):
         super().__init__()
         
-        self.connectionCounter = 0
         self.positionCounter = 0
         self.upCounter = 0
         self.downCounter = 0
         self.stopCounter = 0
         
-        self.connectionChanged.connect( self._connectionChanged )
         self.positionChanged.connect( self._positionChanged )
         
         self.connected = True
@@ -47,24 +45,14 @@ class DeviceObjectMock(DeviceObject):
         else:
             self.currPosition = 90
     
-    def isConnected(self):
-        return self.connected
-    
-    def disconnect(self):
-        self.connected = False
-        self.connectionChanged.emit(self.connected)
-    
     def name(self):
         return self.deviceName
+
+    def currentPosition(self):
+        return self.currPosition
     
     def favSlotsNumber(self):
         return 5
-    
-    def _connectionChanged(self, newConnection):
-        self.connectionCounter += 1
-        
-    def _positionChanged(self):
-        self.positionCounter += 1
         
     def moveUp(self):
         self.upCounter += 1
@@ -76,5 +64,11 @@ class DeviceObjectMock(DeviceObject):
         
     def stopMoving(self):
         self.stopCounter += 1
+    
+    def _setPositionRaw(self, newPosition):
+        self.currPosition = newPosition
+    
+    def _positionChanged(self):
+        self.positionCounter += 1
     
     

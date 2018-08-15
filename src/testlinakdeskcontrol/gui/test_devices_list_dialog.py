@@ -56,6 +56,12 @@ class DevicesListDialogTest(unittest.TestCase):
         QTest.mouseClick(pButton, Qt.LeftButton)
         self.assertEqual(2, self.widget.ui.devicesView.count())
         
+    def test_scan_None(self):
+        self.connector.devList = None
+        pButton = self.widget.ui.scanBTPB
+        QTest.mouseClick(pButton, Qt.LeftButton)
+        self.assertEqual(0, self.widget.ui.devicesView.count())
+        
     def test_connect(self):
         self.widget.ui.devicesView.addItem("Device1")
         self.widget.ui.devicesView.addItem("Device2")

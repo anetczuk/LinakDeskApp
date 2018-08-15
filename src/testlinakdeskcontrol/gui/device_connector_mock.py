@@ -34,6 +34,9 @@ class DeviceConnectorMock(DeviceConnector):
         super().__init__()
         self.itemIndex = -1
         self.devList = ["Desk1", "Desk2"]
+        
+        self.connectionCounter = 0
+        self.newConnection.connect( self._connectionArrived )
     
     def scanDevices(self):
         self.itemIndex = -1
@@ -41,6 +44,13 @@ class DeviceConnectorMock(DeviceConnector):
     
     def connect(self, itemIndex):
         self.itemIndex = itemIndex
+        deviceObject = self.getConnectedDevice()
+        if deviceObject != None:
+            self.newConnection.emit(deviceObject)
+
+
+    # ==============================================================
+    
 
     def isConnected(self):
         if self.itemIndex < 0:
@@ -58,4 +68,6 @@ class DeviceConnectorMock(DeviceConnector):
         devName = self.devList[self.itemIndex]
         return DeviceObjectMock( devName )
     
+    def _connectionArrived(self, deviceObject):
+        self.connectionCounter += 1
     

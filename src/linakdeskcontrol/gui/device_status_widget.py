@@ -43,8 +43,7 @@ class DeviceStatusWidget(QtBaseClass):
  
     def attachDevice(self, device):
         if self.device != None:
-            ## disconnect old device
-            self.device.connectionChanged.disconnect( self._refreshWidget )
+            ## disconnect old object
             self.device.positionChanged.disconnect( self._refreshPosition )
             
         self.device = device
@@ -54,8 +53,7 @@ class DeviceStatusWidget(QtBaseClass):
         
         self._refreshWidget(True)
         
-        ## connect new device
-        self.device.connectionChanged.connect( self._refreshWidget )
+        ## connect new object
         self.device.positionChanged.connect( self._refreshPosition )
  
     def _refreshWidget(self, connected):

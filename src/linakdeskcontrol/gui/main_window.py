@@ -54,22 +54,34 @@ class MainWindow(QtBaseClass):
         self.ui.setupUi(self)
 
     def attachConnector(self, connector):
+        if self.connector != None:
+            ## disconnect from old object
+            self.connector.newConnection.disconnect( self.newConnection )
+            
         self.connector = connector
+        self.connector.newConnection.connect( self.newConnection )
+
 
     # =======================================
 
+
+    ## slot
+    def newConnection(self, deviceObject):
+        if deviceObject == None:
+            return
+        self.ui.deviceControl.attachDevice( deviceObject )
+        
+    ## slot
     def closeApplication(self):
         self.close()
 
+    ## slot
     def connectToDevice(self):
         deviceDialog = DevicesListDialog(self)
         deviceDialog.attachConnector(self.connector)
         deviceDialog.exec_()                            ### modal mode
-        device = self.connector.getConnectedDevice()
-        if device == None:
-            return
-        self.ui.deviceControl.attachDevice( device )
-        
+    
+    ## slot    
     def disconnectFromDevice(self):
         self.ui.deviceControl.attachDevice( None )
         

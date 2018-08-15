@@ -28,29 +28,17 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 class DeviceObject(QObject):
     
-    connectionChanged = pyqtSignal(bool)
     positionChanged = pyqtSignal()
     
     
     def __init__(self):
         super().__init__()
-        self.currPosition = None
 
-    def isConnected(self):
-        raise NotImplementedError('You need to define this method in derived class!')
-    
     def name(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
     def currentPosition(self):
-        return self.currPosition
-
-    def positionCm(self):
-        return str(self.currPosition) + " cm"
-    
-    def setPosition(self, newPosition):
-        self.currPosition = newPosition
-        self.positionChanged.emit()
+        raise NotImplementedError('You need to define this method in derived class!')
 
     def favSlotsNumber(self):
         raise NotImplementedError('You need to define this method in derived class!')
@@ -63,3 +51,16 @@ class DeviceObject(QObject):
         
     def stopMoving(self):
         raise NotImplementedError('You need to define this method in derived class!')
+
+    def _setPositionRaw(self, newPosition):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
+    def positionCm(self):
+        currPos = self.currentPosition()
+        return str(currPos) + " cm"
+    
+    def setPosition(self, newPosition):
+        self._setPositionRaw(newPosition)
+        self.positionChanged.emit()
+    
+    

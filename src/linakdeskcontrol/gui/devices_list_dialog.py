@@ -58,6 +58,8 @@ class DevicesListDialog(QtBaseClass):
 #         print "Scanning for devices"
         self.ui.devicesView.clear()
         foundItems = self.connector.scanDevices()
+        if foundItems == None:
+            return
 #         print "Found:", foundItems
         for item in foundItems:
             self.ui.devicesView.addItem(item)
