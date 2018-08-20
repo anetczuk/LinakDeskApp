@@ -26,15 +26,18 @@
 
 import sys
 import os
+import signal
+from time import sleep
+
+#### append local library
+sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "..") ))
+sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../../lib/linak_bt_desk") ))
+
 import time
 import argparse
 import logging
 import cProfile
-
-
-#### append local library
-sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "..") ))
-sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../lib/linak_bt_desk") ))
+from bt_device_connector import BTDeviceConnector
 
 
 try:
@@ -44,28 +47,33 @@ except ImportError as e:
     print(e)
     exit(1)
 
-# from linak_dpg_bt.linak_device import LinakDesk
-# import linak_dpg_bt
+
+from linak_dpg_bt.linak_device import LinakDesk
+
+from linakdeskcontrol.gui.main_window import MainWindow
+# from bt_device_connector import BTDeviceConnector
 
 
-from gui import main_window #as main_window
+from gui.qt import QApplication
+
+from gui.sigint import setup_interrupt_handling 
 
 
 
-def scanDevices():
-    if os.getuid() != 0:
-        print( "Functionality needs root privileges" )
-        exit(1)
-    
-    print( "Scanning bluetooth devices" )
-    
-    scanner = Scanner()
-    devices = scanner.scan(10.0)
-    
-    for dev in devices:
-        print( "Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi) )
-        for (adtype, desc, value) in dev.getScanData():
-            print( "  %s = %s" % (desc, value) )
+# def scanDevices():
+#     if os.getuid() != 0:
+#         print( "Functionality needs root privileges" )
+#         exit(1)
+#     
+#     print( "Scanning bluetooth devices" )
+#     
+#     scanner = Scanner()
+#     devices = scanner.scan(10.0)
+#     
+#     for dev in devices:
+#         print( "Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi) )
+#         for (adtype, desc, value) in dev.getScanData():
+#             print( "  %s = %s" % (desc, value) )
 
 
 
@@ -115,54 +123,63 @@ try:
     
     print( "Connecting" )
 
-    ## desk: c6:e4:0a:57:2f:e0 DESK 2256
-    ### services:
-    ##### GENERIC_ACCESS(UUID.fromString("00001800-0000-1000-8000-00805F9B34FB"))
-    ##### REFERENCE_OUTPUT(UUID.fromString("99FA0020-338A-1024-8A49-009C0215F78A"))
-    ##### CONTROL(UUID.fromString("99FA0001-338A-1024-8A49-009C0215F78A"))
-    ##### REFERENCE_INPUT(UUID.fromString("99FA0030-338A-1024-8A49-009C0215F78A"))
-    ##### DPG(UUID.fromString("99FA0010-338A-1024-8A49-009C0215F78A"))
 
-
-    main_window.execApp()
     
+    def xxx(aaa, bbb):
+        print("xxxxxx:", aaa, bbb, dir(bbb), bbb.__class__)
+#         QApplication.closeAllWindows()
+#         app.closeAllWindows()
+#         print("fffff")
+#         app.quit()
+#         app.exit()
+#         print("fffff2")
+#     signal.signal(signal.SIGINT, xxx)            ## handles CTRL+C
+
+#     signal.signal(signal.SIGINT, signal.SIG_DFL)            ## handles CTRL+C
+#     signal.signal(signal.SIGINT, signal.SIG_IGN)            ## handles CTRL+C
+
+        
+#     def foo(aaa, bbb, ccc):
+#         print( "xxccccccccccccc" )
+#         ###raise KeyboardInterrupt()
+#     
+#     sys.excepthook = foo
+    
+    
+    ## GUI
+    app = QApplication(sys.argv)
+        
+    btConnector = BTDeviceConnector()
+        
+    window = MainWindow()
+    window.attachConnector(btConnector)
+        
+    btConnector.connectTo("c6:e4:0a:57:2f:e0")
+        
+    window.show()
+    
+    setup_interrupt_handling()
+    
+    sys.exit(app.exec_())
+
     
 #     desk = LinakDesk("c6:e4:0a:57:2f:e0")
-#     
-# #     print "Reading services and characteristics"
-# #     with desk._conn as conn:
-# #         peripheral = conn._conn;
-# #         peripheral.getCharacteristics(uuid = "")
-# #         services = peripheral.getServices()
-# #         for s in services:
-# #             chars = s.getCharacteristics()
-# #             print "Service:", s, "uuid:", s.uuid, "chars:", len(chars)
-# #             for ch in chars:
-# #                 if ch.supportsRead():
-# #                     bytes = bytearray(ch.read())
-# #                     print "Char[", ch.uuid, ch.getHandle(), "]:", "[{}]".format( " ".join("0x{:X}".format(x) for x in bytes) ), ch.read()
-#     
-#     print "\nReading data"
-#     
-#     desk.read_dpg_data()
 #      
-#     print "Done"
+#     print( "\nReading data" )
+#      
+#     desk.read_dpg_data()
 #       
-#     print "Name:", desk.name
+#     print( "Done" )
+#        
+#     print( "Name:", desk.name )
 # #     print "Height:", desk.current_height_with_offset.human_cm
-#     print "State:", desk
-
-
-
-#     print "Moving"
+#     print( "State:", desk )
+# 
+#     print( "Moving" )
 #     desk.move_to_cm(95)
     
 
 
-#     mainW = MainWindow.MainWindow()
-#     mainW.main()
-
-     
 #     dataParser = DataParser()
 #     data = dataParser.parseFile(args.file)
 # 

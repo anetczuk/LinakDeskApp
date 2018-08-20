@@ -39,9 +39,6 @@ from linakdeskcontrol.gui.devices_list_dialog import DevicesListDialog
 
 
 
-signal.signal(signal.SIGINT, signal.SIG_DFL)            ## handles CTRL+C
-
-
 UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
