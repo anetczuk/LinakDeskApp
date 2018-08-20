@@ -22,7 +22,7 @@
 #
 
 
-from PyQt5.QtCore import QObject, pyqtSignal
+from .qt import QObject, pyqtSignal
 
 from .device_object import DeviceObject
 
