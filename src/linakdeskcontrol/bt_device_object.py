@@ -22,8 +22,6 @@
 #
 
 
-from PyQt5 import QtCore
-
 from gui.device_object import DeviceObject
 
 from linak_dpg_bt.linak_device import LinakDesk
@@ -35,18 +33,15 @@ class BTDeviceObject(DeviceObject):
     def __init__(self, deviceAddr):
         super().__init__()
         self.desk = LinakDesk( deviceAddr )
-        self.desk.read_dpg_data()
-        
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self._handleBTNotifications)
-        self.timer.start(100)           ## 10 times per second
+        ##self.desk.read_dpg_data()
+        self.desk.initialize()
+        self.desk.set_position_change_callback( self._handleBTPositionChange )
  
 #     def isConnected(self):
 #         return True
      
     def name(self):
-        ## self.desk.name is of type 'bytes'
-        return self.desk.name.decode("utf-8") 
+        return self.desk.name
  
     def currentPosition(self):
         return self.desk.read_current_position()
@@ -65,8 +60,7 @@ class BTDeviceObject(DeviceObject):
 
 #     def _setPositionRaw(self, newPosition):
 #         raise NotImplementedError('You need to define this method in derived class!')
-    
-    def _handleBTNotifications(self):
-        self.desk.processNotifications()
-    
-    
+
+    def _handleBTPositionChange(self):
+        self.positionChanged.emit()
+        
