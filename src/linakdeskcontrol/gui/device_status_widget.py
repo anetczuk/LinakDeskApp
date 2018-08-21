@@ -59,12 +59,14 @@ class DeviceStatusWidget(QtBaseClass):
     def _refreshWidget(self, connected):
         if connected == False:
             self.ui.statusLabel.setText("disconnected")
-            self.ui.nameLabel.setText("")
+            self.ui.deviceLabel.setText("")
+            self.ui.userTypeLabel.setText("")
             self.ui.positionLabel.setText("")
             self.ui.favsNumLabel.setText("")
         else:
             self.ui.statusLabel.setText( "connected" )
-            self.ui.nameLabel.setText( self.device.name() )
+            self.ui.deviceLabel.setText( self.device.name() )
+            self.ui.userTypeLabel.setText( self.device.userType() )
             self.ui.positionLabel.setText( self.device.positionCm() )
             self.ui.favsNumLabel.setText( str( self.device.favSlotsNumber() ) )
         

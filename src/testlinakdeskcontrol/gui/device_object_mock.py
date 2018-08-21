@@ -28,7 +28,7 @@ from linakdeskcontrol.gui.device_object import DeviceObject
 
 class DeviceObjectMock(DeviceObject):
     
-    def __init__(self, name, position = None):
+    def __init__(self, name, userType, position = None):
         super().__init__()
         
         self.positionCounter = 0
@@ -40,6 +40,7 @@ class DeviceObjectMock(DeviceObject):
         
         self.connected = True
         self.deviceName = name
+        self.typeOfUser = userType
         if position != None:
             self.currPosition = position
         else:
@@ -47,6 +48,9 @@ class DeviceObjectMock(DeviceObject):
     
     def name(self):
         return self.deviceName
+
+    def userType(self):
+        return self.typeOfUser
 
     def currentPosition(self):
         return self.currPosition

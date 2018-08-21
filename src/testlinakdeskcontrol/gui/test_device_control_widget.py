@@ -55,7 +55,7 @@ class DeviceControlWidgetTest(unittest.TestCase):
         self.assertFalse( downPB.isEnabled() )
        
     def test_upPB(self):
-        device = DeviceObjectMock("Device#1", 83)
+        device = DeviceObjectMock("Device#1", "Owner", 83)
         self.widget.attachDevice( device )
         
         positionStart = device.currentPosition()
@@ -77,7 +77,7 @@ class DeviceControlWidgetTest(unittest.TestCase):
         self.assertGreater(positionEnd, positionStart)
        
     def test_downPB(self):
-        device = DeviceObjectMock("Device#1", 83)
+        device = DeviceObjectMock("Device#1", "Owner", 83)
         self.widget.attachDevice( device )
         
         positionStart = device.currentPosition()

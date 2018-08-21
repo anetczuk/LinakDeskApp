@@ -31,7 +31,7 @@ from .device_object_mock import DeviceObjectMock
 class DeviceObjectTest(unittest.TestCase):
     def setUp(self):
         ## Called before testfunction is executed
-        self.object = DeviceObjectMock("Device#1")
+        self.object = DeviceObjectMock("Device#1", "Owner")
   
     def tearDown(self):
         ## Called after testfunction was executed
