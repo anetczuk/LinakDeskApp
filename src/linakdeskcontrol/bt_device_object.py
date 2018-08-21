@@ -44,8 +44,7 @@ class BTDeviceObject(DeviceObject):
         return self.desk.name
     
     def userType(self):
-        #TODO: implement
-        raise NotImplementedError('You need to define this method in derived class!')
+        return self.desk.userType
  
     def currentPosition(self):
         return self.desk.read_current_position()
