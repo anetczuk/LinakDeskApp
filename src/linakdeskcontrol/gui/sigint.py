@@ -6,7 +6,7 @@
 
 import signal
 
-from gui.qt import QtCore, QApplication
+from .qt import QtCore, QApplication
 
 
 

@@ -32,10 +32,12 @@ import os
 sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../..") ))
 
 
-from PyQt5.QtWidgets import QApplication
-
+from linakdeskcontrol.gui.qt import QApplication
+from linakdeskcontrol.gui.sigint import setup_interrupt_handling 
 from linakdeskcontrol.gui.main_window import MainWindow
+
 from testlinakdeskcontrol.gui.device_connector_mock import DeviceConnectorMock
+
 
 
 if __name__ == '__main__':
@@ -47,4 +49,12 @@ if __name__ == '__main__':
     window.attachConnector(connector)
     
     window.show()
-    sys.exit(app.exec_())
+    
+    setup_interrupt_handling()
+    
+    exitCode = app.exec_()
+    
+    print("Done")
+    
+    sys.exit(exitCode)
+

@@ -109,6 +109,7 @@ search_time = 10
 starttime = time.time()
 profiler = None
 
+exitCode = 0
 
 try:
  
@@ -160,7 +161,7 @@ try:
     
     setup_interrupt_handling()
     
-    sys.exit(app.exec_())
+    exitCode = app.exec_()
 
     
 #     desk = LinakDesk("c6:e4:0a:57:2f:e0")
@@ -247,3 +248,5 @@ finally:
     timeDiff = (time.time()-starttime)*1000.0
     print( "Calculation time: {:13.8f}ms".format(timeDiff) )
     
+    sys.exit(exitCode)
+
