@@ -1,4 +1,4 @@
 [submodule "lib/linak_bt_desk"]
-	path = lib/linak_bt_desk
-	url = https://github.com/anetczuk/linak_bt_desk.git
-	branch = master
+  path = lib/linak_bt_desk
+  url = https://github.com/anetczuk/linak_bt_desk.git
+  branch = master 
