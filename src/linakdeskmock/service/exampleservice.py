@@ -10,7 +10,7 @@ from exception import NotPermittedException
 
 
 
-class TestService(Service):
+class ExampleService(Service):
     """
     Dummy test service that provides characteristics and descriptors that
     exercise various API functionality.
@@ -20,10 +20,10 @@ class TestService(Service):
 
     def __init__(self, bus, index):
         Service.__init__(self, bus, index, self.TEST_SVC_UUID, False)
-        self.add_characteristic(TestCharacteristic(bus, 0, self))
-        self.add_characteristic(TestEncryptCharacteristic(bus, 1, self))
+        self.add_characteristic(ExampleCharacteristic(bus, 0, self))
+        self.add_characteristic(ExampleEncryptCharacteristic(bus, 1, self))
 
-class TestCharacteristic(Characteristic):
+class ExampleCharacteristic(Characteristic):
     """
     Dummy test characteristic. Allows writing arbitrary bytes to its value, and
     contains "extended properties", as well as a test descriptor.
@@ -38,20 +38,20 @@ class TestCharacteristic(Characteristic):
                 ['read', 'write', 'writable-auxiliaries'],
                 service)
         self.value = []
-        self.add_descriptor(TestDescriptor(bus, 0, self))
+        self.add_descriptor(ExampleDescriptor(bus, 0, self))
         self.add_descriptor(
                 CharacteristicUserDescriptionDescriptor(bus, 1, self))
 
     def ReadValue(self):
-        print('TestCharacteristic Read: ' + repr(self.value))
+        print('ExampleCharacteristic Read: ' + repr(self.value))
         return self.value
 
     def WriteValue(self, value):
-        print('TestCharacteristic Write: ' + repr(value))
+        print('ExampleCharacteristic Write: ' + repr(value))
         self.value = value
 
 
-class TestDescriptor(Descriptor):
+class ExampleDescriptor(Descriptor):
     """
     Dummy test descriptor. Returns a static value.
 
@@ -96,7 +96,7 @@ class CharacteristicUserDescriptionDescriptor(Descriptor):
             raise NotPermittedException()
         self.value = value
 
-class TestEncryptCharacteristic(Characteristic):
+class ExampleEncryptCharacteristic(Characteristic):
     """
     Dummy test characteristic requiring encryption.
 
@@ -110,19 +110,19 @@ class TestEncryptCharacteristic(Characteristic):
                 ['encrypt-read', 'encrypt-write'],
                 service)
         self.value = []
-        self.add_descriptor(TestEncryptDescriptor(bus, 2, self))
+        self.add_descriptor(ExampleEncryptDescriptor(bus, 2, self))
         self.add_descriptor(
                 CharacteristicUserDescriptionDescriptor(bus, 3, self))
 
     def ReadValue(self):
-        print('TestCharacteristic Read: ' + repr(self.value))
+        print('ExampleCharacteristic Read: ' + repr(self.value))
         return self.value
 
     def WriteValue(self, value):
-        print('TestCharacteristic Write: ' + repr(value))
+        print('ExampleCharacteristic Write: ' + repr(value))
         self.value = value
 
-class TestEncryptDescriptor(Descriptor):
+class ExampleEncryptDescriptor(Descriptor):
     """
     Dummy test descriptor requiring encryption. Returns a static value.
 
