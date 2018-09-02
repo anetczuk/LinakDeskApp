@@ -29,5 +29,8 @@ class Ctrl1Characteristic(WWCharacteristic):
                 self.UUID,
                 service)
 
+    def writeValueHandler(self, value):
+        WWCharacteristic.writeValueHandler(self, value)
+        print "MOVING_TO request received"
         
     

@@ -36,12 +36,18 @@ class ControlCharacteristic(WWCharacteristic):
     
     def writeValueHandler(self, value):
         command = int(value[0])
-        
-        if command == 255:
-            print "STOP_MOVEMENT request received", command, hex(command)
+
+        if command == 70:
+            print "MOVE_1_DOWN request received", command, hex(command)
+            return
+        if command == 71:
+            print "MOVE_1_UP request received", command, hex(command)
             return
         if command == 254:
             print "UNDEFINED request received", command, hex(command)
+            return
+        if command == 255:
+            print "STOP_MOVEMENT request received", command, hex(command)
             return
 
         print "Unknown CONTROL command code:", command, hex(command)
