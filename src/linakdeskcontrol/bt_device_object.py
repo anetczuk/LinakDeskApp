@@ -25,6 +25,7 @@
 from gui.device_object import DeviceObject
 
 from linak_dpg_bt.linak_device import LinakDesk
+from linak_dpg_bt.desk_mover import DeskMoverThread
 
 
 
@@ -37,6 +38,9 @@ class BTDeviceObject(DeviceObject):
         self.desk.initialize()
         self.desk.set_position_change_callback( self._handleBTPositionChange )
  
+        self.mover = DeskMoverThread( self.desk )
+        
+        
 #     def isConnected(self):
 #         return True
      
@@ -53,13 +57,13 @@ class BTDeviceObject(DeviceObject):
         return self.desk.read_favorite_number()
      
     def moveUp(self):
-        self.desk.moveUp()
+        self.mover.moveUp()
          
     def moveDown(self):
-        self.desk.moveDown()
+        self.mover.moveDown()
          
     def stopMoving(self):
-        self.desk.stopMoving()
+        self.mover.stopMoving()
 
 #     def _setPositionRaw(self, newPosition):
 #         raise NotImplementedError('You need to define this method in derived class!')
