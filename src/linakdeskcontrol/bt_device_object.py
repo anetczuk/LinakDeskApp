@@ -55,18 +55,24 @@ class BTDeviceObject(DeviceObject):
  
     def favSlotsNumber(self):
         return self.desk.read_favorite_number()
-     
+    
+    def favValues(self):
+        return self.desk.read_favorite_values()
+    
     def moveUp(self):
         self.mover.moveUp()
          
     def moveDown(self):
         self.mover.moveDown()
+        
+    def moveToFav(self, favIndex):
+        self.desk.moveToFav( favIndex )
          
     def stopMoving(self):
         self.mover.stopMoving()
 
-#     def _setPositionRaw(self, newPosition):
-#         raise NotImplementedError('You need to define this method in derived class!')
+#    def _setPositionRaw(self, newPosition):
+#        self.desk.moveTo( newPosition )
 
     def _handleBTPositionChange(self):
         self.positionChanged.emit()

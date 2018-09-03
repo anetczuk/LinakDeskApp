@@ -46,10 +46,16 @@ class DeviceObject(QObject):
     def favSlotsNumber(self):
         raise NotImplementedError('You need to define this method in derived class!')
     
+    def favValues(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
     def moveUp(self):
         raise NotImplementedError('You need to define this method in derived class!')
         
     def moveDown(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
+    def moveToFav(self, favIndex):
         raise NotImplementedError('You need to define this method in derived class!')
         
     def stopMoving(self):

@@ -98,4 +98,21 @@ class DeviceControlWidgetTest(unittest.TestCase):
         positionEnd = device.currentPosition()
         self.assertLess(positionEnd, positionStart)
 
+    def test_favPB(self):
+        device = DeviceObjectMock("Device#1", "Owner", 83)
+        self.widget.attachDevice( device )
+                 
+        layout = self.widget.ui.favLayout
+        
+        favSize = device.favSlotsNumber()
+        self.assertEquals(favSize, layout.count())
+        
+        positionStart = device.currentPosition()
+         
+        fav1PB = layout.itemAt(0).widget()
+        QTest.mouseClick(fav1PB, Qt.LeftButton)
+        self.assertEquals(1, device.positionCounter)
+         
+        positionEnd = device.currentPosition()
+        self.assertLess(positionEnd, positionStart)
 

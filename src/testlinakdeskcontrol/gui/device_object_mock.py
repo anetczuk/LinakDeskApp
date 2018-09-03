@@ -56,8 +56,11 @@ class DeviceObjectMock(DeviceObject):
         return self.currPosition
     
     def favSlotsNumber(self):
-        return 5
-        
+        return len( self.favValues() )
+
+    def favValues(self):
+        return [11, 22, 33, 44, 55]
+
     def moveUp(self):
         self.upCounter += 1
         self.setPosition( self.currPosition + 1 )
@@ -65,6 +68,11 @@ class DeviceObjectMock(DeviceObject):
     def moveDown(self):
         self.downCounter += 1
         self.setPosition( self.currPosition - 1 )
+        
+    def moveToFav(self, favIndex):
+        favList = self.favValues()
+        fav = favList[favIndex]
+        self.setPosition( fav )
         
     def stopMoving(self):
         self.stopCounter += 1

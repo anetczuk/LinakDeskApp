@@ -22,7 +22,11 @@
 #
 
 
+import functools
+
 from . import uiloader
+
+from .qt import QPushButton
 
 
 
@@ -40,13 +44,13 @@ class DeviceControlWidget(QtBaseClass):
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
-        self.ui.upPB.setEnabled(False)
-        self.ui.downPB.setEnabled(False)
+        self.attachDevice(None)
         
         self.ui.upPB.pressed.connect(self._goingUp)
         self.ui.upPB.released.connect(self._stopMoving)
         self.ui.downPB.pressed.connect(self._goingDown)
         self.ui.downPB.released.connect(self._stopMoving)
+        self.ui.stopPB.clicked.connect(self._stopMoving)
 
     def attachDevice(self, device):
         self.ui.deviceStatus.attachDevice(device)
@@ -54,9 +58,14 @@ class DeviceControlWidget(QtBaseClass):
         if self.device == None:
             self.ui.upPB.setEnabled(False)
             self.ui.downPB.setEnabled(False)
-            return
-        self.ui.upPB.setEnabled(True)
-        self.ui.downPB.setEnabled(True)
+            self.ui.favLayout.setEnabled(False)
+            self._clearFavLayout()
+        else:
+            self.ui.upPB.setEnabled(True)
+            self.ui.downPB.setEnabled(True)
+            self.ui.favLayout.setEnabled(True)
+            self._clearFavLayout()
+            self._genFavButtons()
 
     def _goingUp(self):
         if self.device == None:
@@ -72,4 +81,28 @@ class DeviceControlWidget(QtBaseClass):
         if self.device == None:
             return
         self.device.stopMoving()
+    
+    def _moveToFav(self, favIndex):
+        if self.device == None:
+            return
+        self.device.moveToFav( favIndex )
         
+    def _getFavList(self):
+        if self.device == None:
+            return []        
+        return self.device.favValues()
+        
+    def _clearFavLayout(self):
+        for i in reversed(range(self.ui.favLayout.count())): 
+            self.ui.favLayout.itemAt(i).widget().deleteLater()
+            
+    def _genFavButtons(self):
+        favourities = self._getFavList()
+        for i in range( len(favourities) ):
+            label = str( favourities[i] )
+            button = QPushButton(label, self)
+            favHandler = functools.partial(self._moveToFav, i)
+            button.clicked.connect( favHandler )
+            self.ui.favLayout.addWidget( button )
+    
+    
