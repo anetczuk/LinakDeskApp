@@ -66,7 +66,7 @@ class BTDeviceObject(DeviceObject):
         self.mover.moveDown()
         
     def moveToFav(self, favIndex):
-        self.desk.moveToFav( favIndex )
+        self.mover.moveToFav(favIndex)
          
     def stopMoving(self):
         self.mover.stopMoving()
