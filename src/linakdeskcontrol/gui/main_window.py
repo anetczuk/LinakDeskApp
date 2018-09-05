@@ -26,7 +26,7 @@ import sys
 
 from . import uiloader
 from . import tray_icon
-from .qt import QApplication, QStyle
+from .qt import QApplication
 
 from linakdeskcontrol.gui.devices_list_dialog import DevicesListDialog
 
