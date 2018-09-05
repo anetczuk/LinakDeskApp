@@ -1,7 +1,10 @@
-##
-## The code is taken from: 
-##                https://coldfix.eu/2016/11/08/pyqt-boilerplate/
-##
+'''
+The code is taken from: 
+               https://coldfix.eu/2016/11/08/pyqt-boilerplate/
+
+As stated on the website (https://coldfix.eu/about/), content and source code
+is published under CC BY and CC0 license respectively.
+'''
 
 
 import signal
