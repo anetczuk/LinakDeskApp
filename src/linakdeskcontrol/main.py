@@ -26,8 +26,8 @@
 
 import sys
 import os
-import signal
-from time import sleep
+# import signal
+# from time import sleep
 
 #### append local library
 sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "..") ))
@@ -37,43 +37,12 @@ import time
 import argparse
 import logging
 import cProfile
-from bt_device_connector import BTDeviceConnector
-
-
-try:
-    from bluepy.btle import Scanner
-except ImportError as e:
-    ### No module named <name>
-    print(e)
-    exit(1)
-
-
-from linak_dpg_bt.linak_device import LinakDesk
 
 from linakdeskcontrol.gui.main_window import MainWindow
-# from bt_device_connector import BTDeviceConnector
 
-
+from bt_device_connector import BTDeviceConnector
 from gui.qt import QApplication
-
 from gui.sigint import setup_interrupt_handling 
-
-
-
-# def scanDevices():
-#     if os.getuid() != 0:
-#         print( "Functionality needs root privileges" )
-#         exit(1)
-#     
-#     print( "Scanning bluetooth devices" )
-#     
-#     scanner = Scanner()
-#     devices = scanner.scan(10.0)
-#     
-#     for dev in devices:
-#         print( "Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi) )
-#         for (adtype, desc, value) in dev.getScanData():
-#             print( "  %s = %s" % (desc, value) )
 
 
 
@@ -84,23 +53,25 @@ if __name__ != '__main__':
     sys.exit(0)
 
 
-## pilot: DPG1C
-
-
 parser = argparse.ArgumentParser(description='Linak desk controller')
 parser.add_argument('--profile', action='store_const', const=True, default=False, help='Profile the code' )
 parser.add_argument('--pfile', action='store', default=None, help='Profile the code and output data to file' )
 # parser.add_argument('--mode', action='store', required=True, choices=["BF", "POLY", "COMMON"], help='Mode' )
 # parser.add_argument('--file', action='store', required=True, help='File with data' )
-# parser.add_argument('--mindsize', action='store', default=1, help='Minimal data size' )
+parser.add_argument('--connect', action='store', default=None, help='BT address to connect to' )
  
   
   
 args = parser.parse_args()
 
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+# logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 # logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
+logging.basicConfig( stream = sys.stdout, 
+                     format = '%(asctime)s,%(msecs)-3d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                     datefmt = '%H:%M:%S', 
+                     level = logging.DEBUG )
 
 
 search_time = 10
@@ -111,6 +82,7 @@ profiler = None
 
 exitCode = 0
 
+
 try:
  
     profiler_outfile = args.pfile
@@ -120,114 +92,23 @@ try:
         profiler.enable()
 
 
-#     scanDevices()
-    
-    print( "Connecting" )
-
-
-    
-    def xxx(aaa, bbb):
-        print("xxxxxx:", aaa, bbb, dir(bbb), bbb.__class__)
-#         QApplication.closeAllWindows()
-#         app.closeAllWindows()
-#         print("fffff")
-#         app.quit()
-#         app.exit()
-#         print("fffff2")
-#     signal.signal(signal.SIGINT, xxx)            ## handles CTRL+C
-
-#     signal.signal(signal.SIGINT, signal.SIG_DFL)            ## handles CTRL+C
-#     signal.signal(signal.SIGINT, signal.SIG_IGN)            ## handles CTRL+C
-
-        
-#     def foo(aaa, bbb, ccc):
-#         print( "xxccccccccccccc" )
-#         ###raise KeyboardInterrupt()
-#     
-#     sys.excepthook = foo
-    
-    
     ## GUI
     app = QApplication(sys.argv)
-        
-    btConnector = BTDeviceConnector()
-        
+                  
     window = MainWindow()
+    
+    btConnector = BTDeviceConnector()
     window.attachConnector(btConnector)
-        
-    btConnector.connectTo("c6:e4:0a:57:2f:e0")
-        
+    
+    if args.connect != None:
+        btAddress = args.connect
+        btConnector.connectTo( btAddress )        
+         
     window.show()
-    
+     
     setup_interrupt_handling()
-    
+     
     exitCode = app.exec_()
-
-    
-#     desk = LinakDesk("c6:e4:0a:57:2f:e0")
-#      
-#     print( "\nReading data" )
-#      
-#     desk.read_dpg_data()
-#       
-#     print( "Done" )
-#        
-#     print( "Name:", desk.name )
-# #     print "Height:", desk.current_height_with_offset.human_cm
-#     print( "State:", desk )
-# 
-#     print( "Moving" )
-#     desk.move_to_cm(95)
-    
-
-
-#     dataParser = DataParser()
-#     data = dataParser.parseFile(args.file)
-# 
-#     minSearchData = int(args.mindsize)
-#     
-#     if   args.mode == "BF":
-#         ## finding full key by forward algorithm
-#         finder = RevHwCRC(True)
-# #         finder = RevDivisionCRC(True)
-# #         finder = RevModCRC(True)
-# #         finder = RevCRCCommon(True)
-#         retList = finder.bruteForceInput(data, minSearchData)
-#         if len(retList) < 1:
-#             print "\nNo keys discovered"
-#         else:
-#             print "\nDiscovered keys[{:}]:".format( len(retList) )
-#             for key in retList:
-#                 print key
-#     elif args.mode == "POLY":
-#         ## find polygons by xor-ing data pairs
-#         finder = RevHwCRC(True)
-# #         finder = RevDivisionCRC(True)
-# #         finder = RevModCRC(True)
-# #         finder = RevCRCCommon(True)
-#         retList = finder.findPolysInput(data, minSearchData)
-#         if len(retList) < 1:
-#             print "\nNo polys discovered"
-#         else:
-#             print "\nDiscovered polys[{:}]:".format( len(retList) )
-#             for poly in retList.most_common():
-#                 print poly[0], poly[1]
-#     elif args.mode == "COMMON":
-#         ## finding full key by backward algorithm
-#         finder = RevHwCRC(True)
-# #         finder = RevDivisionCRC(True)
-# #         finder = RevModCRC(True)
-# #         finder = RevCRCCommon(True)
-#         retList = finder.findCommonInput(data, minSearchData)
-#         if len(retList) < 1:
-#             print "\nNo keys discovered"
-#         else:
-#             print "\nDiscovered keys[{:}]:".format( len(retList) )
-#             for poly in retList.most_common():
-#                 print poly[0], poly[1]
-#     else:
-#         print "Invalid mode:", args.mode
-#         sys.exit(1)
 
 
 # except BluetoothError as e:
