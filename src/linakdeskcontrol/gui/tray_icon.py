@@ -22,14 +22,17 @@
 #
 
 
-from .qt import QApplication
-from .qt import qApp, QSystemTrayIcon, QStyle, QMenu, QAction, QtCore, QObject
+from .qt import qApp, QSystemTrayIcon, QStyle, QMenu, QAction
 
 
 
 class TrayIcon(QSystemTrayIcon):
     def __init__(self, parent):
         super().__init__(parent)
+
+        icon = parent.style().standardIcon(QStyle.SP_ComputerIcon)
+        self.setIcon( icon )
+        self.activated.connect( self._icon_activated )
 
         '''
             Define and add steps to work with the system tray icon
@@ -40,13 +43,22 @@ class TrayIcon(QSystemTrayIcon):
         show_action = QAction("Show", self)
         quit_action = QAction("Exit", self)
         hide_action = QAction("Hide", self)
-        show_action.triggered.connect(self.show)
-        hide_action.triggered.connect(self.hide)
-        quit_action.triggered.connect(qApp.quit)
+        show_action.triggered.connect( parent.show )
+        hide_action.triggered.connect( parent.hide )
+        quit_action.triggered.connect( qApp.quit )
         tray_menu = QMenu()
-        tray_menu.addAction(show_action)
-        tray_menu.addAction(hide_action)
-        tray_menu.addAction(quit_action)
-        self.setContextMenu(tray_menu)
+        tray_menu.addAction( show_action )
+        tray_menu.addAction( hide_action )
+        tray_menu.addAction( quit_action )
+        self.setContextMenu( tray_menu )
     
-        
+    def _icon_activated(self, reason):
+#         print("tray clicked, reason:", reason)
+        if reason == 3:
+            ## clicked
+            parent = self.parent()
+            if parent.isHidden():
+                parent.show()
+            else:
+                parent.hide()
+    
