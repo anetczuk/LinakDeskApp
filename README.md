@@ -13,6 +13,7 @@ reverse engineered mostly by mocking DPG1C Bluetooth service.
 - scanning for nearby devices
 - moving up/down
 - moving to favourite position
+- system tray icon
 
 
 ## Modules

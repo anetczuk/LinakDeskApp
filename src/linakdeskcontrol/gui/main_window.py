@@ -23,17 +23,10 @@
 
 
 import sys
-import signal
-
-try:
-    from PyQt5.QtWidgets import QApplication
-#     from PyQt5 import uic
-except ImportError as e:
-    ### No module named <name>
-    print(e)
-    exit(1)
 
 from . import uiloader
+from . import tray_icon
+from .qt import QApplication, QStyle
 
 from linakdeskcontrol.gui.devices_list_dialog import DevicesListDialog
 
@@ -49,6 +42,12 @@ class MainWindow(QtBaseClass):
         self.connector = None
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
+        
+        ## Init QSystemTrayIcon
+        self.tray_icon = tray_icon.TrayIcon(self)
+        self.tray_icon.setIcon(self.style().standardIcon(QStyle.SP_ComputerIcon))
+        self.tray_icon.activated.connect(self._icon_activated)
+        self.tray_icon.show()
 
     def attachConnector(self, connector):
         if self.connector != None:
@@ -81,7 +80,26 @@ class MainWindow(QtBaseClass):
     ## slot    
     def disconnectFromDevice(self):
         self.ui.deviceControl.attachDevice( None )
+
         
+    # =======================================
+
+
+    # Override closeEvent, to intercept the window closing event
+    def closeEvent(self, event):
+        event.ignore()
+        self.hide()
+        self.tray_icon.show()
+
+    def _icon_activated(self, reason):
+#         print("tray clicked, reason:", reason)
+        if reason == 3:
+            ## clicked
+            if self.isHidden():
+                self.show()
+            else:
+                self.hide()
+
 
 def execApp():
     app = QApplication(sys.argv)
