@@ -29,6 +29,7 @@ from .qt import QObject, pyqtSignal
 class DeviceObject(QObject):
     
     positionChanged = pyqtSignal()
+    speedChanged = pyqtSignal()
     
     
     def __init__(self):
@@ -41,6 +42,9 @@ class DeviceObject(QObject):
         raise NotImplementedError('You need to define this method in derived class!')
 
     def currentPosition(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    def currentSpeed(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
     def favSlotsNumber(self):

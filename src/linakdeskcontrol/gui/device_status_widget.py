@@ -55,6 +55,7 @@ class DeviceStatusWidget(QtBaseClass):
         
         ## connect new object
         self.device.positionChanged.connect( self._refreshPosition )
+        self.device.speedChanged.connect( self._refreshSpeed )
  
     def _refreshWidget(self, connected):
         if connected == False:
@@ -62,14 +63,20 @@ class DeviceStatusWidget(QtBaseClass):
             self.ui.deviceLabel.setText("")
             self.ui.userTypeLabel.setText("")
             self.ui.positionLabel.setText("")
+            self.ui.speedLabel.setText("")
             self.ui.favsNumLabel.setText("")
         else:
             self.ui.statusLabel.setText( "connected" )
             self.ui.deviceLabel.setText( self.device.name() )
             self.ui.userTypeLabel.setText( self.device.userType() )
-            self.ui.positionLabel.setText( self.device.positionCm() )
+            self._refreshPosition()
+            self._refreshSpeed()
             self.ui.favsNumLabel.setText( str( self.device.favSlotsNumber() ) )
         
     def _refreshPosition(self):
         self.ui.positionLabel.setText( self.device.positionCm() )
+        
+    def _refreshSpeed(self):
+        currSpeed = self.device.currentSpeed()
+        self.ui.speedLabel.setText( str(currSpeed) )
         

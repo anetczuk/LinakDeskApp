@@ -55,6 +55,9 @@ class DeviceObjectMock(DeviceObject):
     def currentPosition(self):
         return self.currPosition
     
+    def currentSpeed(self):
+        return 0
+    
     def favSlotsNumber(self):
         return len( self.favValues() )
 

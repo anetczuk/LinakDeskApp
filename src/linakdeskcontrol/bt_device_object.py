@@ -37,6 +37,7 @@ class BTDeviceObject(DeviceObject):
         ##self.desk.read_dpg_data()
         self.desk.initialize()
         self.desk.set_position_change_callback( self._handleBTPositionChange )
+        self.desk.set_speed_change_callback( self._handleBTSpeedChange )
  
         self.mover = DeskMoverThread( self.desk )
         
@@ -52,6 +53,9 @@ class BTDeviceObject(DeviceObject):
  
     def currentPosition(self):
         return self.desk.read_current_position()
+    
+    def currentSpeed(self):
+        return self.desk.read_current_speed()
  
     def favSlotsNumber(self):
         return self.desk.read_favorite_number()
@@ -71,9 +75,9 @@ class BTDeviceObject(DeviceObject):
     def stopMoving(self):
         self.mover.stopMoving()
 
-#    def _setPositionRaw(self, newPosition):
-#        self.desk.moveTo( newPosition )
-
     def _handleBTPositionChange(self):
         self.positionChanged.emit()
+        
+    def _handleBTSpeedChange(self):
+        self.speedChanged.emit()
         
