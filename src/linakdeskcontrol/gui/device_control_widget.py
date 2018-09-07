@@ -101,10 +101,14 @@ class DeviceControlWidget(QtBaseClass):
     def _genFavButtons(self):
         favourities = self._getFavList()
         for i in range( len(favourities) ):
-            label = str( favourities[i] )
+            fav = favourities[i]
+            label = str( fav )
             button = QPushButton(label, self)
-            favHandler = functools.partial(self._moveToFav, i)
-            button.clicked.connect( favHandler )
+            if fav == None:
+                button.setEnabled( False )
+            else:
+                favHandler = functools.partial(self._moveToFav, i)
+                button.clicked.connect( favHandler )
             self.ui.favLayout.addWidget( button )
     
     
