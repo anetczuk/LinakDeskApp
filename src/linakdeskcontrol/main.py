@@ -69,7 +69,7 @@ args = parser.parse_args()
 # logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 logging.basicConfig( stream = sys.stdout, 
-                     format = '%(asctime)s,%(msecs)-3d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                     format = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s',
                      datefmt = '%H:%M:%S', 
                      level = logging.DEBUG )
 
