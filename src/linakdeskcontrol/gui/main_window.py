@@ -43,6 +43,8 @@ class MainWindow(QtBaseClass):
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
+        self.statusBar().showMessage("Ready")
+        
         ## Init QSystemTrayIcon
         self.tray_icon = tray_icon.TrayIcon(self)
         self.tray_icon.show()
@@ -88,6 +90,10 @@ class MainWindow(QtBaseClass):
         event.ignore()
         self.hide()
         self.tray_icon.show()
+#         self.tray_icon.showMessage( "Tray Program",
+#                                     "Application was minimized to Tray",
+#                                     QSystemTrayIcon.Information, 2000
+#                                 )
 
 
 def execApp():
