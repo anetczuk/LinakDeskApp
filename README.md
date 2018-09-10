@@ -1,12 +1,13 @@
 # Linak Desk Application
 This is desktop application controlling Linak office desks. Application functionality is 
-similar to application proviced by Linak -- official application does not support Linux
-operating systems.
+similar to application provided by Linak. 
+One of the goals of this project is to allow the desk control under Linux operating 
+systems, because official application does not support Linux OS. 
 
-Application was tested on DPG1C desk panel containing built-in Bluetooth module.
+Application was tested on *DPG1C* desk panel containing built-in Bluetooth module.
 
-Communication protocol between DPG1C module and official application was
-reverse engineered mostly by mocking DPG1C Bluetooth service.
+Communication protocol between *DPG1C* module and official application was
+reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 
 
 ## Features
