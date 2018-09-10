@@ -40,14 +40,14 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="6" column="0">
     <widget class="QLabel" name="positionText">
      <property name="text">
       <string>Position:</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="6" column="1">
     <widget class="QLabel" name="positionLabel">
      <property name="text">
       <string>TextLabel</string>
@@ -68,14 +68,14 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="8" column="0">
     <widget class="QLabel" name="favNumText">
      <property name="text">
       <string>Favs number:</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
+   <item row="8" column="1">
     <widget class="QLabel" name="favsNumLabel">
      <property name="text">
       <string>TextLabel</string>
@@ -96,14 +96,14 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
+   <item row="7" column="0">
     <widget class="QLabel" name="speedText">
      <property name="text">
       <string>Speed:</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="1">
+   <item row="7" column="1">
     <widget class="QLabel" name="speedLabel">
      <property name="text">
       <string>TextLabel</string>
@@ -133,6 +133,20 @@
    </item>
    <item row="3" column="1">
     <widget class="QLabel" name="capsLabel">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="reminderText">
+     <property name="text">
+      <string>Reminder:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLabel" name="reminderLabel">
      <property name="text">
       <string>TextLabel</string>
      </property>

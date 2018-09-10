@@ -56,6 +56,9 @@ class BTDeviceObject(DeviceObject):
     
     def userType(self):
         return self.desk.userType
+
+    def reminder(self):
+        return self.desk.reminder
  
     def currentPosition(self):
         return self.desk.read_current_position()

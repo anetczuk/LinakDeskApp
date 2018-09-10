@@ -47,6 +47,9 @@ class DeviceObject(QObject):
     def userType(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    def reminder(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
     def currentPosition(self):
         raise NotImplementedError('You need to define this method in derived class!')
 

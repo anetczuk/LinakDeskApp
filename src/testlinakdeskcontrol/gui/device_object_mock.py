@@ -43,6 +43,7 @@ class DeviceObjectMock(DeviceObject):
         self.devType = "DPG Linak"
         self.caps = "a b c"
         self.typeOfUser = userType
+        self.reminderData = "50 10"
         if position != None:
             self.currPosition = position
         else:
@@ -60,6 +61,9 @@ class DeviceObjectMock(DeviceObject):
     def userType(self):
         return self.typeOfUser
 
+    def reminder(self):
+        return self.reminderData
+    
     def currentPosition(self):
         return self.currPosition
     
