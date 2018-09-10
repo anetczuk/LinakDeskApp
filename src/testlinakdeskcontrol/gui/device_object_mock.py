@@ -40,7 +40,8 @@ class DeviceObjectMock(DeviceObject):
         
         self.connected = True
         self.deviceName = name
-        self.deviceName = "DPG Linak"
+        self.devType = "DPG Linak"
+        self.caps = "a b c"
         self.typeOfUser = userType
         if position != None:
             self.currPosition = position
@@ -51,7 +52,10 @@ class DeviceObjectMock(DeviceObject):
         return self.deviceName
     
     def deviceType(self):
-        return self.deviceType
+        return self.devType
+    
+    def capabilities(self):
+        return self.caps
 
     def userType(self):
         return self.typeOfUser

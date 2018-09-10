@@ -51,6 +51,9 @@ class BTDeviceObject(DeviceObject):
     def deviceType(self):
         return self.desk.deviceType
     
+    def capabilities(self):
+        return self.desk.capabilities
+    
     def userType(self):
         return self.desk.userType
  
