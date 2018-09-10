@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+#
 # MIT License
 # 
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
@@ -22,26 +24,37 @@
 #
 
 
-import unittest
-
-import linakdeskcontrol.gui.uiloader as uiloader
-
+import sys
+import os
 
 
-class UiLoaderTest(unittest.TestCase):
-    def setUp(self):
-        ## Called before testfunction is executed
-        pass
-  
-    def tearDown(self):
-        ## Called after testfunction was executed
-        pass
-       
-    def test_generateUIFileNameFromClassName_ext(self):
-        ui_file = uiloader.generateUIFileNameFromClassName("aaa.py")
-        self.assertEqual("aaa.ui", ui_file)
-        
-    def test_generateUIFileNameFromClassName_file(self):
-        ui_file = uiloader.generateUIFileNameFromClassName( __file__ )
-        self.assertEqual("test_uiloader.ui", ui_file)
+#### append local library
+sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../..") ))
+
+
+from linakdeskapp.gui.qt import QApplication
+from linakdeskapp.gui.sigint import setup_interrupt_handling 
+from linakdeskapp.gui.main_window import MainWindow
+
+from testlinakdeskapp.gui.device_connector_mock import DeviceConnectorMock
+
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    
+    connector = DeviceConnectorMock()
+    
+    window.attachConnector(connector)
+    
+    window.show()
+    
+    setup_interrupt_handling()
+    
+    exitCode = app.exec_()
+    
+    print("Done")
+    
+    sys.exit(exitCode)
 

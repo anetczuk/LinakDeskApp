@@ -27,7 +27,7 @@ import unittest
 
 from PyQt5.QtWidgets import QApplication
 
-from linakdeskcontrol.gui.device_status_widget import DeviceStatusWidget as TestWidget
+from linakdeskapp.gui.device_status_widget import DeviceStatusWidget as TestWidget
 from .device_object_mock import DeviceObjectMock
 
 

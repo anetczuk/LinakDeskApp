@@ -38,7 +38,7 @@ import argparse
 import logging
 import cProfile
 
-from linakdeskcontrol.gui.main_window import MainWindow
+from linakdeskapp.gui.main_window import MainWindow
 
 from bt_device_connector import BTDeviceConnector
 from gui.qt import QApplication

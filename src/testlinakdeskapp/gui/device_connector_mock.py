@@ -22,7 +22,7 @@
 #
 
 
-from linakdeskcontrol.gui.device_connector import DeviceConnector
+from linakdeskapp.gui.device_connector import DeviceConnector
 
 from .device_object_mock import DeviceObjectMock
 

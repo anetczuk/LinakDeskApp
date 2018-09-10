@@ -72,7 +72,7 @@
   <customwidget>
    <class>DeviceStatusWidget</class>
    <extends>QWidget</extends>
-   <header>linakdeskcontrol.gui.device_status_widget</header>
+   <header>linakdeskapp.gui.device_status_widget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

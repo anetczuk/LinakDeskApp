@@ -60,7 +60,7 @@
   <customwidget>
    <class>DeviceControlWidget</class>
    <extends>QWidget</extends>
-   <header>linakdeskcontrol.gui.device_control_widget</header>
+   <header>linakdeskapp.gui.device_control_widget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

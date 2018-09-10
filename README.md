@@ -17,14 +17,14 @@ reverse engineered mostly by mocking DPG1C Bluetooth service.
 
 
 ## Modules
-- linakdeskcontrol.main -- entry point for the application
+- linakdeskapp.main -- entry point for the application
 - linakdeskmock -- Bluetooth service mocking Linak desk service
-- testlinakdeskcontrol -- unit tests for the application
+- testlinakdeskapp -- unit tests for the application
 
 
 ### Running application
 
-To run application simply execute *linakdeskcontrol/main.py* file. Application
+To run application simply execute *linakdeskapp/main.py* file. Application
 can be run in profiler mode. 
 
 
@@ -39,7 +39,7 @@ To run tests execute *src/runtests.py*. It can be run with code profiling
 and code coverage options.
 
 In addition there is demo application not requiring Bluetooth connection. It 
-can be run by *testlinakdeskcontrol/gui/main_window_example.py*.
+can be run by *testlinakdeskapp/gui/main_window_example.py*.
 
 
 ## Examples of use of not obvious Python mechanisms:

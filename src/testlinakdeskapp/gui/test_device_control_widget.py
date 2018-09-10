@@ -29,7 +29,7 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
 
-from linakdeskcontrol.gui.device_control_widget import DeviceControlWidget as TestWidget
+from linakdeskapp.gui.device_control_widget import DeviceControlWidget as TestWidget
 from .device_object_mock import DeviceObjectMock
 
 

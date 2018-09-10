@@ -22,27 +22,33 @@
 #
 
 
-import os
+import sys
+import unittest
 
-try:
-    from PyQt5 import uic
-except ImportError as e:
-    ### No module named <name>
-    print(e)
-    exit(1)    
+from PyQt5.QtWidgets import QApplication
+# from PyQt5.QtWidgets import QWidget
+# from PyQt5.QtCore import QObject
+# from PyQt5.QtTest import QTest
+# from PyQt5.QtCore import Qt
 
-import linakdeskcontrol.defs as defs
+from linakdeskapp.gui.main_window import MainWindow as TestWidget
 
 
-def generateUIFileNameFromClassName(classFileName):
-    baseName = os.path.basename(classFileName)
-    nameTuple = os.path.splitext(baseName)
-    return nameTuple[0] + ".ui"
 
-def loadUi(uiFilename):
-    return uic.loadUiType( os.path.join( defs.ROOT_DIR, "ui", uiFilename ) )
+app = QApplication(sys.argv)
 
-def loadUiFromClassName(uiFilename):
-    ui_file = generateUIFileNameFromClassName(uiFilename)
-    return loadUi( ui_file )
+
+
+class MainWindowTest(unittest.TestCase):
+    def setUp(self):
+        ## Called before testfunction is executed
+        self.widget = TestWidget()
+  
+    def tearDown(self):
+        ## Called after testfunction was executed
+        self.widget = None
+       
+    def test_test(self):
+        self.assertTrue(True)
+
 

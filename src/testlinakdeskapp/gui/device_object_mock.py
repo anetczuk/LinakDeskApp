@@ -22,7 +22,7 @@
 #
 
 
-from linakdeskcontrol.gui.device_object import DeviceObject
+from linakdeskapp.gui.device_object import DeviceObject
 
 
 

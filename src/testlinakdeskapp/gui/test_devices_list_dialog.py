@@ -30,7 +30,7 @@ from PyQt5.QtWidgets import QDialog as QDialog
 from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
 
-from linakdeskcontrol.gui.devices_list_dialog import DevicesListDialog as TestWidget
+from linakdeskapp.gui.devices_list_dialog import DevicesListDialog as TestWidget
 from .device_connector_mock import DeviceConnectorMock
 
 
