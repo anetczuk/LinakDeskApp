@@ -1,4 +1,4 @@
-# Linak Desk Control
+# Linak Desk Application
 This is desktop application controlling Linak office desks. Application functionality is 
 similar to application proviced by Linak -- official application does not support Linux
 operating systems.

@@ -53,7 +53,7 @@ if __name__ != '__main__':
     sys.exit(0)
 
 
-parser = argparse.ArgumentParser(description='Linak desk controller')
+parser = argparse.ArgumentParser(description='Linak desk application')
 parser.add_argument('--profile', action='store_const', const=True, default=False, help='Profile the code' )
 parser.add_argument('--pfile', action='store', default=None, help='Profile the code and output data to file' )
 # parser.add_argument('--mode', action='store', required=True, choices=["BF", "POLY", "COMMON"], help='Mode' )
