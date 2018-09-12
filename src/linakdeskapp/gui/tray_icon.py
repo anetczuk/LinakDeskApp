@@ -30,6 +30,8 @@ class TrayIcon(QSystemTrayIcon):
     def __init__(self, parent):
         super().__init__(parent)
 
+        ## print("is tray available:",  QSystemTrayIcon.isSystemTrayAvailable() )
+
         icon = parent.style().standardIcon(QStyle.SP_ComputerIcon)
         self.setIcon( icon )
         self.activated.connect( self._icon_activated )

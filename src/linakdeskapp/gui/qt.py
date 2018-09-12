@@ -10,8 +10,9 @@ try:
     from PyQt5.QtWidgets import QPushButton
     from PyQt5.QtWidgets import QSystemTrayIcon
     from PyQt5.QtWidgets import QStyle, QMenu, QAction
+    from PyQt5.QtGui import QIcon
 #     from PyQt5 import uic
 except ImportError as e:
     ### No module named <name>
-    print(e)
+    print('Exception while importing:', e)
     exit(1)

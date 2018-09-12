@@ -23,10 +23,11 @@
 
 
 import sys
+import os
 
 from . import uiloader
 from . import tray_icon
-from .qt import QApplication
+from .qt import QApplication, QIcon
 
 from linakdeskapp.gui.devices_list_dialog import DevicesListDialog
 
@@ -43,11 +44,17 @@ class MainWindow(QtBaseClass):
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
+        scriptDir = os.path.dirname(os.path.realpath(__file__))
+        appIcon = QIcon( scriptDir + os.path.sep + 'office-chair.png' )
+        self.setWindowIcon( appIcon )
+        
         self.statusBar().showMessage("Ready")
         
         ## Init QSystemTrayIcon
-        self.tray_icon = tray_icon.TrayIcon(self)
-        self.tray_icon.show()
+        self.trayIcon = tray_icon.TrayIcon(self)
+        systemIcon = QIcon( scriptDir + os.path.sep + 'office-chair_gray.png' )
+        self.trayIcon.setIcon( systemIcon )
+        self.trayIcon.show()
 
     def attachConnector(self, connector):
         if self.connector != None:
@@ -89,8 +96,8 @@ class MainWindow(QtBaseClass):
     def closeEvent(self, event):
         event.ignore()
         self.hide()
-        self.tray_icon.show()
-#         self.tray_icon.showMessage( "Tray Program",
+        self.trayIcon.show()
+#         self.trayIcon.showMessage( "Tray Program",
 #                                     "Application was minimized to Tray",
 #                                     QSystemTrayIcon.Information, 2000
 #                                 )
