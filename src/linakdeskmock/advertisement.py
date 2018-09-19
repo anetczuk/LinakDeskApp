@@ -1,5 +1,7 @@
 #
-#
+# Code based on:
+#        https://github.com/Vudentz/BlueZ/blob/master/test/example-gatt-server
+#        https://github.com/Vudentz/BlueZ/blob/master/test/example-advertisement
 #
 
 import dbus.service
