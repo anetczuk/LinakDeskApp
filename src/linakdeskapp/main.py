@@ -30,8 +30,9 @@ import os
 # from time import sleep
 
 #### append local library
-sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "..") ))
-sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../../lib/linak_bt_desk") ))
+script_dir = os.path.dirname(__file__)
+sys.path.append(os.path.abspath( os.path.join(script_dir, "..") ))
+sys.path.append(os.path.abspath( os.path.join(script_dir, "../../lib/linak_bt_desk") ))
 
 import time
 import argparse
@@ -68,13 +69,35 @@ args = parser.parse_args()
 # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 # logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-logging.basicConfig( stream = sys.stdout, 
-                     format = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s',
+loggerFormat = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
+
+# logging.basicConfig( stream = sys.stdout, 
+#                      format = loggerFormat,
+#                      datefmt = '%H:%M:%S', 
+#                      level = logging.DEBUG )
+
+
+logDir = os.path.join(script_dir, "../../tmp")
+if os.path.isdir( logDir ) == False:
+    logDir = os.getcwd()
+    
+logFile = os.path.join(logDir, "log.txt")    
+
+logging.basicConfig( format = loggerFormat,
                      datefmt = '%H:%M:%S', 
-                     level = logging.DEBUG )
+                     level = logging.DEBUG,
+                     handlers=[ logging.FileHandler( filename = logFile, mode = "a+" ),
+                                logging.StreamHandler( stream = sys.stdout )]
+                     )
 
 
-search_time = 10
+_LOGGER = logging.getLogger(__name__)
+
+_LOGGER.debug("\n\n")
+_LOGGER.debug("Starting the application")
+
+_LOGGER.debug("Logger log file: %s" % logFile)
+
 
 
 starttime = time.time()
