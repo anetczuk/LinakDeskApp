@@ -40,7 +40,11 @@ def generateUIFileNameFromClassName(classFileName):
     return nameTuple[0] + ".ui"
 
 def loadUi(uiFilename):
-    return uic.loadUiType( os.path.join( defs.ROOT_DIR, "ui", uiFilename ) )
+    try:
+        return uic.loadUiType( os.path.join( defs.ROOT_DIR, "ui", uiFilename ) )
+    except Exception as e:
+        print("Exception while loading UI file:", uiFilename, e)
+        raise
 
 def loadUiFromClassName(uiFilename):
     ui_file = generateUIFileNameFromClassName(uiFilename)
