@@ -84,7 +84,7 @@ if os.path.isdir( logDir ) == False:
 logFile = os.path.join(logDir, "log.txt")    
 
 logging.basicConfig( format = loggerFormat,
-                     datefmt = '%H:%M:%S', 
+                     datefmt = '%Y-%m-%d %H:%M:%S', 
                      level = logging.DEBUG,
                      handlers=[ logging.FileHandler( filename = logFile, mode = "a+" ),
                                 logging.StreamHandler( stream = sys.stdout )]
@@ -136,6 +136,10 @@ try:
 
 # except BluetoothError as e:
 #     print "Error: ", e, " check if BT is powered on"
+
+except:
+    _LOGGER.exception("Exception occured")
+    raise
 
 finally:
     print( "" )                    ## print new line
