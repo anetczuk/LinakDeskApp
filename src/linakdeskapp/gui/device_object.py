@@ -30,6 +30,7 @@ class DeviceObject(QObject):
     
     positionChanged = pyqtSignal()
     speedChanged = pyqtSignal()
+    settingChanged = pyqtSignal()
     
     
     def __init__(self):
@@ -48,6 +49,18 @@ class DeviceObject(QObject):
         raise NotImplementedError('You need to define this method in derived class!')
 
     def reminder(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
+    def reminderValues(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    def reminderSettings(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    def readReminderState(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
+    def sendReminderState(self):
         raise NotImplementedError('You need to define this method in derived class!')
     
     def currentPosition(self):

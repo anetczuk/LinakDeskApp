@@ -38,6 +38,7 @@ class BTDeviceObject(DeviceObject):
         self.desk.initialize()
         self.desk.set_position_change_callback( self._handleBTPositionChange )
         self.desk.set_speed_change_callback( self._handleBTSpeedChange )
+        self.desk.add_setting_callback( self._handleBTSettingChange )
  
         self.mover = DeskMoverThread( self.desk )
         
@@ -59,6 +60,18 @@ class BTDeviceObject(DeviceObject):
 
     def reminder(self):
         return self.desk.reminder
+ 
+    def reminderValues(self):
+        return self.desk.read_reminder_values()
+ 
+    def reminderSettings(self):
+        return self.desk.reminder_settings()
+ 
+    def readReminderState(self):
+        return self.desk.read_reminder_state()
+ 
+    def sendReminderState(self):
+        return self.desk.send_reminder_state()
  
     def currentPosition(self):
         return self.desk.read_current_position()
@@ -89,4 +102,7 @@ class BTDeviceObject(DeviceObject):
         
     def _handleBTSpeedChange(self):
         self.speedChanged.emit()
+        
+    def _handleBTSettingChange(self):
+        self.settingChanged.emit()
         

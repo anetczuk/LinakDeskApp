@@ -16,7 +16,31 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="DeviceControlWidget" name="deviceControl" native="true"/>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="statusTab">
+       <attribute name="title">
+        <string>Status</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="DeviceControlWidget" name="deviceControl" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="settingsTab">
+       <attribute name="title">
+        <string>Settings</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="DeviceSettingsWidget" name="deviceSettings" native="true"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -61,6 +85,12 @@
    <class>DeviceControlWidget</class>
    <extends>QWidget</extends>
    <header>linakdeskapp.gui.device_control_widget</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DeviceSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>linakdeskapp.gui.device_settings_widget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

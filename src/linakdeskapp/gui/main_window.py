@@ -27,7 +27,7 @@ import os
 
 from . import uiloader
 from . import tray_icon
-from .qt import QApplication, QIcon
+from .qt import qApp, QApplication, QIcon
 
 from linakdeskapp.gui.devices_list_dialog import DevicesListDialog
 
@@ -58,12 +58,16 @@ class MainWindow(QtBaseClass):
 
     def attachConnector(self, connector):
         if self.connector != None:
-            ## disconnect from old object
+            ## disconnect slot from old object
             self.connector.newConnection.disconnect( self.newConnection )
             
         self.connector = connector
+        ## connect slot to new object
         self.connector.newConnection.connect( self.newConnection )
 
+    def _setDevice(self, device):
+        self.ui.deviceControl.attachDevice( device )
+        self.ui.deviceSettings.attachDevice( device )
 
     # =======================================
 
@@ -72,11 +76,12 @@ class MainWindow(QtBaseClass):
     def newConnection(self, deviceObject):
         if deviceObject == None:
             return
-        self.ui.deviceControl.attachDevice( deviceObject )
+        self._setDevice( deviceObject )
         
     ## slot
     def closeApplication(self):
-        self.close()
+        ##self.close()
+        qApp.quit()
 
     ## slot
     def connectToDevice(self):
@@ -86,7 +91,7 @@ class MainWindow(QtBaseClass):
     
     ## slot    
     def disconnectFromDevice(self):
-        self.ui.deviceControl.attachDevice( None )
+        self._setDevice( None )
 
         
     # =======================================

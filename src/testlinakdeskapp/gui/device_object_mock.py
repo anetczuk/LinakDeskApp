@@ -64,6 +64,20 @@ class DeviceObjectMock(DeviceObject):
     def reminder(self):
         return self.reminderData
     
+    def reminderValues(self):
+        return [(11, 33), (77, 99)]
+    
+    def reminderSettings(self):
+        return ReminderSettingMock()
+    
+    def readReminderState(self):
+        ## do nothing
+        pass
+        
+    def sendReminderState(self):
+        ## do nothing
+        pass
+    
     def currentPosition(self):
         return self.currPosition
     
@@ -98,4 +112,59 @@ class DeviceObjectMock(DeviceObject):
     def _positionChanged(self):
         self.positionCounter += 1
     
+    
+    
+class ReminderSettingMock():
+    
+    def __init__(self):
+        self.cmEnabled   = False
+        self.impulseUp   = False
+        self.impulseDown = False
+        self.wake        = False
+        self.lightGuide  = False
+    
+    def getCmUnit(self):
+        return self.cmEnabled
+    
+    def setCmUnit(self, useCm):
+        if useCm == True:
+            self.cmEnabled = True
+        else:
+            self.cmEnabled = False
+            
+    def getAutomaticUp(self):
+        return self.impulseUp
+    
+    def setAutomaticUp(self, state):
+        if state == True:
+            self.impulseUp = True
+        else:
+            self.impulseUp = False
+            
+    def getAutomaticDown(self):
+        return self.impulseDown
+    
+    def setAutomaticDown(self, state):
+        if state == True:
+            self.impulseDown = True
+        else:
+            self.impulseDown = False
+                
+    def getWake(self):
+        return self.wake
+        
+    def setWake(self, state):
+        if state == True:
+            self.wake = True
+        else: 
+            self.wake = False
+            
+    def getLights(self):
+        return self.lightGuide
+        
+    def setLights(self, state):
+        if state == True:
+            self.lightGuide = True
+        else: 
+            self.lightGuide = False
     
