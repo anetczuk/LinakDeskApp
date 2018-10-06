@@ -39,6 +39,7 @@ class BTDeviceObject(DeviceObject):
         self.desk.set_position_change_callback( self._handleBTPositionChange )
         self.desk.set_speed_change_callback( self._handleBTSpeedChange )
         self.desk.add_setting_callback( self._handleBTSettingChange )
+        self.desk.add_favorities_callback( self._handleBTFavoritiesChange )
  
         self.mover = DeskMoverThread( self.desk )
         
@@ -73,17 +74,35 @@ class BTDeviceObject(DeviceObject):
     def sendReminderState(self):
         return self.desk.send_reminder_state()
  
+    def activateDisplay(self):
+        return self.desk.activate_display()
+ 
     def currentPosition(self):
         return self.desk.read_current_position()
     
     def currentSpeed(self):
         return self.desk.read_current_speed()
  
+    def favorities(self):
+        return self.desk.favorities()
+ 
+    def favPositions(self):
+        return self.desk.read_favorite_positions()
+ 
+    def setFavPosition(self, favIndex, newPosition):
+        self.desk.set_favorite_position(favIndex, newPosition)
+ 
     def favSlotsNumber(self):
         return self.desk.read_favorite_number()
     
     def favValues(self):
         return self.desk.read_favorite_values()
+    
+    def readFavoritiesState(self):
+        return self.desk.read_favorities_state()
+    
+    def sendFavoritiesState(self):
+        return self.desk.send_favorities_state()
     
     def moveUp(self):
         self.mover.moveUp()
@@ -105,4 +124,7 @@ class BTDeviceObject(DeviceObject):
         
     def _handleBTSettingChange(self):
         self.settingChanged.emit()
+        
+    def _handleBTFavoritiesChange(self):
+        self.favoritiesChanged.emit()
         

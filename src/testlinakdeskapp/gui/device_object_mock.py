@@ -77,6 +77,10 @@ class DeviceObjectMock(DeviceObject):
     def sendReminderState(self):
         ## do nothing
         pass
+
+    def activateDisplay(self):
+        ## do nothing
+        pass
     
     def currentPosition(self):
         return self.currPosition

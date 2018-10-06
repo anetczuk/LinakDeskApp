@@ -60,7 +60,7 @@
    <item row="2" column="0">
     <widget class="QLabel" name="deviceTypeText">
      <property name="text">
-      <string>DeviceType:</string>
+      <string>Device type:</string>
      </property>
     </widget>
    </item>
@@ -72,84 +72,56 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="capsText">
-     <property name="text">
-      <string>Capabilities:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLabel" name="capsLabel">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
     <widget class="QLabel" name="userTypeText">
      <property name="text">
       <string>User Type:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="3" column="1">
     <widget class="QLabel" name="userTypeLabel">
      <property name="text">
       <string>TextLabel</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
+   <item row="4" column="0">
     <widget class="QLabel" name="reminderText">
      <property name="text">
       <string>Reminder:</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="1">
+   <item row="4" column="1">
     <widget class="QLabel" name="reminderLabel">
      <property name="text">
       <string>TextLabel</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="5" column="0">
     <widget class="QLabel" name="positionText">
      <property name="text">
       <string>Position:</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
+   <item row="5" column="1">
     <widget class="QLabel" name="positionLabel">
      <property name="text">
       <string>TextLabel</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="0">
+   <item row="6" column="0">
     <widget class="QLabel" name="speedText">
      <property name="text">
       <string>Speed:</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
+   <item row="6" column="1">
     <widget class="QLabel" name="speedLabel">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="opCounterText">
-     <property name="text">
-      <string>Inner timer:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QLabel" name="counterLabel">
      <property name="text">
       <string>TextLabel</string>
      </property>

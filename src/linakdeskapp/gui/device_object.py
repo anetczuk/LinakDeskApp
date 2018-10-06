@@ -28,9 +28,10 @@ from .qt import QObject, pyqtSignal
 
 class DeviceObject(QObject):
     
-    positionChanged = pyqtSignal()
-    speedChanged = pyqtSignal()
-    settingChanged = pyqtSignal()
+    positionChanged     = pyqtSignal()
+    speedChanged        = pyqtSignal()
+    settingChanged      = pyqtSignal()
+    favoritiesChanged   = pyqtSignal()
     
     
     def __init__(self):
@@ -63,16 +64,34 @@ class DeviceObject(QObject):
     def sendReminderState(self):
         raise NotImplementedError('You need to define this method in derived class!')
     
+    def activateDisplay(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
     def currentPosition(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
     def currentSpeed(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    def favorities(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    def favPositions(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    def setFavPosition(self, favIndex, newPosition):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
     def favSlotsNumber(self):
         raise NotImplementedError('You need to define this method in derived class!')
     
     def favValues(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
+    def readFavoritiesState(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
+    def sendFavoritiesState(self):
         raise NotImplementedError('You need to define this method in derived class!')
     
     def moveUp(self):
