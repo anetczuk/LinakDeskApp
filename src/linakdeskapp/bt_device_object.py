@@ -101,6 +101,9 @@ class BTDeviceObject(DeviceObject):
     def readFavoritiesState(self):
         return self.desk.read_favorities_state()
     
+    def sendFavoriteState(self, favIndex):
+        return self.desk.send_fav(favIndex)
+    
     def sendFavoritiesState(self):
         return self.desk.send_favorities_state()
     
@@ -125,6 +128,6 @@ class BTDeviceObject(DeviceObject):
     def _handleBTSettingChange(self):
         self.settingChanged.emit()
         
-    def _handleBTFavoritiesChange(self):
-        self.favoritiesChanged.emit()
+    def _handleBTFavoritiesChange(self, favNumber):
+        self.favoritiesChanged.emit(favNumber-1)
         

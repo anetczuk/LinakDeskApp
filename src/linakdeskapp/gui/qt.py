@@ -17,6 +17,7 @@ try:
     from PyQt5.QtWidgets import QSpacerItem
     from PyQt5.QtWidgets import QSizePolicy
     from PyQt5.QtWidgets import QStyle, QMenu, QAction
+    from PyQt5.QtWidgets import QHBoxLayout
     from PyQt5.QtGui import QIcon
 #     from PyQt5 import uic
 except ImportError as e:

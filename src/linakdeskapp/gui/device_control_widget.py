@@ -27,6 +27,7 @@ import functools
 from . import uiloader
 
 from .qt import QPushButton
+from .qt import clearLayout
 
 
 
@@ -53,9 +54,23 @@ class DeviceControlWidget(QtBaseClass):
         self.ui.stopPB.clicked.connect(self._stopMoving)
 
     def attachDevice(self, device):
+        if self.device != None:
+            ## disconnect old object
+            self.device.favoritiesChanged.disconnect( self._refreshFavLayout )
+            
         self.ui.deviceStatus.attachDevice(device)
         self.device = device
         if self.device == None:
+            self._refreshWidget(False)
+            return
+         
+        self._refreshWidget(True)
+            
+        ## connect new object
+        self.device.favoritiesChanged.connect( self._refreshFavLayout )
+
+    def _refreshWidget(self, connected):
+        if connected == False:
             self.ui.upPB.setEnabled(False)
             self.ui.downPB.setEnabled(False)
             self.ui.stopPB.setEnabled(False)
@@ -66,7 +81,6 @@ class DeviceControlWidget(QtBaseClass):
             self.ui.downPB.setEnabled(True)
             self.ui.stopPB.setEnabled(True)
             self.ui.favLayout.setEnabled(True)
-            self._clearFavLayout()
             self._genFavButtons()
 
     def _goingUp(self):
@@ -95,10 +109,11 @@ class DeviceControlWidget(QtBaseClass):
         return self.device.favValues()
         
     def _clearFavLayout(self):
-        for i in reversed(range(self.ui.favLayout.count())): 
-            self.ui.favLayout.itemAt(i).widget().deleteLater()
+        clearLayout( self.ui.favLayout )
             
     def _genFavButtons(self):
+        self._clearFavLayout()
+        
         favourities = self._getFavList()
         for i in range( len(favourities) ):
             fav = favourities[i]
@@ -111,4 +126,6 @@ class DeviceControlWidget(QtBaseClass):
                 button.clicked.connect( favHandler )
             self.ui.favLayout.addWidget( button )
     
-    
+    def _refreshFavLayout(self, favIndex):
+        self._genFavButtons()
+        

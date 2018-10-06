@@ -27,7 +27,7 @@ import logging
 
 from . import uiloader
 
-from .qt import QPushButton, QSpinBox, QtWidgets, QCheckBox
+from .qt import QPushButton, QSpinBox, QtWidgets, QCheckBox, QHBoxLayout
 from .qt import clearLayout
 
 
@@ -52,7 +52,6 @@ class DeviceSettingsWidget(QtBaseClass):
         
         self.ui.refreshPB.pressed.connect(self._refreshSettings)
         self.ui.remUpdatePB.pressed.connect(self._updateReminderSettings)
-        self.ui.favUpdatePB.pressed.connect(self._updateFavoritiesSettings)
  
     def attachDevice(self, device):
         if self.device != None:
@@ -265,95 +264,95 @@ class DeviceSettingsWidget(QtBaseClass):
     def _refreshFavoritiesWidget(self, connected):
         if connected == False:
             self._clearFavLayout()
-            self._clearFavSpinLayout()
-            self.ui.favUpdatePB.setEnabled(False)
         else:
             self._genFavButtons()
-            self._genFavSpinButtons()
-            self.ui.favUpdatePB.setEnabled(True)
 
-    def _updateFavoritiesSettings(self):
-        self.device.sendFavoritiesState()
-        self.device.readFavoritiesState()
-
-        
     def _clearFavLayout(self):
         clearLayout(self.ui.favLayout)
-            
+
     def _genFavButtons(self):
         self._clearFavLayout()
         
-        favourities = self.device.favValues()
-        for i in range( len(favourities) ):
-            fav = favourities[i]
-            label = str( fav )
-            button = QPushButton(label, self)
-            if fav == None:
-                button.setEnabled( False )
-            else:
-                favHandler = functools.partial(self._moveToFav, i)
-                button.clicked.connect( favHandler )
-            self.ui.favLayout.addWidget( button )
-            
-    def _moveToFav(self, favIndex):
-        if self.device == None:
-            return
-        self.device.moveToFav( favIndex )
-
-    def _clearFavSpinLayout(self):
-        clearLayout( self.ui.favSpinLayout )
-            
-    def _genFavSpinButtons(self):
-        self._clearFavSpinLayout()
+        self.favSpinBoxes = []
+        self.favGoToButtons = []
         
         favorities = self.device.favPositions()
-        for favIndex in range( len(favorities) ):
-            pos = favorities[favIndex]
-            _LOGGER.info("pos val: %s %s", str(favIndex), str(pos) )
-            
-            check = QCheckBox(self)
-            if pos != None:
-                check.setChecked(True)
-            else:
-                check.setChecked(False)
-            favHandler = functools.partial(self._toggleFavEnable, favIndex)
-            check.stateChanged.connect( favHandler )
-            self.ui.favSpinLayout.addWidget( check )
-                        
-            spin = QSpinBox(self)
-            spin.setMinimum(1)
-            spin.setMaximum(255)
-            if pos != None:
-                spin.setEnabled(True)
-                spin.setValue( pos )
-            else:
-                spin.setEnabled(False)
-                currPos = self.device.currentPosition()
-                spin.setValue( currPos )
-            favHandler = functools.partial(self._toggleFav, favIndex)
-            spin.valueChanged.connect( favHandler )
-            self.ui.favSpinLayout.addWidget( spin )
-             
-            spacer = QtWidgets.QSpacerItem(20, 10, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-            self.ui.favSpinLayout.addItem( spacer )
+        for i in range( len(favorities) ):
+            fav = favorities[i]
+            hLayout = self._genFavHLayout( i, fav )
+            self.ui.favLayout.addItem( hLayout )
+    
+    def _genFavHLayout(self, favIndex, favValue):
+        layout = QHBoxLayout()
+
+        check = QCheckBox(self)
+        if favValue != None:
+            check.setChecked(True)
+        else:
+            check.setChecked(False)
+        favHandler = functools.partial(self._toggleFavEnable, favIndex)
+        check.stateChanged.connect( favHandler )
+        layout.addWidget( check )
         
+        layout.addSpacing( 6 )
+                    
+        spin = QSpinBox(self)
+        spin.setMinimum(1)
+        spin.setMaximum(255)
+        if favValue != None:
+            spin.setEnabled(True)
+            spin.setValue( favValue )
+        else:
+            spin.setEnabled(False)
+            currPos = self.device.currentPosition()
+            spin.setValue( currPos )
+        favHandler = functools.partial(self._toggleFav, favIndex)
+        spin.valueChanged.connect( favHandler )
+        layout.addWidget( spin )
+        self.favSpinBoxes.append( spin )
+        
+        layout.addSpacing( 6 )
+        
+        button = QPushButton("Go To", self)
+        if favValue == None:
+            button.setEnabled( False )
+        favHandler = functools.partial(self._moveToFav, favIndex)
+        button.clicked.connect( favHandler )
+        layout.addWidget( button )
+        self.favGoToButtons.append( button )
+        
+        layout.addSpacing( 6 )
+
+        button = QPushButton("Update", self)
+        favHandler = functools.partial(self._updateFavorite, favIndex)
+        button.clicked.connect( favHandler )
+        layout.addWidget( button )
+        
+        layout.addStretch(1)
+        
+        return layout
+
     def _toggleFavEnable(self, favIndex, state):
         ## state: 0 -- unchecked
         ## state: 2 -- checked
-        favorities = self.device.favorities()
-        fav = favorities[favIndex]
         if state == 0:
             ## unchecked
-            fav.disable()
+            self.device.setFavPosition(favIndex, None)
+            self.favGoToButtons[favIndex].setEnabled(False)
+            self.favSpinBoxes[favIndex].setEnabled(False)
         else:
             ## checked
-            value = self.device.currentPosition()
+            value = self.favSpinBoxes[favIndex].value()
             self.device.setFavPosition(favIndex, value)
-            
-        self._genFavButtons()
+            self.favGoToButtons[favIndex].setEnabled(True)
+            self.favSpinBoxes[favIndex].setEnabled(True)
     
     def _toggleFav(self, favIndex, value):
-        self.device.setFavPosition(favIndex, value)
-        self._genFavButtons()
+        self.device.setFavPosition( favIndex, value )
         
+    def _moveToFav(self, favIndex):
+        self.device.moveToFav( favIndex )
+        
+    def _updateFavorite(self, favIndex):
+        self.device.sendFavoriteState( favIndex )
     

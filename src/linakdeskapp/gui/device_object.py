@@ -31,7 +31,7 @@ class DeviceObject(QObject):
     positionChanged     = pyqtSignal()
     speedChanged        = pyqtSignal()
     settingChanged      = pyqtSignal()
-    favoritiesChanged   = pyqtSignal()
+    favoritiesChanged   = pyqtSignal(int)
     
     
     def __init__(self):
@@ -89,6 +89,9 @@ class DeviceObject(QObject):
         raise NotImplementedError('You need to define this method in derived class!')
     
     def readFavoritiesState(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
+    def sendFavoriteState(self, favIndex):
         raise NotImplementedError('You need to define this method in derived class!')
     
     def sendFavoritiesState(self):
