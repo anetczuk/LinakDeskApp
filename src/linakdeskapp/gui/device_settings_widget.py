@@ -27,7 +27,7 @@ import logging
 
 from . import uiloader
 
-from .qt import QPushButton, QSpinBox, QtWidgets, QCheckBox, QHBoxLayout
+from .qt import QPushButton, QSpinBox, QCheckBox, QHBoxLayout
 from .qt import clearLayout
 
 
@@ -237,9 +237,6 @@ class DeviceSettingsWidget(QtBaseClass):
             favHandler = functools.partial(self._toggleStand, remIndex)
             spin.valueChanged.connect( favHandler )
             self.ui.remSpinLayout.addWidget( spin )
-            
-            spacer = QtWidgets.QSpacerItem(20, 10, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-            self.ui.remSpinLayout.addItem( spacer )
 
     def _toggleReminder(self, remIndex):
         reminderSettings = self.device.reminderSettings()
@@ -277,10 +274,11 @@ class DeviceSettingsWidget(QtBaseClass):
         self.favGoToButtons = []
         
         favorities = self.device.favPositions()
+        #_LOGGER.info("got favs: %s", favorities)
         for i in range( len(favorities) ):
             fav = favorities[i]
             hLayout = self._genFavHLayout( i, fav )
-            self.ui.favLayout.addItem( hLayout )
+            self.ui.favLayout.addLayout( hLayout )
     
     def _genFavHLayout(self, favIndex, favValue):
         layout = QHBoxLayout()

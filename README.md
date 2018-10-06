@@ -52,6 +52,10 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 - code coverage (*coverage*)
 
 
+## ToDo:
+- handle cm/inch unit switch
+
+
 ## Issues:
 - disabling light guidance does not seem to work. It seems to be problem on 
 device side, because even in Linak app it does not work.
