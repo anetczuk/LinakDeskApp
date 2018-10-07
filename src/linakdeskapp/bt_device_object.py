@@ -53,11 +53,14 @@ class BTDeviceObject(DeviceObject):
     def deviceType(self):
         return self.desk.deviceType
     
+    def userType(self):
+        return self.desk.userType
+    
     def capabilities(self):
         return self.desk.capabilities
     
-    def userType(self):
-        return self.desk.userType
+    def sendDeskHeight(self, cmValue):
+        self.desk.send_desk_height(cmValue)
 
     def reminder(self):
         return self.desk.reminder

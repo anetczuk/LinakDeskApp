@@ -27,7 +27,7 @@ import logging
 
 from . import uiloader
 
-from .qt import QPushButton, QSpinBox, QCheckBox, QHBoxLayout
+from .qt import QPushButton, QSpinBox, QCheckBox, QHBoxLayout, QLabel
 from .qt import clearLayout
 
 
@@ -50,13 +50,16 @@ class DeviceSettingsWidget(QtBaseClass):
         
         self.attachDevice(self.device)
         
-        self.ui.refreshPB.pressed.connect(self._refreshSettings)
-        self.ui.remUpdatePB.pressed.connect(self._updateReminderSettings)
+        self.ui.refreshPB.pressed.connect( self._refreshSettings )
+        self.ui.updateDeskHeightPB.pressed.connect( self._changeDeskHeight )
+        self.ui.remUpdatePB.pressed.connect( self._updateReminderSettings )
  
     def attachDevice(self, device):
         if self.device != None:
             ## disconnect old object
+            self.device.positionChanged.disconnect( self._refreshHeight )
             self.device.settingChanged.disconnect( self._refreshContent )
+            self.device.favoritiesChanged.disconnect( self._refreshContent )
             
         self.device = device
         if self.device == None:
@@ -66,10 +69,21 @@ class DeviceSettingsWidget(QtBaseClass):
         self._refreshWidget(True)
         
         ## connect new object
+        self.device.positionChanged.connect( self._refreshHeight )
         self.device.settingChanged.connect( self._refreshContent )
+        self.device.favoritiesChanged.connect( self._refreshContent )
  
+    def _refreshHeight(self):
+        deskHeight = self.device.currentPosition()
+        self.ui.deskHeightSB.setValue( deskHeight )
+        
     def _refreshContent(self):
         self._refreshWidget(True)
+ 
+    def _changeDeskHeight(self):
+        newValue = self.ui.deskHeightSB.value()
+        self.device.sendDeskHeight( newValue )
+        self._refreshSettings()
  
     def _refreshWidget(self, connected):
         self._refreshReminderWidget(connected)
@@ -79,6 +93,10 @@ class DeviceSettingsWidget(QtBaseClass):
         if connected == False:
             self.ui.refreshPB.setEnabled(False)
             self.ui.capsLabel.setText("")
+            
+            self.ui.deskHeightSB.setEnabled(False)
+            self.ui.updateDeskHeightPB.setEnabled(False)
+            
             self.ui.counterLabel.setText("")
             self._clearReminderFlagsLayout()
             self._clearReminderLayout()
@@ -86,6 +104,11 @@ class DeviceSettingsWidget(QtBaseClass):
         else:
             self.ui.refreshPB.setEnabled(True)
             self.ui.capsLabel.setText( self.device.capabilities() )
+            
+            self.ui.deskHeightSB.setEnabled(True)
+            self._refreshHeight()            
+            self.ui.updateDeskHeightPB.setEnabled(True)
+            
             reminderSettings = self.device.reminderSettings()
             self.ui.counterLabel.setText( str( reminderSettings.counter() ) )
             self.ui.reminderStateLabel.setText( reminderSettings.state() )
@@ -95,6 +118,7 @@ class DeviceSettingsWidget(QtBaseClass):
 
     def _refreshSettings(self):
         self.device.readReminderState()
+        self.device.readFavoritiesState()
 
     def _updateReminderSettings(self):
         self.device.sendReminderState()
@@ -237,6 +261,9 @@ class DeviceSettingsWidget(QtBaseClass):
             favHandler = functools.partial(self._toggleStand, remIndex)
             spin.valueChanged.connect( favHandler )
             self.ui.remSpinLayout.addWidget( spin )
+            
+            self.ui.remSpinLayout.addSpacing( 10 )
+            ## self.ui.remSpinLayout.addStretch(1)
 
     def _toggleReminder(self, remIndex):
         reminderSettings = self.device.reminderSettings()
@@ -283,6 +310,15 @@ class DeviceSettingsWidget(QtBaseClass):
     def _genFavHLayout(self, favIndex, favValue):
         layout = QHBoxLayout()
 
+        favs = self.device.favorities() 
+        favCounter = favs[favIndex].counter()
+
+        label = QLabel(self)
+        label.setText( str(favCounter) )
+        layout.addWidget( label )
+
+        layout.addSpacing( 6 )
+
         check = QCheckBox(self)
         if favValue != None:
             check.setChecked(True)
@@ -303,7 +339,7 @@ class DeviceSettingsWidget(QtBaseClass):
         else:
             spin.setEnabled(False)
             currPos = self.device.currentPosition()
-            spin.setValue( currPos )
+            spin.setValue( int(currPos) )
         favHandler = functools.partial(self._toggleFav, favIndex)
         spin.valueChanged.connect( favHandler )
         layout.addWidget( spin )
