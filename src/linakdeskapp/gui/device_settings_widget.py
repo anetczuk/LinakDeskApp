@@ -347,7 +347,7 @@ class DeviceSettingsWidget(QtBaseClass):
         
         layout.addSpacing( 6 )
         
-        button = QPushButton("Go To", self)
+        button = QPushButton("Move To", self)
         if favValue == None:
             button.setEnabled( False )
         favHandler = functools.partial(self._moveToFav, favIndex)
@@ -357,7 +357,7 @@ class DeviceSettingsWidget(QtBaseClass):
         
         layout.addSpacing( 6 )
 
-        button = QPushButton("Update", self)
+        button = QPushButton("Save", self)
         favHandler = functools.partial(self._updateFavorite, favIndex)
         button.clicked.connect( favHandler )
         layout.addWidget( button )

@@ -70,7 +70,7 @@
    <item row="3" column="0">
     <widget class="QLabel" name="opCounterText">
      <property name="text">
-      <string>Inner timer:</string>
+      <string>Reminder counter:</string>
      </property>
     </widget>
    </item>
@@ -143,7 +143,7 @@
      <item>
       <widget class="QPushButton" name="remUpdatePB">
        <property name="text">
-        <string>Update</string>
+        <string>Save</string>
        </property>
       </widget>
      </item>
@@ -178,7 +178,7 @@
      <item>
       <widget class="QPushButton" name="updateDeskHeightPB">
        <property name="text">
-        <string>Update</string>
+        <string>Save</string>
        </property>
       </widget>
      </item>
