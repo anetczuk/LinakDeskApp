@@ -26,6 +26,10 @@ from linakdeskapp.gui.device_object import DeviceObject
 
 
 
+def to_bin_string7(data):
+    return " ".join( '{:07b}'.format(x) for x in data )
+
+
 class DeviceObjectMock(DeviceObject):
     
     def __init__(self, name, userType, position = None):
@@ -115,7 +119,12 @@ class DeviceObjectMock(DeviceObject):
     
     def _positionChanged(self):
         self.positionCounter += 1
+        
+    def favPositions(self):
+        return []
     
+    def favorities(self):
+        return []
     
     
 class ReminderSettingMock():
@@ -171,4 +180,21 @@ class ReminderSettingMock():
             self.lightGuide = True
         else: 
             self.lightGuide = False
+    
+    def currentReminderInfo(self):
+        return "111/222"
+    
+    def counter(self):
+        return 12345
+    
+    def state(self):
+        flags = 0b00110100
+        return to_bin_string7( [flags] )
+    
+    def getRemindersList(self):
+        retList = [] 
+        return retList
+    
+    def getReminderIndex(self):
+        return 0
     

@@ -68,6 +68,9 @@ class DeviceConnectorMock(DeviceConnector):
         devName = self.devList[self.itemIndex]
         return DeviceObjectMock( devName, "Owner" )
     
+    def connectTo(self, deviceAddress):
+        self.connect(0)
+    
     def _connectionArrived(self, deviceObject):
         self.connectionCounter += 1
     

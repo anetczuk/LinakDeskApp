@@ -32,6 +32,9 @@ import os
 sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../..") ))
 
 
+import argparse
+import logging
+
 from linakdeskapp.gui.qt import QApplication
 from linakdeskapp.gui.sigint import setup_interrupt_handling 
 from linakdeskapp.gui.main_window import MainWindow
@@ -40,13 +43,39 @@ from testlinakdeskapp.gui.device_connector_mock import DeviceConnectorMock
 
 
 
-if __name__ == '__main__':
+## ============================= main section ===================================
+
+
+
+if __name__ != '__main__':
+    sys.exit(0)
+
+parser = argparse.ArgumentParser(description='Linak desk application')
+parser.add_argument('--profile', action='store_const', const=True, default=False, help='Profile the code' )
+parser.add_argument('--pfile', action='store', default=None, help='Profile the code and output data to file' )
+# parser.add_argument('--mode', action='store', required=True, choices=["BF", "POLY", "COMMON"], help='Mode' )
+# parser.add_argument('--file', action='store', required=True, help='File with data' )
+parser.add_argument('--connect', action='store', default=None, help='BT address to connect to' )
+
+
+args = parser.parse_args()
+
+
+_LOGGER = logging.getLogger(__name__)
+
+
+try:
+
     app = QApplication(sys.argv)
     window = MainWindow()
     
     connector = DeviceConnectorMock()
     
     window.attachConnector(connector)
+    
+    if args.connect != None:
+        btAddress = args.connect
+        connector.connectTo( btAddress )
     
     window.show()
     
@@ -58,3 +87,6 @@ if __name__ == '__main__':
     
     sys.exit(exitCode)
 
+except:
+    _LOGGER.exception("Exception occured")
+    raise
