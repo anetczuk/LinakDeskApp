@@ -30,9 +30,19 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="appTab">
+       <attribute name="title">
+        <string>Application</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="AppSettingsWidget" name="appSettings" native="true"/>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="settingsTab">
        <attribute name="title">
-        <string>Settings</string>
+        <string>Device</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
@@ -91,6 +101,12 @@
    <class>DeviceSettingsWidget</class>
    <extends>QWidget</extends>
    <header>linakdeskapp.gui.device_settings_widget</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>AppSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>linakdeskapp.gui.app_settings_widget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
