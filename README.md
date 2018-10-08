@@ -14,7 +14,14 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 - scanning for nearby devices
 - moving up/down
 - moving to favourite position
+- setting reminder, desk offset and favoritie positions
 - system tray icon
+
+
+## Screens
+
+![Status of desk](doc/app-screen-status.png "Status of desk")
+![Device settings](doc/app-screen-device.png "Device settings")
 
 
 ## Modules
@@ -46,8 +53,9 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 ## Examples of use of not obvious Python mechanisms:
 - use of *EnumMeta* class (*linak_service.py*)
 - defining method decorators (*synchronied.py*)
-- properly killing (Ctrl+C) PyQt (*sigint.py*)
 - use of threading: *Thread*, *Event*, *Timer*
+- properly killing (Ctrl+C) PyQt (*sigint.py*)
+- loading of UI files and inheriting from it
 - code profiling (*cProfile*)
 - code coverage (*coverage*)
 
