@@ -75,6 +75,7 @@ _LOGGER.debug("Starting the test application")
 _LOGGER.debug("Logger log file: %s" % logFile)
 
 
+exitCode = 0
 
 try:
 
@@ -96,9 +97,10 @@ try:
     exitCode = app.exec_()
     
     _LOGGER.info("Done")
-    
-    sys.exit(exitCode)
 
 except:
+    exitCode = 1
     _LOGGER.exception("Exception occured")
     raise
+
+sys.exit(exitCode)

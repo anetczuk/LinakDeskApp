@@ -119,6 +119,7 @@ try:
 #     print "Error: ", e, " check if BT is powered on"
 
 except:
+    exitCode = 1
     _LOGGER.exception("Exception occured")
     raise
 
