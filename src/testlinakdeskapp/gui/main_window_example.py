@@ -35,6 +35,8 @@ sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../.."
 import argparse
 import logging
 
+import linakdeskapp.logger as logger
+
 from linakdeskapp.gui.qt import QApplication
 from linakdeskapp.gui.sigint import setup_interrupt_handling 
 from linakdeskapp.gui.main_window import MainWindow
@@ -61,7 +63,17 @@ parser.add_argument('--connect', action='store', default=None, help='BT address 
 args = parser.parse_args()
 
 
+logFile = logger.getLoggingOutputFile()
+logger.configure( logFile )
+
+
 _LOGGER = logging.getLogger(__name__)
+
+_LOGGER.debug("\n\n")
+_LOGGER.debug("Starting the test application")
+
+_LOGGER.debug("Logger log file: %s" % logFile)
+
 
 
 try:
@@ -83,7 +95,7 @@ try:
     
     exitCode = app.exec_()
     
-    print("Done")
+    _LOGGER.info("Done")
     
     sys.exit(exitCode)
 

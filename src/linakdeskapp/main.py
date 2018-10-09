@@ -39,6 +39,8 @@ import argparse
 import logging
 import cProfile
 
+import logger
+
 from linakdeskapp.gui.main_window import MainWindow
 
 from bt_device_connector import BTDeviceConnector
@@ -66,29 +68,8 @@ parser.add_argument('--connect', action='store', default=None, help='BT address 
 args = parser.parse_args()
 
 
-# logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-# logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
-loggerFormat = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
-
-# logging.basicConfig( stream = sys.stdout, 
-#                      format = loggerFormat,
-#                      datefmt = '%H:%M:%S', 
-#                      level = logging.DEBUG )
-
-
-logDir = os.path.join(script_dir, "../../tmp")
-if os.path.isdir( logDir ) == False:
-    logDir = os.getcwd()
-    
-logFile = os.path.join(logDir, "log.txt")    
-
-logging.basicConfig( format = loggerFormat,
-                     datefmt = '%Y-%m-%d %H:%M:%S', 
-                     level = logging.DEBUG,
-                     handlers=[ logging.FileHandler( filename = logFile, mode = "a+" ),
-                                logging.StreamHandler( stream = sys.stdout )]
-                     )
+logFile = logger.getLoggingOutputFile()
+logger.configure( logFile )
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -142,19 +123,19 @@ except:
     raise
 
 finally:
-    print( "" )                    ## print new line
+    _LOGGER.info( "" )                    ## print new line
     if profiler != None:
         profiler.disable()
         if profiler_outfile == None:
-            print( "Generating profiler data" )
+            _LOGGER.info( "Generating profiler data" )
             profiler.print_stats(1)
         else:
-            print( "Storing profiler data to", profiler_outfile )
+            _LOGGER.info( "Storing profiler data to", profiler_outfile )
             profiler.dump_stats( profiler_outfile )
-            print( "pyprof2calltree -k -i", profiler_outfile )
+            _LOGGER.info( "pyprof2calltree -k -i", profiler_outfile )
          
     timeDiff = (time.time()-starttime)*1000.0
-    print( "Calculation time: {:13.8f}ms".format(timeDiff) )
+    _LOGGER.info( "Calculation time: {:13.8f}ms".format(timeDiff) )
     
     sys.exit(exitCode)
 
