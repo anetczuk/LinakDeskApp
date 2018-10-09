@@ -55,6 +55,8 @@ class MainWindow(QtBaseClass):
         systemIcon = QIcon( scriptDir + os.path.sep + 'office-chair_gray.png' )
         self.trayIcon.setIcon( systemIcon )
         self.trayIcon.show()
+        
+        self.ui.appSettings.attachTray( self.trayIcon )
 
     def attachConnector(self, connector):
         if self.connector != None:
@@ -68,6 +70,7 @@ class MainWindow(QtBaseClass):
     def _setDevice(self, device):
         self.ui.deviceControl.attachDevice( device )
         self.ui.deviceSettings.attachDevice( device )
+        self.ui.appSettings.attachDevice( device )
 
     # =======================================
 
