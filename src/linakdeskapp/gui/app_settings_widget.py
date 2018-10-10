@@ -105,7 +105,7 @@ class AppSettingsWidget(QtBaseClass):
         self.ui.remStatusLabel.setText( "Sitting countdown" )
         timeout = self.reminder.sitTime * 1000 * 60
         self.timer.start( timeout )
-        _LOGGER.debug( "setting sitting timer, timeout: %s", str(self.reminder.sitTime) )
+        ## _LOGGER.debug( "setting sitting timer, timeout: %s", str(self.reminder.sitTime) )
         
     def _setStandingTimer(self):
         self.sitting = False

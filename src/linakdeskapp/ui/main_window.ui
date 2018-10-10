@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>mainWindow</class>
+ <widget class="QMainWindow" name="mainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -115,7 +115,7 @@
   <connection>
    <sender>actionExit</sender>
    <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
+   <receiver>mainWindow</receiver>
    <slot>closeApplication()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -131,7 +131,7 @@
   <connection>
    <sender>actionConnect</sender>
    <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
+   <receiver>mainWindow</receiver>
    <slot>connectToDevice()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -147,7 +147,7 @@
   <connection>
    <sender>actionDisconnect</sender>
    <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
+   <receiver>mainWindow</receiver>
    <slot>disconnectFromDevice()</slot>
    <hints>
     <hint type="sourcelabel">

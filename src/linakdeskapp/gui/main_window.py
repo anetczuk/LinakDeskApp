@@ -82,11 +82,30 @@ class MainWindow(QtBaseClass):
         settings = self.getSettings()
         _LOGGER.debug( "loading app state from %s", settings.fileName() )
         self.ui.appSettings.loadSettings( settings )
+        
+        ## restore widget state and geometry
+        settings.beginGroup( self.objectName() )
+        geometry = settings.value("geometry")
+        state = settings.value("windowState")
+        if geometry != None:
+            self.restoreGeometry( geometry );
+        if state != None:
+            self.restoreState( state );
+        settings.endGroup()
     
     def saveSettings(self):
         settings = self.getSettings()
         _LOGGER.debug( "saving app state to %s", settings.fileName() )
         self.ui.appSettings.saveSettings( settings )
+        
+        ## store widget state and geometry
+        settings.beginGroup( self.objectName() )
+        settings.setValue("geometry", self.saveGeometry() );
+        settings.setValue("windowState", self.saveState() );
+        settings.endGroup()
+        
+        ## force save to file
+        settings.sync()        
 
     def getSettings(self):
 #         ## store in app directory
@@ -134,10 +153,7 @@ class MainWindow(QtBaseClass):
         event.ignore()
         self.hide()
         self.trayIcon.show()
-#         self.trayIcon.showMessage( "Tray Program",
-#                                     "Application was minimized to Tray",
-#                                     QSystemTrayIcon.Information, 2000
-#                                 )
+
 
 
 def execApp():
