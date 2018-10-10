@@ -80,7 +80,9 @@ exitCode = 0
 try:
 
     app = QApplication(sys.argv)
+    
     window = MainWindow()
+    window.loadSettings()
     
     connector = DeviceConnectorMock()
     
@@ -95,6 +97,8 @@ try:
     setup_interrupt_handling()
     
     exitCode = app.exec_()
+    
+    window.saveSettings()
     
     _LOGGER.info("Done")
 

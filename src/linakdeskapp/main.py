@@ -100,6 +100,7 @@ try:
     app = QApplication(sys.argv)
                   
     window = MainWindow()
+    window.loadSettings()
     
     btConnector = BTDeviceConnector()
     window.attachConnector(btConnector)
@@ -114,6 +115,8 @@ try:
      
     exitCode = app.exec_()
 
+    window.saveSettings()
+    
 
 # except BluetoothError as e:
 #     print "Error: ", e, " check if BT is powered on"

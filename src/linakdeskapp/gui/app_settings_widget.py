@@ -70,14 +70,9 @@ class AppSettingsWidget(QtBaseClass):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect( self._timerHandler )
         
-        reminderActivated = self.reminder.isEnabled()
-        self.ui.enabledRemCB.setChecked( reminderActivated )
-        self._setReminderStatus( reminderActivated )
+        self._setStatusFromReminder()
+    
         self.ui.enabledRemCB.stateChanged.connect( self._toggleReminder )
-        
-        self.ui.sitSB.setValue( self.reminder.sitTime )
-        self.ui.standSB.setValue( self.reminder.standTime )
-        
         self.ui.sitSB.valueChanged.connect( self._toggleSit )
         self.ui.standSB.valueChanged.connect( self._toggleStand )
         
@@ -97,15 +92,8 @@ class AppSettingsWidget(QtBaseClass):
     def _toggleReminder(self, state):
         ## state: 0 -- unchecked
         ## state: 2 -- checked
-        if state == 0:
-            ## unchecked
-            self._setReminderStatus(False)
-        else:
-            ## checked
-            self._setReminderStatus(True)
-            
-    def _setReminderStatus(self, status):
-        self.reminder.setEnabled(status)
+        enabled = (state != 0)
+        self.reminder.setEnabled( enabled )
         self._setSittingTimer()
     
     def _setSittingTimer(self):
@@ -169,4 +157,28 @@ class AppSettingsWidget(QtBaseClass):
         if self.sitting != False:
             return
         self._setSittingTimer()
+        
+    def _setStatusFromReminder(self):
+        reminderActivated = self.reminder.isEnabled()
+        self.ui.enabledRemCB.setChecked( reminderActivated )
+        self._setSittingTimer()
+        
+        self.ui.sitSB.setValue( self.reminder.sitTime )
+        self.ui.standSB.setValue( self.reminder.standTime )
+        
+    def loadSettings(self, settings):
+        settings.beginGroup( self.objectName() )
+        self.reminder.enabled = bool( settings.value("enabled", False) )
+        self.reminder.sitTime = int( settings.value("sitTime", 55) )
+        self.reminder.standTime = int( settings.value("standTime", 5) )
+        settings.endGroup()
+        self._setStatusFromReminder()
+    
+    def saveSettings(self, settings):
+        settings.beginGroup( self.objectName() )
+        settings.setValue("enabled", self.reminder.enabled)
+        settings.setValue("sitTime", self.reminder.sitTime)
+        settings.setValue("standTime", self.reminder.standTime)
+        settings.endGroup()
+    
     
