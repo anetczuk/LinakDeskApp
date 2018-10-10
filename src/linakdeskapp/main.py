@@ -115,7 +115,8 @@ try:
      
     exitCode = app.exec_()
 
-    window.saveSettings()
+    if exitCode == 0:
+        window.saveSettings()
     
 
 # except BluetoothError as e:

@@ -98,9 +98,10 @@ try:
     
     exitCode = app.exec_()
     
-    window.saveSettings()
+    if exitCode == 0:
+        window.saveSettings()
     
-    _LOGGER.info("Done")
+    _LOGGER.info("Done with exit code: %s", exitCode)
 
 except:
     exitCode = 1

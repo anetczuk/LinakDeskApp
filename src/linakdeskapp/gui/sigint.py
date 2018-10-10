@@ -8,8 +8,13 @@ is published under CC BY and CC0 license respectively.
 
 
 import signal
+import logging
 
 from .qt import QtCore, QApplication
+
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 
@@ -17,7 +22,8 @@ from .qt import QtCore, QApplication
 # collected when going out of scope:
 def _interrupt_handler(signum, frame):
     """Handle KeyboardInterrupt: quit application."""
-    QApplication.quit()
+    _LOGGER.debug("Interrupt received: %s", signum)
+    QApplication.exit(2)
 
 
 def safe_timer(timeout, func, *args, **kwargs):
