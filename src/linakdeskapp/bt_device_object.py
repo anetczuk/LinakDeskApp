@@ -98,6 +98,7 @@ class BTDeviceObject(DeviceObject):
     def favSlotsNumber(self):
         return self.desk.read_favorite_number()
     
+    ## with 'cm' suffix
     def favValues(self):
         return self.desk.read_favorite_values()
     

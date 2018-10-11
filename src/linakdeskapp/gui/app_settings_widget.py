@@ -139,6 +139,8 @@ class AppSettingsWidget(QtBaseClass):
             self._showMessage("It's time to stand up")
         else:
             self._showMessage("It's time to sit down")
+        if self.trayIcon != None:
+            self.trayIcon.setIndicator()
             
     def _updatePositionState(self):
         devicePosition = self.readDevicePosition()
@@ -179,6 +181,8 @@ class AppSettingsWidget(QtBaseClass):
         timeout = self.reminder.sitTime * 1000 * 60
         self.positionTimer.start( timeout )
         self._refreshStateLabel()
+        if self.trayIcon != None:
+            self.trayIcon.setNeutral()
         
     def _setStandingState(self):
         self.sitting = False
@@ -188,10 +192,14 @@ class AppSettingsWidget(QtBaseClass):
         timeout = self.reminder.standTime * 1000 * 60
         self.positionTimer.start( timeout )
         self._refreshStateLabel()
+        if self.trayIcon != None:
+            self.trayIcon.setNeutral()
 
     def _stopPositionTimer(self):
         self.positionTimer.stop()
         self._refreshStateLabel()
+        if self.trayIcon != None:
+            self.trayIcon.setNeutral()
 
     def loadSettings(self, settings):
         settings.beginGroup( self.objectName() )

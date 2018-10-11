@@ -51,15 +51,17 @@ class MainWindow(QtBaseClass):
         self.settingsFilePath = None
         
         scriptDir = os.path.dirname(os.path.realpath(__file__))
-        appIcon = QIcon( scriptDir + os.path.sep + 'office-chair.png' )
+        imgDir = scriptDir + os.path.sep +'img' + os.path.sep
+        appIcon = QIcon( imgDir + 'office-chair.png' )
         self.setWindowIcon( appIcon )
         
         self.statusBar().showMessage("Ready")
         
         ## Init QSystemTrayIcon
         self.trayIcon = tray_icon.TrayIcon(self)
-        systemIcon = QIcon( scriptDir + os.path.sep + 'office-chair_gray.png' )
-        self.trayIcon.setIcon( systemIcon )
+        self.trayIcon.setIconNeutral( QIcon( imgDir + 'office-chair_gray.png' ) )
+        self.trayIcon.setIconIndicator( QIcon( imgDir + 'office-chair-red_gray.png' ) )
+        self.trayIcon.setNeutral()
         self.trayIcon.show()
         
         self.ui.appSettings.attachTray( self.trayIcon )
@@ -77,6 +79,7 @@ class MainWindow(QtBaseClass):
         self.ui.deviceControl.attachDevice( device )
         self.ui.deviceSettings.attachDevice( device )
         self.ui.appSettings.attachDevice( device )
+        self.trayIcon.attachDevice( device )
 
     def loadSettings(self):
         settings = self.getSettings()
@@ -153,7 +156,13 @@ class MainWindow(QtBaseClass):
         event.ignore()
         self.hide()
         self.trayIcon.show()
-
+    
+    def showEvent(self, event):
+        self.trayIcon.updateLabel()
+    
+    def hideEvent(self, event):
+        self.trayIcon.updateLabel()
+    
 
 
 def execApp():

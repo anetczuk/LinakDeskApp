@@ -22,6 +22,8 @@
 #
 
 
+import functools
+
 from .qt import qApp, QSystemTrayIcon, QStyle, QMenu, QAction
 
 
@@ -31,6 +33,11 @@ class TrayIcon(QSystemTrayIcon):
         super().__init__(parent)
 
         ## print("is tray available:",  QSystemTrayIcon.isSystemTrayAvailable() )
+
+        self.device = None
+        
+        self.neutralIcon = None
+        self.indicatorIcon = None
 
         icon = parent.style().standardIcon(QStyle.SP_ComputerIcon)
         self.setIcon( icon )
@@ -42,25 +49,83 @@ class TrayIcon(QSystemTrayIcon):
             hide - hide window
             exit - exit from application
         '''
-        show_action = QAction("Show", self)
+        ##show_action = QAction("Show", self)
+        ##hide_action = QAction("Hide", self)
+        self.toggle_window_action = QAction("Show", self)
         quit_action = QAction("Exit", self)
-        hide_action = QAction("Hide", self)
-        show_action.triggered.connect( parent.show )
-        hide_action.triggered.connect( parent.hide )
+        ##show_action.triggered.connect( parent.show )
+        ##hide_action.triggered.connect( parent.hide )
+        self.toggle_window_action.triggered.connect( self._toggleParent )
         quit_action.triggered.connect( qApp.quit )
+        ##tray_menu.addAction( show_action )
+        ##tray_menu.addAction( hide_action )
+        
+        self.fav_menu = QMenu("Favs")
+        
         tray_menu = QMenu()
-        tray_menu.addAction( show_action )
-        tray_menu.addAction( hide_action )
+        tray_menu.addAction( self.toggle_window_action )
+        tray_menu.addMenu( self.fav_menu )
         tray_menu.addAction( quit_action )
         self.setContextMenu( tray_menu )
+    
+    def attachDevice(self, device):
+        if self.device != None:
+            ## disconnect old object
+            self.device.favoritiesChanged.disconnect( self.updateFavMenu )
+             
+        self.device = device
+        self.updateFavMenu()
+
+        ## connect new object
+        self.device.favoritiesChanged.connect( self.updateFavMenu )
+
+    
+    def setIconNeutral(self, icon):
+        self.neutralIcon = icon
+    
+    def setIconIndicator(self, icon):
+        self.indicatorIcon = icon
+    
+    def setNeutral(self):
+        if self.neutralIcon != None:
+            self.setIcon( self.neutralIcon )
+            
+    def setIndicator(self):
+        if self.indicatorIcon != None:
+            self.setIcon( self.indicatorIcon )
     
     def _icon_activated(self, reason):
 #         print("tray clicked, reason:", reason)
         if reason == 3:
             ## clicked
-            parent = self.parent()
-            if parent.isHidden():
-                parent.show()
-            else:
-                parent.hide()
+            self._toggleParent()
+    
+    def _toggleParent(self):
+        parent = self.parent()
+        if parent.isHidden():
+            parent.show()
+        else:
+            parent.hide()
+        self.updateLabel()
+    
+    def updateFavMenu(self):
+        self.fav_menu.clear()
+        if self.device == None:
+            return
+        positions = self.device.favPositions()
+        for i in range( len(positions) ):
+            fav = positions[i]
+            if fav == None:
+                continue
+            favAction = QAction( str(fav), self)
+            favHandler = functools.partial(self.device.moveToFav, i)
+            favAction.triggered.connect( favHandler )
+            self.fav_menu.addAction( favAction )
+        
+    def updateLabel(self):
+        parent = self.parent()
+        if parent.isHidden():
+            self.toggle_window_action.setText("Show")
+        else:
+            self.toggle_window_action.setText("Hide")
     
