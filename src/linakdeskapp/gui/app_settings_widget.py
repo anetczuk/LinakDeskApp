@@ -226,21 +226,24 @@ class AppSettingsWidget(QtBaseClass):
 
     def _refreshStateLabel(self):
         if self.device == None:
-            self.ui.remStatusLabel.setText( "Device disconnected" )
+            self.ui.remStatusLabel.setText( "device disconnected" )
             return            
         if self.reminder.isEnabled() == False:
-            self.ui.remStatusLabel.setText( "Stopped" )
+            self.ui.remStatusLabel.setText( "stopped" )
             return
         if self.positionTimer.isActive() == False:
-            self.ui.remStatusLabel.setText( "Waiting for change of position" )
+            if self.sitting == True:
+                self.ui.remStatusLabel.setText( "waiting for stand up" )
+            else:
+                self.ui.remStatusLabel.setText( "waiting for sit down" )
             return
         remaining = self.positionTimer.remainingTime()
         remainingTime = datetime.timedelta(milliseconds=remaining)
         formattedTime = formatTimeDelta( remainingTime )
         if self.sitting == True:
-            self.ui.remStatusLabel.setText( "Sitting countdown: " + formattedTime )
+            self.ui.remStatusLabel.setText( "sitting countdown: " + formattedTime )
         else:
-            self.ui.remStatusLabel.setText( "Standing countdown: " + formattedTime )
+            self.ui.remStatusLabel.setText( "standing countdown: " + formattedTime )
         
     def _showMessage(self, message):
         if self.trayIcon == None:
