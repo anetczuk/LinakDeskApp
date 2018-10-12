@@ -23,11 +23,11 @@
 
 
 import sys
-import os
 import logging
 
 from . import uiloader
 from . import tray_icon
+from . import resources
 from .qt import qApp, QApplication, QIcon, QtCore
 
 from linakdeskapp.gui.devices_list_dialog import DevicesListDialog
@@ -50,18 +50,14 @@ class MainWindow(QtBaseClass):
         
         self.settingsFilePath = None
         
-        scriptDir = os.path.dirname(os.path.realpath(__file__))
-        imgDir = scriptDir + os.path.sep +'img' + os.path.sep
-        appIcon = QIcon( imgDir + 'office-chair.png' )
+        imgDir = resources.getImagePath('office-chair.png')
+        appIcon = QIcon( imgDir )
         self.setWindowIcon( appIcon )
         
         self.statusBar().showMessage("Ready")
         
         ## Init QSystemTrayIcon
         self.trayIcon = tray_icon.TrayIcon(self)
-        self.trayIcon.setIconNeutral( QIcon( imgDir + 'office-chair_gray.png' ) )
-        self.trayIcon.setIconIndicator( QIcon( imgDir + 'office-chair-red_gray.png' ) )
-        self.trayIcon.setNeutral()
         self.trayIcon.show()
         
         self.ui.appSettings.attachTray( self.trayIcon )

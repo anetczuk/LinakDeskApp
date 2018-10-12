@@ -24,7 +24,10 @@
 
 import functools
 
-from .qt import qApp, QSystemTrayIcon, QStyle, QMenu, QAction
+from .qt import qApp, QSystemTrayIcon, QMenu, QAction
+from .qt import QIcon
+
+from . import resources
 
 
 
@@ -35,12 +38,15 @@ class TrayIcon(QSystemTrayIcon):
         ## print("is tray available:",  QSystemTrayIcon.isSystemTrayAvailable() )
 
         self.device = None
-        
         self.neutralIcon = None
         self.indicatorIcon = None
 
-        icon = parent.style().standardIcon(QStyle.SP_ComputerIcon)
-        self.setIcon( icon )
+        neutralPath = resources.getImagePath('office-chair_gray.png')
+        indicatorPath = resources.getImagePath('office-chair-red_gray.png')
+        self.setIconNeutral( QIcon( neutralPath ) )
+        self.setIconIndicator( QIcon( indicatorPath ) )
+        self.setNeutral()
+
         self.activated.connect( self._icon_activated )
 
         '''
