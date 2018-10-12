@@ -56,11 +56,10 @@ class MainWindow(QtBaseClass):
         
         self.statusBar().showMessage("Ready")
         
-        ## Init QSystemTrayIcon
         self.trayIcon = tray_icon.TrayIcon(self)
+        self.ui.appSettings.showMessage.connect( self.trayIcon.displayMessage )
+        self.ui.appSettings.indicatePositionChange.connect( self.trayIcon.changeIcon )
         self.trayIcon.show()
-        
-        self.ui.appSettings.attachTray( self.trayIcon )
 
     def attachConnector(self, connector):
         if self.connector != None:

@@ -100,6 +100,15 @@ class TrayIcon(QSystemTrayIcon):
         if self.indicatorIcon != None:
             self.setIcon( self.indicatorIcon )
     
+    def displayMessage(self, message):
+        self.showMessage("Desk", message)
+    
+    def changeIcon(self, state):
+        if state == True:
+            self.setIndicator()
+        else:
+            self.setNeutral()
+    
     def _icon_activated(self, reason):
 #         print("tray clicked, reason:", reason)
         if reason == 3:

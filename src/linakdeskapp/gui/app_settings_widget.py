@@ -28,6 +28,7 @@ import datetime
 from . import uiloader
 
 from .qt import QtCore
+from .qt import pyqtSignal
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -68,6 +69,9 @@ class AppSettingsWidget(QtBaseClass):
     
     STAND_HEIGHT = 96
     
+    showMessage             = pyqtSignal(str)
+    indicatePositionChange  = pyqtSignal(bool)
+    
     
     def __init__(self, parentWidget = None):
         super().__init__(parentWidget)
@@ -75,7 +79,6 @@ class AppSettingsWidget(QtBaseClass):
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
-        self.trayIcon = None
         self.device = None
         
         self.reminder = Reminder()
@@ -93,9 +96,6 @@ class AppSettingsWidget(QtBaseClass):
         self.ui.enabledRemCB.stateChanged.connect( self._toggleReminder )
         self.ui.sitSB.valueChanged.connect( self._toggleSit )
         self.ui.standSB.valueChanged.connect( self._toggleStand )
-        
-    def attachTray(self, trayIcon):
-        self.trayIcon = trayIcon
         
     def attachDevice(self, device):
         if self.device != None:
@@ -136,11 +136,10 @@ class AppSettingsWidget(QtBaseClass):
         self._refreshStateLabel()
         if self.sitting == True:
             ## is sitting -- time to stand
-            self._showMessage("It's time to stand up")
+            self.showMessage.emit("It's time to stand up")
         else:
-            self._showMessage("It's time to sit down")
-        if self.trayIcon != None:
-            self.trayIcon.setIndicator()
+            self.showMessage.emit("It's time to sit down")
+        self.indicatePositionChange.emit(True)
             
     def _updatePositionState(self):
         devicePosition = self.readDevicePosition()
@@ -181,8 +180,7 @@ class AppSettingsWidget(QtBaseClass):
         timeout = self.reminder.sitTime * 1000 * 60
         self.positionTimer.start( timeout )
         self._refreshStateLabel()
-        if self.trayIcon != None:
-            self.trayIcon.setNeutral()
+        self.indicatePositionChange.emit(False)
         
     def _setStandingState(self):
         self.sitting = False
@@ -192,14 +190,12 @@ class AppSettingsWidget(QtBaseClass):
         timeout = self.reminder.standTime * 1000 * 60
         self.positionTimer.start( timeout )
         self._refreshStateLabel()
-        if self.trayIcon != None:
-            self.trayIcon.setNeutral()
+        self.indicatePositionChange.emit(False)
 
     def _stopPositionTimer(self):
         self.positionTimer.stop()
         self._refreshStateLabel()
-        if self.trayIcon != None:
-            self.trayIcon.setNeutral()
+        self.indicatePositionChange.emit(False)
 
     def loadSettings(self, settings):
         settings.beginGroup( self.objectName() )
@@ -244,11 +240,6 @@ class AppSettingsWidget(QtBaseClass):
             self.ui.remStatusLabel.setText( "sitting countdown: " + formattedTime )
         else:
             self.ui.remStatusLabel.setText( "standing countdown: " + formattedTime )
-        
-    def _showMessage(self, message):
-        if self.trayIcon == None:
-            return
-        self.trayIcon.showMessage("Desk", message)
     
     def readDevicePosition(self):
         deskHeight = self.device.currentPosition()
