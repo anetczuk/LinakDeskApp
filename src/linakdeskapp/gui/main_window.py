@@ -58,6 +58,7 @@ class MainWindow(QtBaseClass):
         
         self.trayIcon = tray_icon.TrayIcon(self)
         self.ui.appSettings.showMessage.connect( self.trayIcon.displayMessage )
+        self.ui.appSettings.stateInfoChanged.connect( self.trayIcon.setToolTip )
         self.ui.appSettings.indicatePositionChange.connect( self.trayIcon.changeIcon )
         self.trayIcon.show()
 
