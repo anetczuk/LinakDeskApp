@@ -28,7 +28,7 @@ import logging
 from . import uiloader
 from . import tray_icon
 from . import resources
-from .qt import qApp, QApplication, QIcon, QtCore, QWidget
+from .qt import qApp, QApplication, QIcon, QtCore
 
 from linakdeskapp.gui.devices_list_dialog import DevicesListDialog
 
@@ -58,7 +58,7 @@ class MainWindow(QtBaseClass):
         
         self.trayIcon = tray_icon.TrayIcon(self)
         self.ui.appSettings.showMessage.connect( self.trayIcon.displayMessage )
-        self.ui.appSettings.stateInfoChanged.connect( self.trayIcon.setToolTip )
+        self.ui.appSettings.stateInfoChanged.connect( self.trayIcon.setInfo )
         self.ui.appSettings.indicatePositionChange.connect( self.trayIcon.changeIcon )
         self.trayIcon.show()
 

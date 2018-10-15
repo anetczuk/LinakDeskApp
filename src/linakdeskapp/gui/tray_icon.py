@@ -102,6 +102,9 @@ class TrayIcon(QSystemTrayIcon):
     
     def displayMessage(self, message):
         self.showMessage("Desk", message)
+        
+    def setInfo(self, message):
+        self.setToolTip("Desk: " + message)
     
     def changeIcon(self, state):
         if state == True:
