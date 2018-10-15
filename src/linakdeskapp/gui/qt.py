@@ -9,6 +9,7 @@ try:
     from PyQt5.QtCore import Qt
     from PyQt5.QtCore import QObject, pyqtSignal
     from PyQt5.QtWidgets import QApplication, qApp
+    from PyQt5.QtWidgets import QWidget
     from PyQt5.QtWidgets import QPushButton
     from PyQt5.QtWidgets import QSpinBox
     from PyQt5.QtWidgets import QLabel

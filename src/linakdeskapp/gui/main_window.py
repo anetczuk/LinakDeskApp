@@ -28,7 +28,7 @@ import logging
 from . import uiloader
 from . import tray_icon
 from . import resources
-from .qt import qApp, QApplication, QIcon, QtCore
+from .qt import qApp, QApplication, QIcon, QtCore, QWidget
 
 from linakdeskapp.gui.devices_list_dialog import DevicesListDialog
 
@@ -90,6 +90,16 @@ class MainWindow(QtBaseClass):
         if state != None:
             self.restoreState( state );
         settings.endGroup()
+        
+#         ## store geometry of all widgets        
+#         widgets = self.findChildren(QWidget)
+#         for w in widgets:
+#             wKey = getWidgetKey(w)
+#             settings.beginGroup( wKey )
+#             geometry = settings.value("geometry")
+#             if geometry != None:
+#                 w.restoreGeometry( geometry );            
+#             settings.endGroup()
     
     def saveSettings(self):
         settings = self.getSettings()
@@ -101,6 +111,14 @@ class MainWindow(QtBaseClass):
         settings.setValue("geometry", self.saveGeometry() );
         settings.setValue("windowState", self.saveState() );
         settings.endGroup()
+
+#         ## store geometry of all widgets        
+#         widgets = self.findChildren(QWidget)
+#         for w in widgets:
+#             wKey = getWidgetKey(w)
+#             settings.beginGroup( wKey )
+#             settings.setValue("geometry", w.saveGeometry() );
+#             settings.endGroup()
         
         ## force save to file
         settings.sync()        
@@ -159,6 +177,15 @@ class MainWindow(QtBaseClass):
         self.trayIcon.updateLabel()
     
 
+def getWidgetKey(widget):
+    if widget == None:
+        return None
+    retKey = widget.objectName()
+    widget = widget.parent()
+    while widget != None:
+        retKey = widget.objectName() + "-"+ retKey
+        widget = widget.parent()
+    return retKey
 
 def execApp():
     app = QApplication(sys.argv)
