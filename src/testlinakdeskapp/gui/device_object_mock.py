@@ -106,6 +106,14 @@ class DeviceObjectMock(DeviceObject):
         self.downCounter += 1
         self.setPosition( self.currPosition - 1 )
         
+    def moveToTop(self):
+        self.upCounter += 10
+        self.setPosition( self.currPosition + 10 )
+    
+    def moveToBottom(self):
+        self.downCounter += 10
+        self.setPosition( self.currPosition - 10 )
+        
     def moveToFav(self, favIndex):
         favList = self.favValues()
         fav = favList[favIndex]

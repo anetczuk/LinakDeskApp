@@ -106,6 +106,12 @@ class DeviceObject(QObject):
     def moveDown(self):
         raise NotImplementedError('You need to define this method in derived class!')
     
+    def moveToTop(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
+    def moveToBottom(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
     def moveToFav(self, favIndex):
         raise NotImplementedError('You need to define this method in derived class!')
         

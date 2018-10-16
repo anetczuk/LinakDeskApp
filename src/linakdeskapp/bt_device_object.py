@@ -117,6 +117,12 @@ class BTDeviceObject(DeviceObject):
     def moveDown(self):
         self.mover.moveDown()
         
+    def moveToTop(self):
+        self.mover.moveToTop()
+    
+    def moveToBottom(self):
+        self.mover.moveToBottom()
+        
     def moveToFav(self, favIndex):
         self.mover.moveToFav(favIndex)
          

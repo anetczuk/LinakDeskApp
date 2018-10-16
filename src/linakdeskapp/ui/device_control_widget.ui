@@ -26,14 +26,7 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="1" column="3">
-    <widget class="QPushButton" name="downPB">
-     <property name="text">
-      <string>Down</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="6">
+   <item row="1" column="7">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -46,8 +39,15 @@
      </property>
     </spacer>
    </item>
-   <item row="2" column="1" colspan="6">
-    <layout class="QHBoxLayout" name="favLayout"/>
+   <item row="1" column="3">
+    <widget class="QPushButton" name="downPB">
+     <property name="text">
+      <string>Down</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="7">
+    <widget class="DeviceStatusWidget" name="deviceStatus" native="true"/>
    </item>
    <item row="1" column="1">
     <widget class="QPushButton" name="stopPB">
@@ -56,13 +56,27 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="6">
-    <widget class="DeviceStatusWidget" name="deviceStatus" native="true"/>
+   <item row="2" column="1" colspan="7">
+    <layout class="QHBoxLayout" name="favLayout"/>
    </item>
    <item row="1" column="2">
     <widget class="QPushButton" name="upPB">
      <property name="text">
       <string>Up</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
+    <widget class="QPushButton" name="topPB">
+     <property name="text">
+      <string>Top</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="6">
+    <widget class="QPushButton" name="bottomPB">
+     <property name="text">
+      <string>Bottom</string>
      </property>
     </widget>
    </item>

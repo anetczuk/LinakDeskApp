@@ -52,6 +52,8 @@ class DeviceControlWidget(QtBaseClass):
         self.ui.downPB.pressed.connect(self._goingDown)
         self.ui.downPB.released.connect(self._stopMoving)
         self.ui.stopPB.clicked.connect(self._stopMoving)
+        self.ui.topPB.clicked.connect(self._goingTop)
+        self.ui.bottomPB.clicked.connect(self._goingBottom)
 
     def attachDevice(self, device):
         if self.device != None:
@@ -92,6 +94,16 @@ class DeviceControlWidget(QtBaseClass):
         if self.device == None:
             return
         self.device.moveDown()
+    
+    def _goingTop(self):
+        if self.device == None:
+            return
+        self.device.moveToTop()
+    
+    def _goingBottom(self):
+        if self.device == None:
+            return
+        self.device.moveToBottom()
         
     def _stopMoving(self):
         if self.device == None:
