@@ -59,7 +59,7 @@ class DeviceSettingsWidget(QtBaseClass):
             ## disconnect old object
             self.device.positionChanged.disconnect( self._refreshHeight )
             self.device.settingChanged.disconnect( self._refreshContent )
-            self.device.favoritiesChanged.disconnect( self._refreshContent )
+            self._enableFavSlot(False)
             
         self.device = device
         if self.device == None:
@@ -71,7 +71,15 @@ class DeviceSettingsWidget(QtBaseClass):
         ## connect new object
         self.device.positionChanged.connect( self._refreshHeight )
         self.device.settingChanged.connect( self._refreshContent )
-        self.device.favoritiesChanged.connect( self._refreshContent )
+        self._enableFavSlot(True)
+ 
+    def _enableFavSlot(self, state):
+        if self.device == None:
+            return
+        if state == False:
+            self.device.favoritiesChanged.disconnect( self._refreshContent )
+        else:
+            self.device.favoritiesChanged.connect( self._refreshContent )
  
     def _refreshHeight(self):
         deskHeight = self.device.currentPosition()
@@ -382,7 +390,10 @@ class DeviceSettingsWidget(QtBaseClass):
             self.favSpinBoxes[favIndex].setEnabled(True)
     
     def _toggleFav(self, favIndex, value):
+        ##_LOGGER.info("type: %s %s", str( type(self.device.favoritiesChanged) ), dir(self.device.favoritiesChanged) )
+        self._enableFavSlot(False)
         self.device.setFavPosition( favIndex, value )
+        self._enableFavSlot(True)
         
     def _moveToFav(self, favIndex):
         self.device.moveToFav( favIndex )

@@ -41,6 +41,7 @@ class DeviceControlWidget(QtBaseClass):
         super().__init__(parentWidget)
         
         self.device = None
+        self.favButtons = list()
         
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
@@ -122,6 +123,7 @@ class DeviceControlWidget(QtBaseClass):
         
     def _clearFavLayout(self):
         clearLayout( self.ui.favLayout )
+        self.favButtons.clear()
             
     def _genFavButtons(self):
         self._clearFavLayout()
@@ -129,15 +131,30 @@ class DeviceControlWidget(QtBaseClass):
         favourities = self._getFavList()
         for i in range( len(favourities) ):
             fav = favourities[i]
-            label = str( fav )
-            button = QPushButton(label, self)
-            if fav == None:
-                button.setEnabled( False )
-            else:
-                favHandler = functools.partial(self._moveToFav, i)
-                button.clicked.connect( favHandler )
+            button = QPushButton(self)
+            self._updateFavButton(button, fav)
+            favHandler = functools.partial(self._moveToFav, i)
+            button.clicked.connect( favHandler )
             self.ui.favLayout.addWidget( button )
+            self.favButtons.append(button)
     
     def _refreshFavLayout(self, favIndex):
-        self._genFavButtons()
+        self._refreshFavButton(favIndex)
+        
+    def _refreshFavButton(self, favIndex):
+        favourities = self._getFavList()
+        if favIndex >= len(favourities):
+            return 
+        favValue = favourities[ favIndex ]
+        button = self.favButtons[ favIndex ]
+        self._updateFavButton(button, favValue)
+    
+    def _updateFavButton(self, button, favValue):
+        label = str( favValue )
+        button.setText( label )
+        if favValue != None:
+            button.setEnabled( True )
+        else:
+            button.setEnabled( False )
+    
         

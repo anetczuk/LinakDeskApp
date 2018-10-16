@@ -43,10 +43,7 @@ class BTDeviceObject(DeviceObject):
  
         self.mover = DeskMoverThread( self.desk )
         
-        
-#     def isConnected(self):
-#         return True
-     
+    
     def name(self):
         return self.desk.name
     
