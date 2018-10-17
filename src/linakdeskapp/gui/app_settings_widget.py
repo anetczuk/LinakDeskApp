@@ -26,6 +26,7 @@ import logging
 import datetime
 
 from . import uiloader
+from . import position_chart
 
 from .qt import QtCore
 from .qt import pyqtSignal
@@ -98,6 +99,11 @@ class AppSettingsWidget(QtBaseClass):
         self.ui.sitSB.valueChanged.connect( self._toggleSit )
         self.ui.standSB.valueChanged.connect( self._toggleStand )
         
+        self.positionChart = position_chart.PositionChart( self )
+        bgcolor = parentWidget.palette().color(parentWidget.backgroundRole())
+        self.positionChart.setBackgroundByQColor( bgcolor )
+        self.ui.chartLayout.addWidget( self.positionChart )
+        
     def attachDevice(self, device):
         if self.device != None:
             ## disconnect old object
@@ -107,6 +113,9 @@ class AppSettingsWidget(QtBaseClass):
         
         reminderActivated = self.reminder.isEnabled()
         self._setReminderState( reminderActivated )
+        
+        deskHeight = self.device.currentPosition()
+        self.positionChart.add( deskHeight )
         
         ## connect new object
         self.device.positionChanged.connect( self._updatePositionState )
@@ -143,7 +152,9 @@ class AppSettingsWidget(QtBaseClass):
         self.indicatePositionChange.emit(True)
             
     def _updatePositionState(self):
-        devicePosition = self.readDevicePosition()
+        deskHeight = self.device.currentPosition()
+        self.positionChart.add( deskHeight )
+        devicePosition = self.isDevicePositionSitting(deskHeight)
         if self.sitting == devicePosition:
             ## position not changed
             return
@@ -160,7 +171,8 @@ class AppSettingsWidget(QtBaseClass):
         if self.device == None:
             self._stopPositionTimer()
             return
-        devicePosition = self.readDevicePosition()
+        deskHeight = self.device.currentPosition()
+        devicePosition = self.isDevicePositionSitting(deskHeight)
         self._setPositionState(devicePosition)
         
     def _setPositionState(self, isSitting):
@@ -244,8 +256,7 @@ class AppSettingsWidget(QtBaseClass):
         else:
             return "standing countdown: " + formattedTime
     
-    def readDevicePosition(self):
-        deskHeight = self.device.currentPosition()
+    def isDevicePositionSitting(self, deskHeight):
         if deskHeight < self.STAND_HEIGHT:
             ## sitting
             return True
