@@ -6,6 +6,7 @@ import logging
 
 try:
     import matplotlib
+    
     # Make sure that we are using QT5
     matplotlib.use('Qt5Agg')
     
@@ -48,11 +49,15 @@ class MplCanvas(FigureCanvas):
         self.fig.patch.set_facecolor( rgbColor )
         ###_LOGGER.debug("setting background: %r", rgbColor)
 
-    def drawFigure(self):
-        pass
-        
-        
-        
+    def showFigure(self, show):
+        currVis = self.fig.get_visible()
+        if currVis == show:
+            return
+        self.fig.set_visible(show)
+        self.draw()                         ## QWidget draw
+
+
+
 class DynamicMplCanvas(MplCanvas):
     """A canvas that updates itself every second with a new plot."""
  
@@ -60,12 +65,53 @@ class DynamicMplCanvas(MplCanvas):
         MplCanvas.__init__(self, *args, **kwargs)
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self._update)
-        self.timer.start(1000)
+        self._setTimer(True)
         
-    def update_figure(self):
+    def setEnabled(self, enabled):
+        super().setEnabled(enabled)
+        if enabled == True:
+            self._update()
+            self._setTimer(enabled)
+        else:
+            self._setTimer(enabled)
+            self.clearData()
+            self.drawFigure()
+    
+    def hasXData(self):
+        ## reimplement 
+        return False
+    
+    def clearData(self):
         pass
- 
+        
+    def updateData(self):
+        pass
+        
+    def drawFigure(self):
+        if self.hasXData() == False:
+            ## no data - nothing to do
+            self.showFigure( False )
+            return
+        else:
+            self.showFigure( True )
+            
+        ## draw plot
+        self.axes.relim(True)
+        self.axes.autoscale_view()
+
+#         self.fig.canvas.draw()
+#         self.fig.canvas.flush_events()
+        
+        self.draw()                         ## QWidget draw
+
     def _update(self):
-        self.update_figure()
+        self.updateData()
         self.drawFigure()
 
+    def _setTimer(self, enabled):
+        if enabled == True:
+            self.timer.start(1000)
+        else:
+            self.timer.stop()
+    
+            

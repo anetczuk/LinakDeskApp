@@ -25,11 +25,10 @@
 import logging
 import datetime
 
-from . import uiloader
-from . import position_chart
-
 from .qt import QtCore
 from .qt import pyqtSignal
+
+from . import uiloader
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -99,11 +98,6 @@ class AppSettingsWidget(QtBaseClass):
         self.ui.sitSB.valueChanged.connect( self._toggleSit )
         self.ui.standSB.valueChanged.connect( self._toggleStand )
         
-        self.positionChart = position_chart.PositionChart( self )
-        bgcolor = parentWidget.palette().color(parentWidget.backgroundRole())
-        self.positionChart.setBackgroundByQColor( bgcolor )
-        self.ui.chartLayout.addWidget( self.positionChart )
-        
     def attachDevice(self, device):
         if self.device != None:
             ## disconnect old object
@@ -114,8 +108,7 @@ class AppSettingsWidget(QtBaseClass):
         reminderActivated = self.reminder.isEnabled()
         self._setReminderState( reminderActivated )
         
-        deskHeight = self.device.currentPosition()
-        self.positionChart.add( deskHeight )
+        self.ui.positionChartWidget.attachDevice( device )
         
         ## connect new object
         self.device.positionChanged.connect( self._updatePositionState )
@@ -153,7 +146,6 @@ class AppSettingsWidget(QtBaseClass):
             
     def _updatePositionState(self):
         deskHeight = self.device.currentPosition()
-        self.positionChart.add( deskHeight )
         devicePosition = self.isDevicePositionSitting(deskHeight)
         if self.sitting == devicePosition:
             ## position not changed

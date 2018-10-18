@@ -98,17 +98,18 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="2">
-    <layout class="QVBoxLayout" name="chartLayout">
-     <property name="topMargin">
-      <number>6</number>
-     </property>
-     <property name="bottomMargin">
-      <number>6</number>
-     </property>
-    </layout>
+    <widget class="PositionChartWidget" name="positionChartWidget" native="true"/>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PositionChartWidget</class>
+   <extends>QWidget</extends>
+   <header>linakdeskapp.gui.position_chart_widget</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -47,7 +47,7 @@ class PositionChart(DynamicMplCanvas):
         
         self.xdata = list()
         self.ydata = list()
-        self.axes.cla()                                     ## clear
+        
         self.ax, = self.axes.plot_date( self.xdata, self.ydata, 'r', 
                                         linewidth=3, antialiased=True)
         
@@ -56,32 +56,32 @@ class PositionChart(DynamicMplCanvas):
 #         xticks[-1].label1.set_visible(True)
 
         ## _LOGGER.info("aaa: %s", dir(self.axes))
-
-    def drawFigure(self):
-        self.ax.set_xdata( self.xdata )
-        self.ax.set_ydata( self.ydata )
-        
-        ## draw plot
-        self.axes.relim()
-        self.axes.autoscale_view()
-        self.fig.canvas.draw()
-        self.fig.canvas.flush_events()
-        
-        self.draw()
     
-    def add(self, deskHeight):
+    def hasXData(self):
+        return (len(self.xdata) > 0)       
+    
+    def addData(self, deskHeight):
         currTime = self.getCurrTime()
         self.xdata.append(currTime)
         self.ydata.append(deskHeight)
+        self.ax.set_xdata( self.xdata )
+        self.ax.set_ydata( self.ydata )
 
-    def update_figure(self):
+    def clearData(self):
+        self.xdata.clear()
+        self.ydata.clear()
+        self.ax.set_xdata( self.xdata )
+        self.ax.set_ydata( self.ydata )
+
+    def updateData(self):
         yLen = len(self.ydata)
         if yLen < 1:
+            ## no data - nothing to do
             return
         last = self.ydata[-1]
         if yLen < 2:
             ## only one value
-            self.add( last )
+            self.addData( last )
             return
         ## two or more values
         last2 = self.ydata[-2]
@@ -89,6 +89,7 @@ class PositionChart(DynamicMplCanvas):
             self.add( last )
             return
         self.xdata[-1] = self.getCurrTime()
+        self.ax.set_xdata( self.xdata )
     
     def getCurrTime(self):
         currTime = pandas.Timestamp.now()
