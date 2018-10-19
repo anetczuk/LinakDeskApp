@@ -53,32 +53,8 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="timeText">
-     <property name="text">
-      <string>Time span:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QComboBox" name="timeSpanCB"/>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
+   <item row="4" column="0" colspan="2">
+    <layout class="QVBoxLayout" name="toolbarLayout"/>
    </item>
   </layout>
  </widget>
@@ -86,7 +62,7 @@
   <customwidget>
    <class>PositionChart</class>
    <extends>QWidget</extends>
-   <header>linakdeskapp.gui.position_chart</header>
+   <header>linakdeskapp.gui.mpl.position_chart</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

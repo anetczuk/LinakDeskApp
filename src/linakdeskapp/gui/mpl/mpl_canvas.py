@@ -17,7 +17,7 @@ except ImportError as e:
     logging.exception("Exception while importing")
     exit(1)
 
-from .qt import QtCore, QtWidgets
+from ..qt import QtCore, QtWidgets
 
 
 
@@ -30,7 +30,7 @@ class MplCanvas(FigureCanvas):
 
     def __init__(self, parent = None, width = 5, height = 4, dpi = 100):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = self.fig.add_subplot(1, 1, 1)
+        self.plot = self.fig.add_subplot(1, 1, 1)
         
         FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)
@@ -57,7 +57,6 @@ class MplCanvas(FigureCanvas):
         self.draw()                         ## QWidget draw
 
 
-
 class DynamicMplCanvas(MplCanvas):
     """A canvas that updates itself every second with a new plot."""
  
@@ -77,32 +76,31 @@ class DynamicMplCanvas(MplCanvas):
             self.clearData()
             self.drawFigure()
     
-    def hasXData(self):
-        ## reimplement 
-        return False
-    
     def clearData(self):
+        ## implement if needed
         pass
         
     def updateData(self):
-        pass
+        ## implement if needed
+        return False
         
     def drawFigure(self):
-        if self.hasXData() == False:
+        if self._hasData() == False:
             ## no data - nothing to do
             self.showFigure( False )
             return
         else:
             self.showFigure( True )
-            
+
         ## draw plot
-        self.axes.relim(True)
-        self.axes.autoscale_view()
+        self.plot.relim(True)
+        self.plot.autoscale_view()
 
 #         self.fig.canvas.draw()
 #         self.fig.canvas.flush_events()
         
-        self.draw()                         ## QWidget draw
+        ##self.draw()                         ## QWidget draw
+        self.draw_idle()
 
     def _update(self):
         self.updateData()
@@ -114,4 +112,18 @@ class DynamicMplCanvas(MplCanvas):
         else:
             self.timer.stop()
     
+    def _hasData(self):
+        axes = self.figure.get_axes()
+        if len(axes) < 1:
+            return False
+        ax = axes[0]
+        lines = ax.get_lines()
+#         _LOGGER.info("data:\n%r", lines)
+        if len(lines) < 1:
+            return False
+        ll = lines[0]
+        xdata = ll.get_xdata()
+        if len(xdata) < 1:
+            return False
+        return True
             

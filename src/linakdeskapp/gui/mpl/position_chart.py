@@ -48,50 +48,47 @@ class PositionChart(DynamicMplCanvas):
         self.xdata = list()
         self.ydata = list()
         
-        self.ax, = self.axes.plot_date( self.xdata, self.ydata, 'r', 
+        self.line, = self.plot.plot_date( self.xdata, self.ydata, 'r', 
                                         linewidth=3, antialiased=True)
         
-#         xticks = self.axes.xaxis.get_major_ticks()
+#         xticks = self.plot.xaxis.get_major_ticks()
 #         xticks[0].label1.set_visible(True)
 #         xticks[-1].label1.set_visible(True)
 
-        ## _LOGGER.info("aaa: %s", dir(self.axes))
-    
-    def hasXData(self):
-        return (len(self.xdata) > 0)       
+        ## _LOGGER.info("aaa: %s", dir(self.plot))
     
     def addData(self, deskHeight):
         currTime = self.getCurrTime()
         self.xdata.append(currTime)
         self.ydata.append(deskHeight)
-        self.ax.set_xdata( self.xdata )
-        self.ax.set_ydata( self.ydata )
+        self.line.set_xdata( self.xdata )
+        self.line.set_ydata( self.ydata )
 
     def clearData(self):
         self.xdata.clear()
         self.ydata.clear()
-        self.ax.set_xdata( self.xdata )
-        self.ax.set_ydata( self.ydata )
+        self.line.set_xdata( self.xdata )
+        self.line.set_ydata( self.ydata )
 
     def updateData(self):
         yLen = len(self.ydata)
         if yLen < 1:
             ## no data - nothing to do
-            return
+            return False
         last = self.ydata[-1]
         if yLen < 2:
             ## only one value
             self.addData( last )
-            return
+            return True
         ## two or more values
         last2 = self.ydata[-2]
         if last != last2:
             self.add( last )
-            return
+            return True
         self.xdata[-1] = self.getCurrTime()
-        self.ax.set_xdata( self.xdata )
+        self.line.set_xdata( self.xdata )
+        return True
     
     def getCurrTime(self):
         currTime = pandas.Timestamp.now()
-        ## _LOGGER.info("adding plot data: %r %f", currTime, deskHeight )
         return currTime

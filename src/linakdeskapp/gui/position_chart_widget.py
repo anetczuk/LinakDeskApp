@@ -26,6 +26,8 @@ import logging
 
 from . import uiloader
 
+from .mpl.mpl_toolbar import DynamicToolbar
+
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -50,8 +52,12 @@ class PositionChartWidget(QtBaseClass):
         self.ui.positionChart.setBackgroundByQColor( bgcolor )
     
         self.ui.enabledCB.setChecked( self.enabledChart )
-        self._setEnabledState( self.enabledChart )
         self.ui.enabledCB.stateChanged.connect( self._toggleEnabled )
+        
+        self.toolbar = DynamicToolbar(self.ui.positionChart, self)
+        self.ui.toolbarLayout.addWidget( self.toolbar )
+        
+        self._setEnabledState( self.enabledChart )
 
     
     def attachDevice(self, device):
@@ -66,7 +72,7 @@ class PositionChartWidget(QtBaseClass):
     def _setEnabledState(self, enabled):
         ## _LOGGER.info("setting enabled: %s", enabled)
         self.enabledChart = enabled
-        self.ui.timeSpanCB.setEnabled( enabled )
+        self.toolbar.setEnabled( enabled )
         if self.device != None:
             if enabled == True:
                 self._updatePositionState()         ## add current position
