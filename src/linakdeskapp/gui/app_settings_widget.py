@@ -65,6 +65,7 @@ class Reminder():
         
         
 
+#TODO: add global statistics
 class AppSettingsWidget(QtBaseClass):
     
     STAND_HEIGHT = 96
@@ -203,15 +204,20 @@ class AppSettingsWidget(QtBaseClass):
         self.indicatePositionChange.emit(False)
 
     def loadSettings(self, settings):
+        self.ui.positionChartWidget.loadSettings( settings )
+        
         settings.beginGroup( self.objectName() )
-        enabled = bool( settings.value("enabled", False) )
+        enabled = settings.value("enabled", True, type=bool)
         self.reminder.setEnabled( enabled )
         self.reminder.sitTime = int( settings.value("sitTime", 55) )
         self.reminder.standTime = int( settings.value("standTime", 5) )
         settings.endGroup()
-        self._setStatusFromReminder()
+        
+        self._setStatusFromReminder()        
     
     def saveSettings(self, settings):
+        self.ui.positionChartWidget.saveSettings( settings )
+        
         settings.beginGroup( self.objectName() )
         settings.setValue("enabled", self.reminder.enabled)
         settings.setValue("sitTime", self.reminder.sitTime)

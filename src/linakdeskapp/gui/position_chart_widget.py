@@ -69,6 +69,21 @@ class PositionChartWidget(QtBaseClass):
         
         self._setEnabledState( self.enabledChart )
         
+    def loadSettings(self, settings):
+        settings.beginGroup( self.objectName() )
+        enabled = settings.value("chart_enabled", True, type=bool)
+        settings.endGroup()
+         
+        self.ui.enabledCB.setChecked( enabled )
+        self._setEnabledState( enabled )
+    
+    def saveSettings(self, settings):
+        settings.beginGroup( self.objectName() )
+        settings.setValue("chart_enabled", self.enabledChart)
+        settings.endGroup()
+         
+        _LOGGER.info("saved: %s", self.enabledChart)
+        
     def _setEnabledState(self, enabled):
         ## _LOGGER.info("setting enabled: %s", enabled)
         self.enabledChart = enabled
@@ -78,7 +93,11 @@ class PositionChartWidget(QtBaseClass):
                 self._updatePositionState()         ## add current position
                 self.device.positionChanged.connect( self._updatePositionState )
             else:
-                self.device.positionChanged.disconnect( self._updatePositionState )
+                try:
+                    self.device.positionChanged.disconnect( self._updatePositionState )
+                except TypeError as e:
+                    ## do nothing -- not connected
+                    pass
         self.ui.positionChart.setEnabled( enabled )
         
     def _updatePositionState(self):
