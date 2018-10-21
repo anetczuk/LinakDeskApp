@@ -24,8 +24,6 @@
  
 import logging
 
-from .mpl_canvas import DynamicMplCanvas
-
 try:
     import pandas
 except ImportError as e:
@@ -33,12 +31,14 @@ except ImportError as e:
     logging.exception("Exception while importing")
     exit(1)
  
- 
- 
-_LOGGER = logging.getLogger(__name__)
- 
+from .mpl_canvas import matplotlib, DynamicMplCanvas
 
- 
+
+
+_LOGGER = logging.getLogger(__name__)
+
+
+
 class PositionChart(DynamicMplCanvas):
      
     def __init__(self, parentWidget = None):
@@ -48,27 +48,35 @@ class PositionChart(DynamicMplCanvas):
         self.xdata = list()
         self.ydata = list()
         
-        self.line, = self.plot.plot_date( self.xdata, self.ydata, 'r', 
-                                        linewidth=3, antialiased=True)
+        linesList = self.plot.plot_date( self.xdata, self.ydata, 'r', 
+                                         linewidth=3, antialiased=True)
+        self.line = linesList[0]
         
-#         xticks = self.plot.xaxis.get_major_ticks()
-#         xticks[0].label1.set_visible(True)
-#         xticks[-1].label1.set_visible(True)
+        formatter = matplotlib.dates.DateFormatter('%H:%M:%S')
+        self.plot.xaxis.set_major_formatter( formatter )
 
-        ## _LOGGER.info("aaa: %s", dir(self.plot))
+        ### hide first and last major tick (next to plot edges)
+        xticks = self.plot.xaxis.get_major_ticks()
+        xticks[0].label1.set_visible(False)
+        #xticks[-1].label1.set_visible(False)
+
+        # rotates and right aligns the x labels, and moves the bottom of the
+        # axes up to make room for them
+        self.fig.autofmt_xdate()
+
+        self._set_plot_data()
     
     def addData(self, deskHeight):
         currTime = self.getCurrTime()
         self.xdata.append(currTime)
         self.ydata.append(deskHeight)
-        self.line.set_xdata( self.xdata )
-        self.line.set_ydata( self.ydata )
+        
+        self._set_plot_data()
 
     def clearData(self):
         self.xdata.clear()
         self.ydata.clear()
-        self.line.set_xdata( self.xdata )
-        self.line.set_ydata( self.ydata )
+        self._set_plot_data()
 
     def updateData(self):
         yLen = len(self.ydata)
@@ -83,12 +91,46 @@ class PositionChart(DynamicMplCanvas):
         ## two or more values
         last2 = self.ydata[-2]
         if last != last2:
-            self.add( last )
+            self.addData( last )
             return True
         self.xdata[-1] = self.getCurrTime()
-        self.line.set_xdata( self.xdata )
+        self._set_plot_data()
         return True
     
     def getCurrTime(self):
         currTime = pandas.Timestamp.now()
         return currTime
+
+    def _set_plot_data(self):
+        if len(self.xdata) < 2:
+            return
+        
+        self.line.set_xdata( self.xdata )
+        self.line.set_ydata( self.ydata )
+        
+        ticks = self._generate_ticks(12)
+        self.plot.set_xticks( ticks )
+    
+        self.plot.relim(True)
+        self.plot.autoscale_view()
+        
+    def _generate_ticks(self, number):
+        if number < 1:
+            return list()
+        start = self.xdata[0].timestamp()
+        tzoffset = start - pandas.Timestamp( start, unit = "s" ).timestamp()
+        if number < 2:
+            middle = (start + self.xdata[-1].timestamp()) / 2 + tzoffset
+            ts = pandas.Timestamp( middle, unit = "s" )
+            ticks = [ts]
+            return ticks
+        delta = (self.xdata[-1].timestamp() - start) / (number-1)
+        ticks = list()
+        ticks.append( self.xdata[0] )
+        currTs = start + tzoffset
+        for _ in range(1, number):
+            currTs += delta
+            ts = pandas.Timestamp( currTs, unit = "s" )
+            ticks.append( ts )
+        return ticks
+    

@@ -95,7 +95,7 @@ class PositionChartWidget(QtBaseClass):
             else:
                 try:
                     self.device.positionChanged.disconnect( self._updatePositionState )
-                except TypeError as e:
+                except TypeError:
                     ## do nothing -- not connected
                     pass
         self.ui.positionChart.setEnabled( enabled )

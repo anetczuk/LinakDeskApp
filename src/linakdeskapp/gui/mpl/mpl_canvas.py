@@ -92,10 +92,6 @@ class DynamicMplCanvas(MplCanvas):
         else:
             self.showFigure( True )
 
-        ## draw plot
-        self.plot.relim(True)
-        self.plot.autoscale_view()
-
 #         self.fig.canvas.draw()
 #         self.fig.canvas.flush_events()
         
