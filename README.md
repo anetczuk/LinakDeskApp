@@ -17,6 +17,8 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 - setting reminder, desk offset and favoritie positions
 - system tray icon
 - persisting application settings
+- drawing position chart over time
+- position statistics
 
 
 ## Screens
@@ -57,6 +59,7 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 - use of threading: *Thread*, *Event*, *Timer*
 - properly killing (Ctrl+C) PyQt (*sigint.py*)
 - loading of UI files and inheriting from it
+- embedding matplotlib graph with navigation toolbar into PyQt widget
 - code profiling (*cProfile*)
 - code coverage (*coverage*)
 

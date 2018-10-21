@@ -24,6 +24,7 @@
 
 import logging
 import datetime
+import time
 
 from .qt import QtCore
 from .qt import pyqtSignal
@@ -84,20 +85,26 @@ class AppSettingsWidget(QtBaseClass):
         self.device = None
         
         self.reminder = Reminder()
-        self.sitting = True             ## current position
+        self.sitting = None             ## current position, boolean. None means unknown
+        self.positionTime = None
+        
+        self.totalSit = datetime.timedelta()
+        self.totalStand = datetime.timedelta()
 
+        ## timer reminds to change position after given amount of time
         self.positionTimer = QtCore.QTimer()
         self.positionTimer.timeout.connect( self._positionTimeout )
         self.positionTimer.setSingleShot(True)
-
-        self.labelTimer = QtCore.QTimer()
-        self.labelTimer.timeout.connect( self._refreshStateInfo )
         
         self._setStatusFromReminder()
     
         self.ui.enabledRemCB.stateChanged.connect( self._toggleReminder )
         self.ui.sitSB.valueChanged.connect( self._toggleSit )
         self.ui.standSB.valueChanged.connect( self._toggleStand )
+        
+        self.labelTimer = QtCore.QTimer()
+        self.labelTimer.timeout.connect( self._refreshStateInfo )
+        self.labelTimer.start(300)
         
     def attachDevice(self, device):
         if self.device != None:
@@ -141,8 +148,10 @@ class AppSettingsWidget(QtBaseClass):
         if self.sitting == True:
             ## is sitting -- time to stand
             self.showMessage.emit("It's time to stand up")
-        else:
+        elif self.sitting == False:
             self.showMessage.emit("It's time to sit down")
+        else:
+            self.showMessage.emit("waiting for device")
         self.indicatePositionChange.emit(True)
             
     def _updatePositionState(self):
@@ -179,6 +188,7 @@ class AppSettingsWidget(QtBaseClass):
             self._setSittingState()
                 
     def _setSittingState(self):
+        self._updateTotalTime()
         self.sitting = True
         if self.reminder.isEnabled() == False:
             self._stopPositionTimer()
@@ -189,6 +199,7 @@ class AppSettingsWidget(QtBaseClass):
         self.indicatePositionChange.emit(False)
         
     def _setStandingState(self):
+        self._updateTotalTime()
         self.sitting = False
         if self.reminder.isEnabled() == False:
             self._stopPositionTimer()
@@ -209,8 +220,15 @@ class AppSettingsWidget(QtBaseClass):
         settings.beginGroup( self.objectName() )
         enabled = settings.value("enabled", True, type=bool)
         self.reminder.setEnabled( enabled )
-        self.reminder.sitTime = int( settings.value("sitTime", 55) )
-        self.reminder.standTime = int( settings.value("standTime", 5) )
+        
+        self.reminder.sitTime = settings.value("sitTime", 55, type=int)
+        self.reminder.standTime = settings.value("standTime", 5, type=int)
+        
+        sitTotalTime = settings.value("sitTotalTime", 0, type=float)
+        standTotalTime = settings.value("standTotalTime", 0, type=float)
+        self.totalSit += datetime.timedelta(seconds = sitTotalTime)
+        self.totalStand += datetime.timedelta(seconds = standTotalTime)
+        
         settings.endGroup()
         
         self._setStatusFromReminder()        
@@ -222,6 +240,10 @@ class AppSettingsWidget(QtBaseClass):
         settings.setValue("enabled", self.reminder.enabled)
         settings.setValue("sitTime", self.reminder.sitTime)
         settings.setValue("standTime", self.reminder.standTime)
+        
+        settings.setValue("sitTotalTime", self.totalSit.total_seconds())
+        settings.setValue("standTotalTime", self.totalStand.total_seconds())
+        
         settings.endGroup()
         
     def _setStatusFromReminder(self):
@@ -234,7 +256,31 @@ class AppSettingsWidget(QtBaseClass):
     def _refreshStateInfo(self):
         stateInfo = self._getStateInfo()
         self.ui.remStatusLabel.setText( stateInfo )
+
+        self._updateTotalTime()
+        
+        formattedSitTime = formatTimeDelta( self.totalSit )
+        formattedStandTime = formatTimeDelta( self.totalStand )
+        self.ui.totalSitLabel.setText( formattedSitTime )
+        self.ui.totalStandLabel.setText( formattedStandTime )
+        
         self.stateInfoChanged.emit( stateInfo )
+    
+    def _updateTotalTime(self):
+        if self.sitting == None:
+            return
+        if self.positionTime == None:
+            self.positionTime = time.time()
+            return
+        curr = time.time()
+        diff = curr - self.positionTime
+        passedTime = datetime.timedelta(seconds = diff)
+        self.positionTime = curr
+        if self.sitting == True:
+            self.totalSit += passedTime
+        else:
+            self.totalStand += passedTime
+            
     
     def _getStateInfo(self):
         if self.device == None:
@@ -244,15 +290,19 @@ class AppSettingsWidget(QtBaseClass):
         if self.positionTimer.isActive() == False:
             if self.sitting == True:
                 return "waiting for stand up" 
-            else:
+            elif self.sitting == False:
                 return "waiting for sit down"
+            else:
+                return "waiting for device"
         remaining = self.positionTimer.remainingTime()
         remainingTime = datetime.timedelta(milliseconds=remaining)
         formattedTime = formatTimeDelta( remainingTime )
         if self.sitting == True:
             return "sitting countdown: " + formattedTime
-        else:
+        elif self.sitting == False:
             return "standing countdown: " + formattedTime
+        else:
+            return "waiting for device"
     
     def isDevicePositionSitting(self, deskHeight):
         if deskHeight < self.STAND_HEIGHT:
@@ -261,15 +311,4 @@ class AppSettingsWidget(QtBaseClass):
         else:
             ## standing
             return False
-    
-    
-    ## ========================================================
-    
-    
-    def showEvent(self, event):
-        self._refreshStateInfo()
-        self.labelTimer.start(300)
-    
-    def hideEvent(self, event):
-        self.labelTimer.stop()
     
