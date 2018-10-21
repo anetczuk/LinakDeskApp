@@ -60,6 +60,8 @@ class PositionChart(DynamicMplCanvas):
         xticks[0].label1.set_visible(False)
         #xticks[-1].label1.set_visible(False)
 
+        self.plot.margins(y = 0.2)
+
         # rotates and right aligns the x labels, and moves the bottom of the
         # axes up to make room for them
         self.fig.autofmt_xdate()
