@@ -67,6 +67,7 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 
 ## ToDo:
 - handle cm/inch unit switch
+- add buttons to popup of system tray icon
 
 
 ## Issues:
