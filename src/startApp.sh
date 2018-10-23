@@ -1,10 +1,14 @@
 #!/bin/bash
 
+set -e
+
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 
-python3 $SCRIPT_DIR/linakdeskapp/main.py "$@"
+cd $SCRIPT_DIR/linakdeskapp
+
+python3 main.py "$@"
 
 exit_code=$?
 
