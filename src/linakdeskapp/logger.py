@@ -41,19 +41,45 @@ def getLoggingOutputFile():
 
 
 def configure( logFile ):
-    # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-    # logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    fileHandler    = logging.FileHandler( filename = logFile, mode = "a+" )
+    consoleHandler = logging.StreamHandler( stream = sys.stdout )
     
-    loggerFormat = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
+    formatter = createFormatter()
     
-    # logging.basicConfig( stream = sys.stdout, 
-    #                      format = loggerFormat,
-    #                      datefmt = '%H:%M:%S', 
-    #                      level = logging.DEBUG )
+    fileHandler.setFormatter( formatter )
+    consoleHandler.setFormatter( formatter )
     
-    logging.basicConfig( format = loggerFormat,
-                         datefmt = '%Y-%m-%d %H:%M:%S', 
-                         level = logging.DEBUG,
-                         handlers=[ logging.FileHandler( filename = logFile, mode = "a+" ),
-                                    logging.StreamHandler( stream = sys.stdout )]
-                         )
+    logging.root.addHandler( consoleHandler )
+    logging.root.addHandler( fileHandler )
+    logging.root.setLevel( logging.DEBUG )
+    
+##     loggerFormat   = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
+##     dateFormat     = '%Y-%m-%d %H:%M:%S'
+##     logging.basicConfig( format   = loggerFormat,
+##                          datefmt  = dateFormat, 
+##                          level    = logging.DEBUG,
+##                          handlers = [ fileHandler, consoleHandler ]
+##                        )
+
+def createFormatter():
+    loggerFormat   = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
+    dateFormat     = '%Y-%m-%d %H:%M:%S'
+    return EmptyLineFormatter( loggerFormat, dateFormat )
+    ## return logging.Formatter( loggerFormat, dateFormat )
+
+
+
+class EmptyLineFormatter(logging.Formatter):
+    """
+    Special formatter storing empty lines without formatting.
+    """
+    
+    ## override base class method
+    def format(self, record):
+        msg = record.getMessage()
+        clearMsg = msg.replace('\n', '')
+        clearMsg = clearMsg.replace('\r', '')
+        if len(clearMsg) == 0:
+            return msg
+        return super().format( record )
+    
