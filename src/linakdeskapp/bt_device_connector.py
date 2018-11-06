@@ -59,7 +59,7 @@ class BTDeviceConnector(DeviceConnector):
         
         for dev in devices:
             self.devList.append( dev.addr )
-            devName = "%s (%s)" % (dev.addr, dev.addrType)
+            devName = "%s (%s)" % (dev.addr, dev.getValueText(9))
             retList.append( devName )
 #             print( "Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi) )
 #             for (adtype, desc, value) in dev.getScanData():

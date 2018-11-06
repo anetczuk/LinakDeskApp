@@ -49,6 +49,45 @@ from gui.sigint import setup_interrupt_handling
 
 
 
+
+def runApp(args):
+    if args.scan == True:
+        _LOGGER.info( "Scanning for BT devices" )
+        btConnector = BTDeviceConnector()
+        devices = btConnector.scanDevices()
+        if len(devices) < 1:
+            _LOGGER.info( "No BT devices found" )
+        else:
+            for dev in devices:
+                _LOGGER.info( "Found device: %s", dev )  
+        return 0  
+
+    ## GUI
+    app = QApplication(sys.argv)
+                  
+    window = MainWindow()
+    window.loadSettings()
+    
+    btConnector = BTDeviceConnector()
+    window.attachConnector(btConnector)
+    
+    if args.connect != None:
+        btAddress = args.connect
+        btConnector.connectTo( btAddress )        
+         
+    window.show()
+     
+    setup_interrupt_handling()
+     
+    exitCode = app.exec_()
+
+    if exitCode == 0:
+        window.saveSettings()
+    
+    return exitCode
+
+
+
 ## ============================= main section ===================================
 
 
@@ -62,6 +101,7 @@ parser.add_argument('--pfile', action='store', default=None, help='Profile the c
 # parser.add_argument('--mode', action='store', required=True, choices=["BF", "POLY", "COMMON"], help='Mode' )
 # parser.add_argument('--file', action='store', required=True, help='File with data' )
 parser.add_argument('--connect', action='store', default=None, help='BT address to connect to' )
+parser.add_argument('--scan', action='store_const', const=True, default=False, help='Scan nearby BT devices' )
  
   
   
@@ -96,28 +136,8 @@ try:
         profiler.enable()
 
 
-    ## GUI
-    app = QApplication(sys.argv)
-                  
-    window = MainWindow()
-    window.loadSettings()
-    
-    btConnector = BTDeviceConnector()
-    window.attachConnector(btConnector)
-    
-    if args.connect != None:
-        btAddress = args.connect
-        btConnector.connectTo( btAddress )        
-         
-    window.show()
-     
-    setup_interrupt_handling()
-     
-    exitCode = app.exec_()
+    exitCode = runApp(args)
 
-    if exitCode == 0:
-        window.saveSettings()
-    
 
 # except BluetoothError as e:
 #     print "Error: ", e, " check if BT is powered on"
