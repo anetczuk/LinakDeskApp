@@ -54,6 +54,13 @@ In addition there is demo application not requiring Bluetooth connection. It
 can be run by *testlinakdeskapp/gui/main_window_example.py*.
 
 
+## Required libraries
+- PyQt5
+- matplotlib
+- pandas
+- bluepy
+
+
 ## Examples of use of not obvious Python mechanisms:
 - use of *EnumMeta* class (*linak_service.py*)
 - defining method decorators (*synchronied.py*)

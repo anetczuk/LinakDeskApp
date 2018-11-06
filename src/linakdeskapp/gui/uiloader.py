@@ -24,11 +24,14 @@
 
 import os
 
+import logging
+
+
 try:
     from PyQt5 import uic
 except ImportError as e:
     ### No module named <name>
-    print(e)
+    logging.exception("Exception while importing")
     exit(1)    
 
 import linakdeskapp.defs as defs
