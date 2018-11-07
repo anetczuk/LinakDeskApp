@@ -55,12 +55,8 @@ class PositionChart(DynamicMplCanvas):
         formatter = matplotlib.dates.DateFormatter('%H:%M:%S')
         self.plot.xaxis.set_major_formatter( formatter )
 
-        ### hide first and last major tick (next to plot edges)
-        xticks = self.plot.xaxis.get_major_ticks()
-        xticks[0].label1.set_visible(False)
-        #xticks[-1].label1.set_visible(False)
-
         self.plot.margins(y = 0.2)
+        self.plot.set_xmargin(0.0)      ## prevents empty space between first tick and y axis
 
         # rotates and right aligns the x labels, and moves the bottom of the
         # axes up to make room for them
@@ -112,6 +108,11 @@ class PositionChart(DynamicMplCanvas):
         
         ticks = self._generate_ticks(12)
         self.plot.set_xticks( ticks )
+    
+        ### hide first and last major tick (next to plot edges)
+        xticks = self.plot.xaxis.get_major_ticks()
+        xticks[0].label1.set_visible(False)
+        xticks[-1].label1.set_visible(False)
     
         self.plot.relim(True)
         self.plot.autoscale_view()
