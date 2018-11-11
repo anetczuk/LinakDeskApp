@@ -74,12 +74,17 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 
 ## ToDo:
 - handle cm/inch unit switch
-- add buttons to popup of system tray icon
+- add fav buttons inside popup of system tray icon
 
 
 ## Issues:
 - disabling light guidance does not seem to work. It seems to be problem on 
 device side, because even in Linak app it does not work.
+
+
+## Development
+If You are willing to work on this project, then after first clone You have to fetch lib submodule.
+To do this simply call *configure_submodules.sh* script placed in root directory tree.
 
 
 ## References:
