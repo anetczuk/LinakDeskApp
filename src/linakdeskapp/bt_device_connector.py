@@ -90,10 +90,14 @@ class BTDeviceConnector(DeviceConnector):
         if self.isConnected() == False:
             return None
         devItem = self.devList[self.itemIndex]
-        return BTDeviceObject( devItem )
+        obj = BTDeviceObject()
+        if obj.connect(devItem) == True:
+            return obj
+        return None
     
     def connectTo(self, deviceAddress):
-        connectedDevice = BTDeviceObject( deviceAddress )
-        self.newConnection.emit(connectedDevice)
+        obj = BTDeviceObject()
+        if obj.connect(deviceAddress) == True:
+            self.newConnection.emit(obj)
     
     

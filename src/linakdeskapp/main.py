@@ -44,6 +44,7 @@ import logger
 from linakdeskapp.gui.main_window import MainWindow
 
 from bt_device_connector import BTDeviceConnector
+from bt_device_object import BTDeviceObject
 from gui.qt import QApplication
 from gui.sigint import setup_interrupt_handling 
 
@@ -61,6 +62,10 @@ def runApp(args):
             for dev in devices:
                 _LOGGER.info( "Found device: %s", dev )  
         return 0  
+
+    if args.desc == True:
+        BTDeviceObject.printDescription( args.connect )
+        return 0
 
     ## GUI
     app = QApplication(sys.argv)
@@ -101,6 +106,7 @@ parser.add_argument('--pfile', action='store', default=None, help='Profile the c
 # parser.add_argument('--mode', action='store', required=True, choices=["BF", "POLY", "COMMON"], help='Mode' )
 # parser.add_argument('--file', action='store', required=True, help='File with data' )
 parser.add_argument('--connect', action='store', default=None, help='BT address to connect to' )
+parser.add_argument('--desc', action='store_const', const=True, default=False, help='Print description of connected BT and exit' )
 parser.add_argument('--scan', action='store_const', const=True, default=False, help='Scan nearby BT devices' )
  
   

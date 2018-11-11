@@ -21,6 +21,7 @@
 # SOFTWARE.
 #
 
+import logging
 
 from gui.device_object import DeviceObject
 
@@ -28,20 +29,34 @@ from linak_dpg_bt.linak_device import LinakDesk
 from linak_dpg_bt.desk_mover import DeskMoverThread
 
 
+_LOGGER = logging.getLogger(__name__)
+
 
 class BTDeviceObject(DeviceObject):
 
-    def __init__(self, deviceAddr):
+    def __init__(self, deviceAddr = None):
         super().__init__()
+        self.desk = None
+        self.mover = None
+        self.connect( deviceAddr )
+        
+    def connect(self, deviceAddr):
+        if deviceAddr == None:
+            return False
         self.desk = LinakDesk( deviceAddr )
         ##self.desk.read_dpg_data()
-        self.desk.initialize()
+        connected = self.desk.initialize()
+        if connected == False:
+            self.desk = None
+            return False
+        
         self.desk.set_position_change_callback( self._handleBTPositionChange )
         self.desk.set_speed_change_callback( self._handleBTSpeedChange )
         self.desk.add_setting_callback( self._handleBTSettingChange )
         self.desk.add_favorities_callback( self._handleBTFavoritiesChange )
  
         self.mover = DeskMoverThread( self.desk )
+        return True
         
     
     def name(self):
@@ -138,3 +153,11 @@ class BTDeviceObject(DeviceObject):
     def _handleBTFavoritiesChange(self, favNumber):
         self.favoritiesChanged.emit(favNumber-1)
         
+    @staticmethod
+    def printDescription(deviceAddr):
+        if deviceAddr == None:
+            return False
+        desk = LinakDesk( deviceAddr )
+        desk.print_services()
+        return True
+    
