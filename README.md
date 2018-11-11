@@ -83,7 +83,7 @@ device side, because even in Linak app it does not work.
 
 
 ## Development
-If You are willing to work on this project, then after first clone You have to fetch lib submodule.
+If You are willing to work on this project, then after first clone You have to fetch submodule inside *lib*.
 To do this simply call *configure_submodules.sh* script placed in root directory tree.
 
 
