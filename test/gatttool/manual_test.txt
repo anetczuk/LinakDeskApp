@@ -1,0 +1,7 @@
+Testing receiving notifications:
+1. connect to interactive console: gatttool -t random -b <mac address> -I
+2. type: 
+    a) connect
+    b) char-read-uuid 2902
+    c) char-write-cmd 0x1e 01
+3. move desk up and down and observe received notifications 

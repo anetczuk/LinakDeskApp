@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+if [ "$#" -ne 1 ]; then
+    echo "illegal number of parameters -- BT mac address missing"
+    exit 1
+fi
+
+btAddress="$1"
+
+
+echo -e "Device name:"
+gatttool -t random -b "$btAddress" --char-read -a 0x0003
+
+echo -e "\nManufacturer:"
+gatttool -t random -b "$btAddress" --char-read -a 0x0018
+
+echo -e "\nHeight and speed:"
+gatttool -t random -b "$btAddress" --sec-level=medium --char-read -a 0x001d
