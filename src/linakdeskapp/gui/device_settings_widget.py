@@ -106,6 +106,7 @@ class DeviceSettingsWidget(QtBaseClass):
             self.ui.updateDeskHeightPB.setEnabled(False)
             
             self.ui.counterLabel.setText("")
+            self.ui.reminderStateLabel.setText( "" )
             self._clearReminderFlagsLayout()
             self._clearReminderLayout()
             self.ui.remUpdatePB.setEnabled(False)

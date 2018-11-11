@@ -77,12 +77,16 @@ class DeviceControlWidget(QtBaseClass):
             self.ui.upPB.setEnabled(False)
             self.ui.downPB.setEnabled(False)
             self.ui.stopPB.setEnabled(False)
+            self.ui.topPB.setEnabled(False)
+            self.ui.bottomPB.setEnabled(False)
             self.ui.favLayout.setEnabled(False)
             self._clearFavLayout()
         else:
             self.ui.upPB.setEnabled(True)
             self.ui.downPB.setEnabled(True)
             self.ui.stopPB.setEnabled(True)
+            self.ui.topPB.setEnabled(True)
+            self.ui.bottomPB.setEnabled(True)
             self.ui.favLayout.setEnabled(True)
             self._genFavButtons()
 
