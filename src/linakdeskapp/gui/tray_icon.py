@@ -25,7 +25,7 @@
 import logging
 import functools
 
-# from .qt import QtCore
+from .qt import QtCore
 from .qt import qApp, QSystemTrayIcon, QMenu, QAction
 from .qt import QIcon
 
@@ -110,7 +110,12 @@ class TrayIcon(QSystemTrayIcon):
             self.currIconState = 2
     
     def displayMessage(self, message):
-        self.showMessage("Desk", message, QSystemTrayIcon.NoIcon)
+        timeout = 10000
+        ## under xfce4 there is problem with balloon icon -- it changes tray icon, so
+        ## it cannot be changed back to proper one. Workaround is to use NoIcon parameter
+        self.showMessage("Desk", message, QSystemTrayIcon.NoIcon, timeout)
+        ##self.showMessage("Desk", message, QSystemTrayIcon.Information, timeout)
+        ##QtCore.QTimer.singleShot(timeout, self._refreshIcon)
         
     def setInfo(self, message):
         self.setToolTip("Desk: " + message)
