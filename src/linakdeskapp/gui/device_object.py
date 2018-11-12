@@ -61,6 +61,9 @@ class DeviceObject(QObject):
     def reminderSettings(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    def readCapabilities(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+
     def readReminderState(self):
         raise NotImplementedError('You need to define this method in derived class!')
     

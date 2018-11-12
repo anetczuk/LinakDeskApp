@@ -126,6 +126,7 @@ class DeviceSettingsWidget(QtBaseClass):
             self.ui.remUpdatePB.setEnabled(True)
 
     def _refreshSettings(self):
+        self.device.readCapabilities()
         self.device.readReminderState()
         self.device.readFavoritiesState()
 

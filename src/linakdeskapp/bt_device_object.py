@@ -83,6 +83,9 @@ class BTDeviceObject(DeviceObject):
     def reminderSettings(self):
         return self.desk.reminder_settings()
  
+    def readCapabilities(self):
+        return self.desk.read_capabilities()
+ 
     def readReminderState(self):
         return self.desk.read_reminder_state()
  

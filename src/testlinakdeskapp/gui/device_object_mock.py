@@ -74,6 +74,10 @@ class DeviceObjectMock(DeviceObject):
     def reminderSettings(self):
         return ReminderSettingMock()
     
+    def readCapabilities(self):
+        ## do nothing
+        pass
+    
     def readReminderState(self):
         ## do nothing
         pass
