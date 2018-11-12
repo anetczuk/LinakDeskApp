@@ -22,12 +22,18 @@
 #
 
 
+import logging
 import functools
 
+# from .qt import QtCore
 from .qt import qApp, QSystemTrayIcon, QMenu, QAction
 from .qt import QIcon
 
 from . import resources
+
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 
@@ -40,6 +46,7 @@ class TrayIcon(QSystemTrayIcon):
         self.device = None
         self.neutralIcon = None
         self.indicatorIcon = None
+        self.currIconState = 0
 
         neutralPath = resources.getImagePath('office-chair_gray.png')
         indicatorPath = resources.getImagePath('office-chair-red_gray.png')
@@ -95,13 +102,15 @@ class TrayIcon(QSystemTrayIcon):
     def setNeutral(self):
         if self.neutralIcon != None:
             self.setIcon( self.neutralIcon )
+            self.currIconState = 1
             
     def setIndicator(self):
         if self.indicatorIcon != None:
             self.setIcon( self.indicatorIcon )
+            self.currIconState = 2
     
     def displayMessage(self, message):
-        self.showMessage("Desk", message)
+        self.showMessage("Desk", message, QSystemTrayIcon.NoIcon)
         
     def setInfo(self, message):
         self.setToolTip("Desk: " + message)
@@ -111,6 +120,15 @@ class TrayIcon(QSystemTrayIcon):
             self.setIndicator()
         else:
             self.setNeutral()
+            
+    def _refreshIcon(self):
+        _LOGGER.warn("refreshing icon state: %s", self.currIconState)
+        if self.currIconState == 1:
+            self.setNeutral()
+        elif self.currIconState == 2:
+            self.setIndicator()
+        else:
+            _LOGGER.warn("unsupported state: %s", self.currIconState)
     
     def _icon_activated(self, reason):
 #         print("tray clicked, reason:", reason)
