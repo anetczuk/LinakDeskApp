@@ -28,7 +28,7 @@ import logging
 
 
 script_dir = os.path.dirname(__file__)
-
+log_file = None
 
 
 def getLoggingOutputFile():
@@ -40,8 +40,14 @@ def getLoggingOutputFile():
     return logFile
 
 
-def configure( logFile ):
-    fileHandler    = logging.FileHandler( filename = logFile, mode = "a+" )
+def configure( logFile = None ):
+    global log_file
+    
+    log_file = logFile
+    if log_file == None:
+        log_file = getLoggingOutputFile()
+        
+    fileHandler    = logging.FileHandler( filename = log_file, mode = "a+" )
     consoleHandler = logging.StreamHandler( stream = sys.stdout )
     
     formatter = createFormatter()
