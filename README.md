@@ -75,6 +75,7 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 ## ToDo:
 - handle cm/inch unit switch
 - add fav buttons inside popup of system tray icon
+- handle BT disconnections
 
 
 ## Issues:
