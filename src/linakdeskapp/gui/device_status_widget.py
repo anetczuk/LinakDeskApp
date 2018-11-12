@@ -78,7 +78,10 @@ class DeviceStatusWidget(QtBaseClass):
             self.ui.deviceTypeLabel.setText( self.device.deviceType() )
             self.ui.userTypeLabel.setText( self.device.userType() )
             reminderSettings = self.device.reminderSettings()
-            self.ui.reminderLabel.setText( reminderSettings.currentReminderInfo() )
+            if reminderSettings != None:
+                self.ui.reminderLabel.setText( reminderSettings.currentReminderInfo() )
+            else:
+                self.ui.reminderLabel.setText( "None" )
             self._refreshPosition()
             self._refreshSpeed()
         
