@@ -25,7 +25,7 @@
 import logging
 import functools
 
-from .qt import QtCore
+#from .qt import QtCore
 from .qt import qApp, QSystemTrayIcon, QMenu, QAction
 from .qt import QIcon
 
