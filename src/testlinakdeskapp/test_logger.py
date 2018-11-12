@@ -31,7 +31,7 @@ import io
 
 
 
-class DeviceConnectorTest(unittest.TestCase):
+class LoggerTest(unittest.TestCase):
     def setUp(self):
         ## Called before testfunction is executed
         self.logger = logging.Logger(__name__)
