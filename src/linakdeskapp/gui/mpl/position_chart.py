@@ -112,7 +112,7 @@ class PositionChart(DynamicMplCanvas):
         ### hide first and last major tick (next to plot edges)
         xticks = self.plot.xaxis.get_major_ticks()
         xticks[0].label1.set_visible(False)
-        xticks[-1].label1.set_visible(False)
+        ##xticks[-1].label1.set_visible(False)
     
         self.plot.relim(True)
         self.plot.autoscale_view()

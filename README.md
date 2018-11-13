@@ -76,6 +76,8 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 - handle cm/inch unit switch
 - add fav buttons inside popup of system tray icon
 - handle BT disconnections
+- handle hibernation/suspension
+- handle away from keyboard
 
 
 ## Issues:

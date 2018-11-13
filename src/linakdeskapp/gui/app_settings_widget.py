@@ -66,7 +66,6 @@ class Reminder():
         
         
 
-#TODO: add global statistics
 class AppSettingsWidget(QtBaseClass):
     
     STAND_HEIGHT = 96
