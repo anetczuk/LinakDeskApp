@@ -103,11 +103,13 @@ class TrayIcon(QSystemTrayIcon):
     
     def setIconNeutral(self, icon):
         self.neutralIcon = icon
-        self._refreshIcon()
+        if self.currIconState == 1:
+            self.setNeutral()
     
     def setIconIndicator(self, icon):
         self.indicatorIcon = icon
-        self._refreshIcon()
+        if self.currIconState == 2:
+            self.setIndicator()
     
     def setNeutral(self):
         if self.neutralIcon != None:
