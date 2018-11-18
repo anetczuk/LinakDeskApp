@@ -60,7 +60,7 @@
      <x>0</x>
      <y>0</y>
      <width>485</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuConnect">
@@ -68,6 +68,7 @@
      <string>Connection</string>
     </property>
     <addaction name="actionConnect"/>
+    <addaction name="actionReconnect"/>
     <addaction name="actionDisconnect"/>
     <addaction name="actionExit"/>
    </widget>
@@ -76,7 +77,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionConnect">
    <property name="text">
-    <string>Connect</string>
+    <string>Connect To...</string>
    </property>
   </action>
   <action name="actionExit">
@@ -87,6 +88,11 @@
   <action name="actionDisconnect">
    <property name="text">
     <string>Disconnect</string>
+   </property>
+  </action>
+  <action name="actionReconnect">
+   <property name="text">
+    <string>Reconnect</string>
    </property>
   </action>
  </widget>
@@ -160,10 +166,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionReconnect</sender>
+   <signal>triggered()</signal>
+   <receiver>mainWindow</receiver>
+   <slot>reconnectDevice()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>242</x>
+     <y>253</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>closeApplication()</slot>
   <slot>connectToDevice()</slot>
   <slot>disconnectFromDevice()</slot>
+  <slot>reconnectDevice()</slot>
  </slots>
 </ui>

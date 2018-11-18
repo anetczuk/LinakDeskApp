@@ -46,18 +46,18 @@ class PositionChartWidget(QtBaseClass):
         self.ui.setupUi(self)
         
         self.device = None
-        self.enabledChart = True
+        enabledChart = True
     
         bgcolor = parentWidget.palette().color(parentWidget.backgroundRole())
         self.ui.positionChart.setBackgroundByQColor( bgcolor )
     
-        self.ui.enabledCB.setChecked( self.enabledChart )
+        self.ui.enabledCB.setChecked( enabledChart )
         self.ui.enabledCB.stateChanged.connect( self._toggleEnabled )
         
         self.toolbar = DynamicToolbar(self.ui.positionChart, self)
         self.ui.toolbarLayout.addWidget( self.toolbar )
         
-        self._setEnabledState( self.enabledChart )
+        self._setEnabledState()
 
     
     def attachDevice(self, device):
@@ -67,7 +67,7 @@ class PositionChartWidget(QtBaseClass):
             
         self.device = device
         
-        self._setEnabledState( self.enabledChart )
+        self._setEnabledState()
         
     def loadSettings(self, settings):
         settings.beginGroup( self.objectName() )
@@ -75,21 +75,20 @@ class PositionChartWidget(QtBaseClass):
         settings.endGroup()
          
         self.ui.enabledCB.setChecked( enabled )
-        self._setEnabledState( enabled )
     
     def saveSettings(self, settings):
         settings.beginGroup( self.objectName() )
-        settings.setValue("chart_enabled", self.enabledChart)
+        enabledChart = self.ui.enabledCB.isChecked()
+        settings.setValue("chart_enabled", enabledChart)
         settings.endGroup()
-         
-        _LOGGER.info("saved: %s", self.enabledChart)
         
-    def _setEnabledState(self, enabled):
+    def _setEnabledState(self):
         ## _LOGGER.info("setting enabled: %s", enabled)
-        self.enabledChart = enabled
-        self.toolbar.setEnabled( enabled )
+        enabledChart = self.ui.enabledCB.isChecked()
         if self.device != None:
-            if enabled == True:
+            self.toolbar.setEnabled( enabledChart )
+            self.ui.positionChart.setEnabled( enabledChart )
+            if enabledChart == True:
                 self._updatePositionState()         ## add current position
                 self.device.positionChanged.connect( self._updatePositionState )
             else:
@@ -98,8 +97,10 @@ class PositionChartWidget(QtBaseClass):
                 except TypeError:
                     ## do nothing -- not connected
                     pass
-        self.ui.positionChart.setEnabled( enabled )
-        
+        else:
+            self.toolbar.setEnabled( False )
+            self.ui.positionChart.setEnabled( False )
+            
     def _updatePositionState(self):
         deskHeight = self.device.currentPosition()
         self.ui.positionChart.addData( deskHeight )
@@ -107,6 +108,5 @@ class PositionChartWidget(QtBaseClass):
     def _toggleEnabled(self, state):
         ## state: 0 -- unchecked
         ## state: 2 -- checked
-        enabled = (state != 0)
-        self._setEnabledState( enabled )
+        self._setEnabledState()
         

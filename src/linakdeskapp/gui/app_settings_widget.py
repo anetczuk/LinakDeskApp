@@ -125,7 +125,8 @@ class AppSettingsWidget(QtBaseClass):
         self.ui.positionChartWidget.attachDevice( device )
         
         ## connect new object
-        self.device.positionChanged.connect( self._updatePositionState )
+        if self.device != None:
+            self.device.positionChanged.connect( self._updatePositionState )
 
 
     ## ================= slots ========================
@@ -176,10 +177,10 @@ class AppSettingsWidget(QtBaseClass):
     
     
     def _setReminderState(self, state):
-        if state == False:
-            self._stopPositionTimer()
-            return
         if self.device == None:
+            self._disableWidget()
+            return
+        if state == False:
             self._stopPositionTimer()
             return
         deskHeight = self.device.currentPosition()
@@ -278,7 +279,9 @@ class AppSettingsWidget(QtBaseClass):
     def _refreshStateInfo(self):
         stateInfo = self._getStateInfo()
         self.ui.remStatusLabel.setText( stateInfo )
-
+        
+        if self.device == None:
+            return
         self._updateTotalTime()
         
         formattedSitTime = formatTimeDelta( self.totalSit )
@@ -302,7 +305,6 @@ class AppSettingsWidget(QtBaseClass):
             self.totalSit += passedTime
         else:
             self.totalStand += passedTime
-            
     
     def _getStateInfo(self):
         if self.device == None:
@@ -333,4 +335,11 @@ class AppSettingsWidget(QtBaseClass):
         else:
             ## standing
             return False
+    
+    def _disableWidget(self):
+        self.device = None
+        self.sitting = None
+        self.positionTime = None
+        self._stopPositionTimer()
+        
     

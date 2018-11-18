@@ -39,4 +39,10 @@ class DeviceConnector(QObject):
     def connect(self, itemIndex):
         raise NotImplementedError('You need to define this method in derived class!')
     
+    def reconnect(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    def disconnect(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
     

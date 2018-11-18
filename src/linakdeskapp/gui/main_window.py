@@ -172,6 +172,7 @@ class MainWindow(QtBaseClass):
     ## slot
     def closeApplication(self):
         ##self.close()
+        self.connector.disconnect()
         qApp.quit()
 
     ## slot
@@ -182,7 +183,12 @@ class MainWindow(QtBaseClass):
     
     ## slot    
     def disconnectFromDevice(self):
+        self.connector.disconnect()
         self._setDevice( None )
+        
+    ## slot    
+    def reconnectDevice(self):
+        self.connector.reconnect()
 
         
     # =======================================

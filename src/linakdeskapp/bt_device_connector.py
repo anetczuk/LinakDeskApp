@@ -42,6 +42,8 @@ class BTDeviceConnector(DeviceConnector):
         super().__init__()
         self.itemIndex = -1
         self.devList = []
+        self.recentAddress = None
+        self.recentDevice = None
     
     def scanDevices(self):
         self.devList = []
@@ -74,6 +76,16 @@ class BTDeviceConnector(DeviceConnector):
         deviceObject = self.getConnectedDevice()
         if deviceObject != None:
             self.newConnection.emit(deviceObject)
+            
+    def reconnect(self):
+        if self.recentAddress == None:
+            return
+        self.connectTo( self.recentAddress )
+        
+    def disconnect(self):
+        if self.recentDevice == None:
+            return
+        self.recentDevice.disconnect() 
     
     
     # ==============================================================
@@ -90,14 +102,17 @@ class BTDeviceConnector(DeviceConnector):
         if self.isConnected() == False:
             return None
         devItem = self.devList[self.itemIndex]
-        obj = BTDeviceObject()
-        if obj.connect(devItem) == True:
-            return obj
-        return None
+        return self._getDeviceObject( devItem )
     
     def connectTo(self, deviceAddress):
-        obj = BTDeviceObject()
-        if obj.connect(deviceAddress) == True:
+        obj = self._getDeviceObject( deviceAddress )
+        if obj != None:
             self.newConnection.emit(obj)
     
+    def _getDeviceObject(self, address):
+        self.recentAddress = address
+        self.recentDevice  = BTDeviceObject()
+        if self.recentDevice.connect(address) == True:
+            return self.recentDevice
+        return None
     

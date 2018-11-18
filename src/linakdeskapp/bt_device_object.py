@@ -58,6 +58,11 @@ class BTDeviceObject(DeviceObject):
         self.mover = DeskMoverThread( self.desk )
         return True
         
+    def disconnect(self):
+        if self.desk == None:
+            return
+        self.desk.disconnect()
+        
     
     def name(self):
         return self.desk.name

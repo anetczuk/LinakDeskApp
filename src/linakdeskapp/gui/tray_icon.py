@@ -98,7 +98,8 @@ class TrayIcon(QSystemTrayIcon):
         self.updateFavMenu()
 
         ## connect new object
-        self.device.favoritiesChanged.connect( self.updateFavMenu )
+        if self.device != None:
+            self.device.favoritiesChanged.connect( self.updateFavMenu )
 
     
     def setIconNeutral(self, icon):
