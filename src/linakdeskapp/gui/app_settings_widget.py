@@ -26,10 +26,10 @@ import logging
 import datetime
 import time
 
+from . import uiloader
 from .qt import QtCore
 from .qt import pyqtSignal
-
-from . import uiloader
+from .tray_icon import TrayIconTheme
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -73,6 +73,7 @@ class AppSettingsWidget(QtBaseClass):
     showMessage             = pyqtSignal(str)
     stateInfoChanged        = pyqtSignal(str)
     indicatePositionChange  = pyqtSignal(bool)
+    iconThemeChanged        = pyqtSignal( TrayIconTheme )
     
     
     def __init__(self, parentWidget = None):
@@ -104,6 +105,12 @@ class AppSettingsWidget(QtBaseClass):
         self.labelTimer = QtCore.QTimer()
         self.labelTimer.timeout.connect( self._refreshStateInfo )
         self.labelTimer.start(300)
+        
+        ## tray combo box
+        self.ui.trayThemeCB.currentIndexChanged.connect( self._trayThemeChanged )
+        for item in TrayIconTheme:
+            itemName = item.name
+            self.ui.trayThemeCB.addItem( itemName, item )
         
     def attachDevice(self, device):
         if self.device != None:
@@ -161,6 +168,9 @@ class AppSettingsWidget(QtBaseClass):
             return
         self._setPositionState(devicePosition)
     
+    def _trayThemeChanged(self):
+        selectedTheme = self.ui.trayThemeCB.currentData()
+        self.iconThemeChanged.emit( selectedTheme )
     
     ## =================================================
     
@@ -228,9 +238,19 @@ class AppSettingsWidget(QtBaseClass):
         self.totalSit += datetime.timedelta(seconds = sitTotalTime)
         self.totalStand += datetime.timedelta(seconds = standTotalTime)
         
+        trayTheme = settings.value("trayIcon", None, type=str)
+        self._setCurrentTrayTheme( trayTheme )
+        
         settings.endGroup()
         
         self._setStatusFromReminder()        
+    
+    def _setCurrentTrayTheme( self, trayTheme: str ):
+        themeIndex = TrayIconTheme.indexOf( trayTheme )
+        if themeIndex < 0:
+            _LOGGER.warn("could not find index for theme: %r", trayTheme)
+            return
+        self.ui.trayThemeCB.setCurrentIndex( themeIndex )
     
     def saveSettings(self, settings):
         self.ui.positionChartWidget.saveSettings( settings )
@@ -242,6 +262,9 @@ class AppSettingsWidget(QtBaseClass):
         
         settings.setValue("sitTotalTime", self.totalSit.total_seconds())
         settings.setValue("standTotalTime", self.totalStand.total_seconds())
+        
+        selectedTheme = self.ui.trayThemeCB.currentData()
+        settings.setValue("trayIcon", selectedTheme.name)
         
         settings.endGroup()
         

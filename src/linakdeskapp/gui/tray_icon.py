@@ -24,12 +24,9 @@
 
 import logging
 import functools
+from enum import Enum, unique
 
-#from .qt import QtCore
 from .qt import qApp, QSystemTrayIcon, QMenu, QAction
-from .qt import QIcon
-
-from . import resources
 
 
 
@@ -37,22 +34,39 @@ _LOGGER = logging.getLogger(__name__)
 
 
 
+@unique
+class TrayIconTheme(Enum):
+    WHITE           = ('office-chair-white.png', 'office-chair-red.png')
+    BLACK           = ('office-chair-black.png', 'office-chair-red.png')
+    BLACK_ON_GRAY   = ('office-chair-gray.png', 'office-chair-red-gray.png')
+
+    @classmethod
+    def findByName(cls, name):
+        for item in cls:
+            if item.name == name:
+                return item
+        return None
+    
+    @classmethod
+    def indexOf(cls, key):
+        index = 0
+        for item in cls:
+            if item == key:
+                return index
+            if item.name == key:
+                return index
+            index = index + 1
+        return -1
+    
+    
 class TrayIcon(QSystemTrayIcon):
     def __init__(self, parent):
         super().__init__(parent)
 
-        ## print("is tray available:",  QSystemTrayIcon.isSystemTrayAvailable() )
-
         self.device = None
         self.neutralIcon = None
         self.indicatorIcon = None
-        self.currIconState = 0
-
-        neutralPath = resources.getImagePath('office-chair_gray.png')
-        indicatorPath = resources.getImagePath('office-chair-red_gray.png')
-        self.setIconNeutral( QIcon( neutralPath ) )
-        self.setIconIndicator( QIcon( indicatorPath ) )
-        self.setNeutral()
+        self.currIconState = 1          ## 0 - unknown, 1 - neutral, 2 - indicator
 
         self.activated.connect( self._icon_activated )
 
@@ -62,16 +76,10 @@ class TrayIcon(QSystemTrayIcon):
             hide - hide window
             exit - exit from application
         '''
-        ##show_action = QAction("Show", self)
-        ##hide_action = QAction("Hide", self)
         self.toggle_window_action = QAction("Show", self)
         quit_action = QAction("Exit", self)
-        ##show_action.triggered.connect( parent.show )
-        ##hide_action.triggered.connect( parent.hide )
         self.toggle_window_action.triggered.connect( self._toggleParent )
         quit_action.triggered.connect( qApp.quit )
-        ##tray_menu.addAction( show_action )
-        ##tray_menu.addAction( hide_action )
         
         self.fav_menu = QMenu("Favs")
         
@@ -95,9 +103,11 @@ class TrayIcon(QSystemTrayIcon):
     
     def setIconNeutral(self, icon):
         self.neutralIcon = icon
+        self._refreshIcon()
     
     def setIconIndicator(self, icon):
         self.indicatorIcon = icon
+        self._refreshIcon()
     
     def setNeutral(self):
         if self.neutralIcon != None:

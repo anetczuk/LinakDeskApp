@@ -50,16 +50,18 @@ class MainWindow(QtBaseClass):
         
         self.settingsFilePath = None
         
-        imgDir = resources.getImagePath('office-chair.png')
-        appIcon = QIcon( imgDir )
-        self.setWindowIcon( appIcon )
-        
         self.statusBar().showMessage("Ready")
         
         self.trayIcon = tray_icon.TrayIcon(self)
+        self.trayIcon.setToolTip("Linak desk")
+        
+        self.setIconTheme( tray_icon.TrayIconTheme.WHITE )
+        
         self.ui.appSettings.showMessage.connect( self.trayIcon.displayMessage )
         self.ui.appSettings.stateInfoChanged.connect( self.trayIcon.setInfo )
         self.ui.appSettings.indicatePositionChange.connect( self.trayIcon.changeIcon )
+        self.ui.appSettings.iconThemeChanged.connect( self.setIconTheme )
+        
         self.trayIcon.show()
 
     def attachConnector(self, connector):
@@ -70,6 +72,27 @@ class MainWindow(QtBaseClass):
         self.connector = connector
         ## connect slot to new object
         self.connector.newConnection.connect( self.newConnection )
+
+    def setIconTheme(self, theme: tray_icon.TrayIconTheme):
+        _LOGGER.debug("setting tray theme: %r", theme)
+        
+        fileName = theme.value[0]
+        iconPath = resources.getImagePath( fileName )
+        appIcon = QIcon( iconPath )
+        self.setWindowIcon( appIcon )
+        self.trayIcon.setIconNeutral( appIcon )
+
+        fileName = theme.value[1]
+        iconPath = resources.getImagePath( fileName )
+        appIcon = QIcon( iconPath )
+        self.trayIcon.setIconIndicator( appIcon )
+        
+
+#         neutralPath = resources.getImagePath('office-chair-gray.png')
+#         indicatorPath = resources.getImagePath('office-chair-red-gray.png')
+#         self.setIconNeutral( QIcon( neutralPath ) )
+#         self.setIconIndicator( QIcon( indicatorPath ) )
+#         self.setNeutral()
 
     def _setDevice(self, device):
         self.ui.deviceControl.attachDevice( device )
