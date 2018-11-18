@@ -23,7 +23,7 @@
 
 import logging
 
-from gui.device_object import DeviceObject
+from linakdeskapp.gui.device_object import DeviceObject
 
 from linak_dpg_bt.linak_device import LinakDesk
 from linak_dpg_bt.desk_mover import DeskMoverThread

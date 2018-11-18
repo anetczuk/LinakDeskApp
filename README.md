@@ -34,10 +34,14 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 - testlinakdeskapp -- unit tests for the application
 
 
-### Running application
+## Running application
 
-To run application simply execute *linakdeskapp/main.py* file. Application
-can be run in profiler mode. 
+To run application try one of:
+- run *src/linakdeskctl*
+- run *src/linakdeskapp/main.py* 
+- execute *cd src; python3 -m linakdeskapp*
+
+Application can be run in profiler mode passing *--profile* as command line parameter. 
 
 
 ### Running mock service

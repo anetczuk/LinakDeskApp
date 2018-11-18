@@ -39,14 +39,14 @@ import argparse
 import logging
 import cProfile
 
-import logger
+import linakdeskapp.logger as logger
 
 from linakdeskapp.gui.main_window import MainWindow
 
-from bt_device_connector import BTDeviceConnector
-from bt_device_object import BTDeviceObject
-from gui.qt import QApplication
-from gui.sigint import setup_interrupt_handling 
+from linakdeskapp.bt_device_connector import BTDeviceConnector
+from linakdeskapp.bt_device_object import BTDeviceObject
+from linakdeskapp.gui.qt import QApplication
+from linakdeskapp.gui.sigint import setup_interrupt_handling 
 
 
 

@@ -31,8 +31,8 @@ except ImportError as e:
     print(e)
     exit(1)
 
-from gui.device_connector import DeviceConnector
-from bt_device_object import BTDeviceObject
+from .bt_device_object import BTDeviceObject
+from .gui.device_connector import DeviceConnector
 
 
 
