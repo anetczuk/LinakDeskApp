@@ -58,6 +58,7 @@ parser.add_argument('--pfile', action='store', default=None, help='Profile the c
 # parser.add_argument('--mode', action='store', required=True, choices=["BF", "POLY", "COMMON"], help='Mode' )
 # parser.add_argument('--file', action='store', required=True, help='File with data' )
 parser.add_argument('--connect', action='store', default=None, help='BT address to connect to' )
+parser.add_argument('--minimized', action='store_const', const=True, default=False, help='Start minimized' )
 
 
 args = parser.parse_args()
@@ -92,7 +93,8 @@ try:
         btAddress = args.connect
         connector.connectTo( btAddress )
     
-    window.show()
+    if args.minimized == False:
+        window.show()
     
     setup_interrupt_handling()
     

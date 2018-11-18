@@ -84,7 +84,8 @@ def runApp(args):
         btAddress = args.connect
         btConnector.connectTo( btAddress )        
          
-    window.show()
+    if args.minimized == False:
+        window.show()
      
     setup_interrupt_handling()
      
@@ -100,11 +101,10 @@ def main():
     parser = argparse.ArgumentParser(description='Linak desk application')
     parser.add_argument('--profile', action='store_const', const=True, default=False, help='Profile the code' )
     parser.add_argument('--pfile', action='store', default=None, help='Profile the code and output data to file' )
-    # parser.add_argument('--mode', action='store', required=True, choices=["BF", "POLY", "COMMON"], help='Mode' )
-    # parser.add_argument('--file', action='store', required=True, help='File with data' )
     parser.add_argument('--connect', action='store', default=None, help='BT address to connect to' )
     parser.add_argument('--desc', action='store_const', const=True, default=False, help='Print description of connected BT and exit' )
     parser.add_argument('--scan', action='store_const', const=True, default=False, help='Scan nearby BT devices' )
+    parser.add_argument('--minimized', action='store_const', const=True, default=False, help='Start minimized' )
      
           
     args = parser.parse_args()
