@@ -92,25 +92,25 @@ class AppSettingsWidget(QtBaseClass):
         self.totalStand = datetime.timedelta()
 
         ## timer reminds to change position after given amount of time
-        self.positionTimer = QtCore.QTimer()
-        self.positionTimer.timeout.connect( self._positionTimeout )
-        self.positionTimer.setSingleShot(True)
-        
-        self._setStatusFromReminder()
+        self.reminderTimer = QtCore.QTimer()
+        self.reminderTimer.timeout.connect( self._reminderTimeout )
+        self.reminderTimer.setSingleShot(True)
     
         self.ui.enabledRemCB.stateChanged.connect( self._toggleReminder )
-        self.ui.sitSB.valueChanged.connect( self._toggleSit )
-        self.ui.standSB.valueChanged.connect( self._toggleStand )
+        self.ui.sitSB.valueChanged.connect( self._toggleSitValue )
+        self.ui.standSB.valueChanged.connect( self._toggleStandValue )
         
         self.labelTimer = QtCore.QTimer()
-        self.labelTimer.timeout.connect( self._refreshStateInfo )
-        self.labelTimer.start(300)
+        self.labelTimer.timeout.connect( self._updateStateInfo )
+        self.labelTimer.setInterval(300)
         
         ## tray combo box
         self.ui.trayThemeCB.currentIndexChanged.connect( self._trayThemeChanged )
         for item in TrayIconTheme:
             itemName = item.name
             self.ui.trayThemeCB.addItem( itemName, item )
+            
+        self._disableWidget()
         
     def attachDevice(self, device):
         if self.device != None:
@@ -119,9 +119,11 @@ class AppSettingsWidget(QtBaseClass):
             
         self.device = device
         
-        reminderActivated = self.reminder.isEnabled()
-        self._setReminderState( reminderActivated )
-        
+        if self.device != None:
+            self._enableWidget()
+        else:
+            self._disableWidget()
+            
         self.ui.positionChartWidget.attachDevice( device )
         
         ## connect new object
@@ -132,26 +134,41 @@ class AppSettingsWidget(QtBaseClass):
     ## ================= slots ========================
 
 
+    def _trayThemeChanged(self):
+        selectedTheme = self.ui.trayThemeCB.currentData()
+        self.iconThemeChanged.emit( selectedTheme )
+        
+    ## turn reminder on / off
     def _toggleReminder(self, state):
         ## state: 0 -- unchecked
         ## state: 2 -- checked
         enabled = (state != 0)
         self.reminder.setEnabled( enabled )
-        self._setReminderState( enabled )
+        self._setReminderTimer( enabled )       ## toggle reminder by checkbox
+        self._displayStateInfo()
     
-    def _toggleSit(self, value):
+    ## sitting spin button changed
+    def _toggleSitValue(self, value):
         self.reminder.sitTime = value
         if self.sitting == True:
-            self._setSittingState()
-        
-    def _toggleStand(self,  value):
+            self._setReminderTimeout()                  ## spin values changed
+            self.indicatePositionChange.emit(False)
+    
+    ## standing spin button changed
+    def _toggleStandValue(self,  value):
         self.reminder.standTime = value
         if self.sitting == False:
-            self._setStandingState()
-
-    def _positionTimeout(self):
-        _LOGGER.debug("position timer timeout handler")
-        self._refreshStateInfo()
+            self._setReminderTimeout()                  ## spin values changed
+            self.indicatePositionChange.emit(False)
+    
+    def _reminderTimeout(self):
+        self._displayStateInfo()
+        
+        if self.device == None:
+            _LOGGER.debug("device not attached -- do nothing")
+            return
+        _LOGGER.debug("reminder timer timeout handler")
+        
         if self.sitting == True:
             ## is sitting -- time to stand
             self.showMessage.emit("It's time to stand up")
@@ -160,74 +177,48 @@ class AppSettingsWidget(QtBaseClass):
         else:
             self.showMessage.emit("waiting for device")
         self.indicatePositionChange.emit(True)
-            
+    
+    ## triggered when total time timer ticks
+    def _updateStateInfo(self):
+        self._updateTotalTime()         ## update total timers after timer tick
+        self._displayStateInfo()
+    
+    ## triggered when desk is moving
     def _updatePositionState(self):
         deskHeight = self.device.currentPosition()
         devicePosition = self.isDevicePositionSitting(deskHeight)
         if self.sitting == devicePosition:
             ## position not changed
             return
-        self._setPositionState(devicePosition)
-    
-    def _trayThemeChanged(self):
-        selectedTheme = self.ui.trayThemeCB.currentData()
-        self.iconThemeChanged.emit( selectedTheme )
+        self._updateTotalTime()         ## update previous state time
+        self.sitting = devicePosition
+        self._displayStateInfo()
+        if self.reminder.isEnabled() == False:
+            return
+        self._setReminderTimeout()                  ## position has changed
+        self.reminderTimer.start()
+        self.indicatePositionChange.emit(False)
+
     
     ## =================================================
     
-    
-    def _setReminderState(self, state):
-        if self.device == None:
-            self._disableWidget()
-            return
-        if state == False:
-            self._stopPositionTimer()
-            return
-        deskHeight = self.device.currentPosition()
-        devicePosition = self.isDevicePositionSitting(deskHeight)
-        self._setPositionState(devicePosition)
-        
-    def _setPositionState(self, isSitting):
-        if isSitting == False:
-            ## started standing
-            _LOGGER.debug("standing started")
-            self._setStandingState()
-        else:
-            ## started sitting
-            _LOGGER.debug("sitting started")
-            self._setSittingState()
-                
-    def _setSittingState(self):
-        self._updateTotalTime()
-        self.sitting = True
-        if self.reminder.isEnabled() == False:
-            self._stopPositionTimer()
-            return
-        timeout = self.reminder.sitTime * 1000 * 60
-        self.positionTimer.start( timeout )
-        self._refreshStateInfo()
-        self.indicatePositionChange.emit(False)
-        
-    def _setStandingState(self):
-        self._updateTotalTime()
-        self.sitting = False
-        if self.reminder.isEnabled() == False:
-            self._stopPositionTimer()
-            return
-        timeout = self.reminder.standTime * 1000 * 60
-        self.positionTimer.start( timeout )
-        self._refreshStateInfo()
-        self.indicatePositionChange.emit(False)
 
-    def _stopPositionTimer(self):
-        self.positionTimer.stop()
-        self._refreshStateInfo()
-        self.indicatePositionChange.emit(False)
+    def _enableWidget(self):
+        self._updatePositionState()
+        self.labelTimer.start()
+        
+    def _disableWidget(self):
+        self.sitting = None
+        self.positionTime = None
+        self._setReminderTimer( False )                     ## disabling widget -- disable timer
+        self.labelTimer.stop()
+        self._displayStateInfo()
 
     def loadSettings(self, settings):
         self.ui.positionChartWidget.loadSettings( settings )
         
         settings.beginGroup( self.objectName() )
+        
         enabled = settings.value("enabled", True, type=bool)
         self.reminder.setEnabled( enabled )
         
@@ -240,11 +231,16 @@ class AppSettingsWidget(QtBaseClass):
         self.totalStand += datetime.timedelta(seconds = standTotalTime)
         
         trayTheme = settings.value("trayIcon", None, type=str)
-        self._setCurrentTrayTheme( trayTheme )
         
         settings.endGroup()
         
-        self._setStatusFromReminder()        
+        ## update reminder
+        self._setCurrentTrayTheme( trayTheme )
+        reminderActivated = self.reminder.isEnabled()
+        self.ui.enabledRemCB.setChecked( reminderActivated )
+        self.ui.sitSB.setValue( self.reminder.sitTime )
+        self.ui.standSB.setValue( self.reminder.standTime )
+        self._displayStateInfo()
     
     def _setCurrentTrayTheme( self, trayTheme: str ):
         themeIndex = TrayIconTheme.indexOf( trayTheme )
@@ -268,30 +264,37 @@ class AppSettingsWidget(QtBaseClass):
         settings.setValue("trayIcon", selectedTheme.name)
         
         settings.endGroup()
-        
-    def _setStatusFromReminder(self):
-        reminderActivated = self.reminder.isEnabled()
-        self.ui.enabledRemCB.setChecked( reminderActivated )
-        self._setReminderState( reminderActivated )
-        self.ui.sitSB.setValue( self.reminder.sitTime )
-        self.ui.standSB.setValue( self.reminder.standTime )
 
-    def _refreshStateInfo(self):
-        stateInfo = self._getStateInfo()
-        self.ui.remStatusLabel.setText( stateInfo )
-        
-        if self.device == None:
+    
+    ## might be toggled by user in anytime
+    def _setReminderTimer(self, enable):
+        if enable == False:
+            ## disable reminder
+            self.reminderTimer.stop()
+            self.indicatePositionChange.emit(False)
             return
-        self._updateTotalTime()
-        
-        formattedSitTime = formatTimeDelta( self.totalSit )
-        formattedStandTime = formatTimeDelta( self.totalStand )
-        self.ui.totalSitLabel.setText( formattedSitTime )
-        self.ui.totalStandLabel.setText( formattedStandTime )
-        
-        self.stateInfoChanged.emit( stateInfo )
+        if self.sitting != None:
+            ## enable reminder
+            self._setReminderTimeout()          ## enabling timer
+            self.reminderTimer.start()
+    
+    def _setReminderTimeout(self):
+        if self.sitting == None:
+            return
+        if self.sitting == True:
+            ## started sitting
+            _LOGGER.debug("sitting started")
+            timeout = self.reminder.sitTime * 1000 * 60
+            self.reminderTimer.setInterval( timeout )
+        else:
+            ## started standing
+            _LOGGER.debug("standing started")
+            timeout = self.reminder.standTime * 1000 * 60
+            self.reminderTimer.setInterval( timeout )
     
     def _updateTotalTime(self):
+        if self.device == None:
+            return
         if self.sitting == None:
             return
         if self.positionTime == None:
@@ -306,19 +309,31 @@ class AppSettingsWidget(QtBaseClass):
         else:
             self.totalStand += passedTime
     
+    def _displayStateInfo(self):
+        stateInfo = self._getStateInfo()
+        self.ui.remStatusLabel.setText( stateInfo )
+        
+        formattedSitTime = formatTimeDelta( self.totalSit )
+        formattedStandTime = formatTimeDelta( self.totalStand )
+        self.ui.totalSitLabel.setText( formattedSitTime )
+        self.ui.totalStandLabel.setText( formattedStandTime )
+        
+        self.stateInfoChanged.emit( stateInfo )
+    
     def _getStateInfo(self):
         if self.device == None:
             return "device disconnected"            
         if self.reminder.isEnabled() == False:
             return "stopped" 
-        if self.positionTimer.isActive() == False:
+        if self.reminderTimer.isActive() == False:
+            ## reminder timed out
             if self.sitting == True:
                 return "waiting for stand up" 
             elif self.sitting == False:
                 return "waiting for sit down"
             else:
                 return "waiting for device"
-        remaining = self.positionTimer.remainingTime()
+        remaining = self.reminderTimer.remainingTime()
         remainingTime = datetime.timedelta(milliseconds=remaining)
         formattedTime = formatTimeDelta( remainingTime )
         if self.sitting == True:
@@ -335,11 +350,4 @@ class AppSettingsWidget(QtBaseClass):
         else:
             ## standing
             return False
-    
-    def _disableWidget(self):
-        self.device = None
-        self.sitting = None
-        self.positionTime = None
-        self._stopPositionTimer()
-        
     
