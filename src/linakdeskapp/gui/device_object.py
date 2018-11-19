@@ -32,6 +32,7 @@ class DeviceObject(QObject):
     speedChanged        = pyqtSignal()
     settingChanged      = pyqtSignal()
     favoritiesChanged   = pyqtSignal(int)
+    disconnected        = pyqtSignal()
     
     
     def __init__(self):

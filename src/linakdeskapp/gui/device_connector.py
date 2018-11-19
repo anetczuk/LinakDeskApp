@@ -30,7 +30,8 @@ from .device_object import DeviceObject
 
 class DeviceConnector(QObject):
     
-    newConnection = pyqtSignal(DeviceObject)
+    newConnection   = pyqtSignal(DeviceObject)
+    disconnected    = pyqtSignal()
     
     
     def scanDevices(self):

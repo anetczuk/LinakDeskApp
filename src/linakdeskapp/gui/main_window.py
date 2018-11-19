@@ -68,10 +68,12 @@ class MainWindow(QtBaseClass):
         if self.connector != None:
             ## disconnect slot from old object
             self.connector.newConnection.disconnect( self.newConnection )
+            self.connector.disconnected.disconnect( self.disconnected )
             
         self.connector = connector
         ## connect slot to new object
         self.connector.newConnection.connect( self.newConnection )
+        self.connector.disconnected.connect( self.disconnected )
 
     def setIconTheme(self, theme: tray_icon.TrayIconTheme):
         _LOGGER.debug("setting tray theme: %r", theme)
@@ -172,7 +174,7 @@ class MainWindow(QtBaseClass):
     ## slot
     def closeApplication(self):
         ##self.close()
-        self.connector.disconnect()
+        self.disconnectFromDevice()
         qApp.quit()
 
     ## slot
@@ -186,6 +188,10 @@ class MainWindow(QtBaseClass):
         self.connector.disconnect()
         self._setDevice( None )
         
+    ## slot    
+    def disconnected(self):
+        self._setDevice( None )
+    
     ## slot    
     def reconnectDevice(self):
         self.connector.reconnect()

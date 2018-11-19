@@ -54,6 +54,7 @@ class BTDeviceObject(DeviceObject):
         self.desk.set_speed_change_callback( self._handleBTSpeedChange )
         self.desk.add_setting_callback( self._handleBTSettingChange )
         self.desk.add_favorities_callback( self._handleBTFavoritiesChange )
+        self.desk.set_disconnected_callback( self._handleBTDisconnection )
  
         self.mover = DeskMoverThread( self.desk )
         return True
@@ -160,6 +161,9 @@ class BTDeviceObject(DeviceObject):
         
     def _handleBTFavoritiesChange(self, favNumber):
         self.favoritiesChanged.emit(favNumber-1)
+        
+    def _handleBTDisconnection(self):
+        self.disconnected.emit()
         
     @staticmethod
     def printDescription(deviceAddr):

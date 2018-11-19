@@ -110,9 +110,13 @@ class BTDeviceConnector(DeviceConnector):
             self.newConnection.emit(obj)
     
     def _getDeviceObject(self, address):
+        if self.recentDevice != None:
+            self.recentDevice.disconnect()
+            self.recentDevice.disconnected.disconnect( self.disconnected )
         self.recentAddress = address
         self.recentDevice  = BTDeviceObject()
-        if self.recentDevice.connect(address) == True:
-            return self.recentDevice
-        return None
+        self.recentDevice.disconnected.connect( self.disconnected )
+        if self.recentDevice.connect(address) == False:
+            return None
+        return self.recentDevice
     
