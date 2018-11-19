@@ -158,7 +158,9 @@ class MainWindow(QtBaseClass):
 #         settings = QtCore.QSettings(self.settingsFilePath, QtCore.QSettings.IniFormat, self)
     
         ## store in home directory
-        settings = QtCore.QSettings(QtCore.QSettings.IniFormat, QtCore.QSettings.UserScope, "arnet", "LinakDeskApp", self)
+        orgName = qApp.organizationName()
+        appName = qApp.applicationName()
+        settings = QtCore.QSettings(QtCore.QSettings.IniFormat, QtCore.QSettings.UserScope, orgName, appName, self)
         return settings
         
 
