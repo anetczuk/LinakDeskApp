@@ -81,6 +81,9 @@ exitCode = 0
 try:
 
     app = QApplication(sys.argv)
+    app.setApplicationName("LinakDeskApp")
+    app.setOrganizationName("arnet")
+    ### app.setOrganizationDomain("www.my-org.com")
     
     window = MainWindow()
     window.loadSettings()

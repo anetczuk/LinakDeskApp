@@ -22,13 +22,12 @@
 #
 
 
-import sys
 import logging
 
 from . import uiloader
 from . import tray_icon
 from . import resources
-from .qt import qApp, QApplication, QIcon, QtCore
+from .qt import qApp, QIcon, QtCore
 
 from linakdeskapp.gui.devices_list_dialog import DevicesListDialog
 
@@ -236,11 +235,4 @@ def getWidgetKey(widget):
         retKey = widget.objectName() + "-"+ retKey
         widget = widget.parent()
     return retKey
-
-def execApp():
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    
-    window.show()
-    sys.exit(app.exec_())
 
