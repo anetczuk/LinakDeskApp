@@ -65,7 +65,7 @@
    </property>
    <widget class="QMenu" name="menuConnect">
     <property name="title">
-     <string>Connection</string>
+     <string>&amp;Connection</string>
     </property>
     <addaction name="actionConnect"/>
     <addaction name="actionReconnect"/>
@@ -77,22 +77,22 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionConnect">
    <property name="text">
-    <string>Connect To...</string>
+    <string>&amp;Connect To...</string>
    </property>
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>&amp;Exit</string>
    </property>
   </action>
   <action name="actionDisconnect">
    <property name="text">
-    <string>Disconnect</string>
+    <string>&amp;Disconnect</string>
    </property>
   </action>
   <action name="actionReconnect">
    <property name="text">
-    <string>Reconnect</string>
+    <string>&amp;Reconnect</string>
    </property>
   </action>
  </widget>
