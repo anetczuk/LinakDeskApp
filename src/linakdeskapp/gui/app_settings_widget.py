@@ -83,6 +83,7 @@ class AppSettingsWidget(QtBaseClass):
         self.ui.setupUi(self)
         
         self.device = None
+        self.recentAddress = None
         
         self.reminder = Reminder()
         self.sitting = None             ## current position, boolean. None means unknown
@@ -90,7 +91,7 @@ class AppSettingsWidget(QtBaseClass):
         
         self.totalSit = datetime.timedelta()
         self.totalStand = datetime.timedelta()
-
+        
         ## timer reminds to change position after given amount of time
         self.reminderTimer = QtCore.QTimer()
         self.reminderTimer.timeout.connect( self._reminderTimeout )
@@ -111,7 +112,12 @@ class AppSettingsWidget(QtBaseClass):
             self.ui.trayThemeCB.addItem( itemName, item )
             
         self._disableWidget()
-        
+    
+    def startupReconnectAddress(self):
+        if self.ui.connectOnStartupCB.isChecked() == False:
+            return None
+        return self.recentAddress
+    
     def attachDevice(self, device):
         if self.device != None:
             ## disconnect old object
@@ -204,9 +210,10 @@ class AppSettingsWidget(QtBaseClass):
     
 
     def _enableWidget(self):
+        self.recentAddress = self.device.address()
         self._updatePositionState()
         self.labelTimer.start()
-        
+    
     def _disableWidget(self):
         self.sitting = None
         self.positionTime = None
@@ -218,6 +225,9 @@ class AppSettingsWidget(QtBaseClass):
         self.ui.positionChartWidget.loadSettings( settings )
         
         settings.beginGroup( self.objectName() )
+        
+        connectOnStartup = settings.value("connectOnStartup", True, type=bool)
+        self.recentAddress = settings.value("recentAddress", None, type=str)
         
         enabled = settings.value("enabled", True, type=bool)
         self.reminder.setEnabled( enabled )
@@ -233,6 +243,8 @@ class AppSettingsWidget(QtBaseClass):
         trayTheme = settings.value("trayIcon", None, type=str)
         
         settings.endGroup()
+        
+        self.ui.connectOnStartupCB.setChecked( connectOnStartup )
         
         ## update reminder
         self._setCurrentTrayTheme( trayTheme )
@@ -253,6 +265,10 @@ class AppSettingsWidget(QtBaseClass):
         self.ui.positionChartWidget.saveSettings( settings )
         
         settings.beginGroup( self.objectName() )
+        
+        settings.setValue("connectOnStartup", self.ui.connectOnStartupCB.isChecked())
+        settings.setValue("recentAddress", self.recentAddress)
+        
         settings.setValue("enabled", self.reminder.enabled)
         settings.setValue("sitTime", self.reminder.sitTime)
         settings.setValue("standTime", self.reminder.standTime)

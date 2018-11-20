@@ -64,7 +64,7 @@ class MainWindow(QtBaseClass):
         
         self.trayIcon.show()
 
-    def attachConnector(self, connector):
+    def attachConnector(self, connector, address):
         if self.connector != None:
             ## disconnect slot from old object
             self.connector.newConnection.disconnect( self.newConnection )
@@ -74,6 +74,18 @@ class MainWindow(QtBaseClass):
         ## connect slot to new object
         self.connector.newConnection.connect( self.newConnection )
         self.connector.disconnected.connect( self.disconnected )
+
+        if address != None:
+            self.connector.connectTo(address)
+        else:
+            self._tryReconnectOnStartup()
+
+    def _tryReconnectOnStartup(self):
+        reconnectAddress = self.ui.appSettings.startupReconnectAddress()
+        if reconnectAddress == None:
+            return
+        _LOGGER.debug("trying reconnect on startup")
+        self.connector.connectTo( reconnectAddress )
 
     def setIconTheme(self, theme: tray_icon.TrayIconTheme):
         _LOGGER.debug("setting tray theme: %r", theme)

@@ -81,11 +81,7 @@ def runApp(args):
     window.loadSettings()
     
     btConnector = BTDeviceConnector()
-    window.attachConnector(btConnector)
-    
-    if args.connect != None:
-        btAddress = args.connect
-        btConnector.connectTo( btAddress )        
+    window.attachConnector(btConnector, args.connect)
          
     if args.minimized == False:
         window.show()

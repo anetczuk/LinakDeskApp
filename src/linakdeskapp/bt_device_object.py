@@ -38,9 +38,14 @@ class BTDeviceObject(DeviceObject):
         super().__init__()
         self.desk = None
         self.mover = None
+        self.recentAddress = None
         self.connect( deviceAddr )
         
+    def address(self):
+        return self.recentAddress
+        
     def connect(self, deviceAddr):
+        self.recentAddress = deviceAddr
         if deviceAddr == None:
             return False
         self.desk = LinakDesk( deviceAddr )
