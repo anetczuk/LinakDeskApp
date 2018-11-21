@@ -24,6 +24,8 @@
 
 from . import uiloader
 
+from linakdeskapp.gui.device_connector import ConnectionState
+
 
 
 UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
@@ -61,16 +63,8 @@ class DeviceStatusWidget(QtBaseClass):
             self.device.speedChanged.connect( self._refreshSpeed )
 
     def _refreshWidget(self):
-        connected = self.isDeviceConnected()
-        if connected == False:
-            self.ui.statusLabel.setText("disconnected")
-            self.ui.deviceLabel.setText("")
-            self.ui.deviceTypeLabel.setText("")
-            self.ui.userTypeLabel.setText("")
-            self.ui.reminderLabel.setText("")
-            self.ui.positionLabel.setText("")
-            self.ui.speedLabel.setText("")
-        else:
+        status = self.getDeviceConnectionStatus()
+        if status == ConnectionState.CONNECTED:
             self.ui.statusLabel.setText( "connected" )
             self.ui.deviceLabel.setText( self.device.name() )
             self.ui.deviceTypeLabel.setText( self.device.deviceType() )
@@ -82,11 +76,25 @@ class DeviceStatusWidget(QtBaseClass):
                 self.ui.reminderLabel.setText( "None" )
             self._refreshPosition()
             self._refreshSpeed()
+            return
         
-    def isDeviceConnected(self):
+        if status == ConnectionState.CONN_IN_PROGRESS:
+            self.ui.statusLabel.setText("connecting...")
+        else:
+            self.ui.statusLabel.setText("disconnected")
+
+        ## clear rest
+        self.ui.deviceLabel.setText("")
+        self.ui.deviceTypeLabel.setText("")
+        self.ui.userTypeLabel.setText("")
+        self.ui.reminderLabel.setText("")
+        self.ui.positionLabel.setText("")
+        self.ui.speedLabel.setText("")
+        
+    def getDeviceConnectionStatus(self):
         if self.device == None:
-            return False
-        return self.device.isConnected()
+            return ConnectionState.DISCONNECTED
+        return self.device.getConnectionStatus()
 
     def _refreshPosition(self):
         self.ui.positionLabel.setText( self.device.positionCm() )

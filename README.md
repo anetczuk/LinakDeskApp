@@ -69,6 +69,7 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 - use of *EnumMeta* class (*linak_service.py*)
 - defining method decorators (*synchronied.py*)
 - use of threading: *Thread*, *Event*, *Timer*
+- use of *QThreadPool* and *Worker* concepts
 - properly killing (Ctrl+C) PyQt (*sigint.py*)
 - loading of UI files and inheriting from it
 - embedding matplotlib graph with navigation toolbar into PyQt widget
