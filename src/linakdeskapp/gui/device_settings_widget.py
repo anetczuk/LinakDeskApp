@@ -48,54 +48,57 @@ class DeviceSettingsWidget(QtBaseClass):
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
-        self.attachDevice(self.device)
+        self._refreshWidget()
         
         self.ui.refreshPB.pressed.connect( self._refreshSettings )
         self.ui.updateDeskHeightPB.pressed.connect( self._changeDeskHeight )
         self.ui.remUpdatePB.pressed.connect( self._updateReminderSettings )
  
-    def attachDevice(self, device):
+    def attachConnector(self, connector):
         if self.device != None:
             ## disconnect old object
+            self.device.newConnection.disconnect( self._refreshWidget )
+            self.device.disconnected.disconnect( self._refreshWidget )
+            self.device.settingChanged.disconnect( self._refreshWidget )
             self.device.positionChanged.disconnect( self._refreshHeight )
-            self.device.settingChanged.disconnect( self._refreshContent )
             self._enableFavSlot(False)
             
-        self.device = device
-        if self.device == None:
-            self._refreshWidget(False)
-            return
-         
-        self._refreshWidget(True)
+        self.device = connector
         
-        ## connect new object
-        self.device.positionChanged.connect( self._refreshHeight )
-        self.device.settingChanged.connect( self._refreshContent )
-        self._enableFavSlot(True)
+        self._refreshWidget()
+
+        if self.device != None:
+            ## connect new object
+            self.device.newConnection.connect( self._refreshWidget )
+            self.device.disconnected.connect( self._refreshWidget )
+            self.device.settingChanged.connect( self._refreshWidget )
+            self.device.positionChanged.connect( self._refreshHeight )
+            self._enableFavSlot(True)
  
     def _enableFavSlot(self, state):
-        if self.device == None:
-            return
-        if state == False:
-            self.device.favoritiesChanged.disconnect( self._refreshContent )
+        if state == True:
+            self.device.favoritiesChanged.connect( self._refreshWidget )
         else:
-            self.device.favoritiesChanged.connect( self._refreshContent )
+            self.device.favoritiesChanged.disconnect( self._refreshWidget )
  
     def _refreshHeight(self):
         deskHeight = self.device.currentPosition()
         self.ui.deskHeightSB.setValue( deskHeight )
-        
-    def _refreshContent(self):
-        self._refreshWidget(True)
- 
+    
     def _changeDeskHeight(self):
         newValue = self.ui.deskHeightSB.value()
         self.device.sendDeskHeight( newValue )
         self._refreshSettings()
  
-    def _refreshWidget(self, connected):
+    def _refreshWidget(self):
+        connected = self.isDeviceConnected()
         self._refreshReminderWidget(connected)
         self._refreshFavoritiesWidget(connected)
+        
+    def isDeviceConnected(self):
+        if self.device == None:
+            return False
+        return self.device.isConnected()
         
     def _refreshReminderWidget(self, connected):
         if connected == False:

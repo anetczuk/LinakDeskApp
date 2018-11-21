@@ -30,7 +30,7 @@ from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
 
 from linakdeskapp.gui.device_control_widget import DeviceControlWidget as TestWidget
-from .device_object_mock import DeviceObjectMock
+from .device_connector_mock import DeviceConnectorMock
 
 
 
@@ -55,8 +55,8 @@ class DeviceControlWidgetTest(unittest.TestCase):
         self.assertFalse( downPB.isEnabled() )
        
     def test_upPB(self):
-        device = DeviceObjectMock("Device#1", "Owner", 83)
-        self.widget.attachDevice( device )
+        device = DeviceConnectorMock("Device#1", "Owner", 83)
+        self.widget.attachConnector( device )
         
         positionStart = device.currentPosition()
         
@@ -77,8 +77,8 @@ class DeviceControlWidgetTest(unittest.TestCase):
         self.assertGreater(positionEnd, positionStart)
        
     def test_downPB(self):
-        device = DeviceObjectMock("Device#1", "Owner", 83)
-        self.widget.attachDevice( device )
+        device = DeviceConnectorMock("Device#1", "Owner", 83)
+        self.widget.attachConnector( device )
         
         positionStart = device.currentPosition()
         
@@ -99,8 +99,8 @@ class DeviceControlWidgetTest(unittest.TestCase):
         self.assertLess(positionEnd, positionStart)
 
     def test_favPB(self):
-        device = DeviceObjectMock("Device#1", "Owner", 83)
-        self.widget.attachDevice( device )
+        device = DeviceConnectorMock("Device#1", "Owner", 83)
+        self.widget.attachConnector( device )
                  
         layout = self.widget.ui.favLayout
         

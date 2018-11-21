@@ -44,7 +44,6 @@ import linakdeskapp.logger as logger
 from linakdeskapp.gui.main_window import MainWindow
 
 from linakdeskapp.bt_device_connector import BTDeviceConnector
-from linakdeskapp.bt_device_object import BTDeviceObject
 from linakdeskapp.gui.qt import QApplication
 from linakdeskapp.gui.sigint import setup_interrupt_handling 
 
@@ -68,7 +67,7 @@ def runApp(args):
         return 0  
 
     if args.desc == True:
-        BTDeviceObject.printDescription( args.connect )
+        BTDeviceConnector.printDescription( args.connect )
         return 0
 
     ## GUI

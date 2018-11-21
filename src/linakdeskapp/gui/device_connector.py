@@ -22,22 +22,26 @@
 #
 
 
-from .qt import QObject, pyqtSignal
 
-from .device_object import DeviceObject
-
-
-
-class DeviceConnector(QObject):
+class DeviceConnector():
     
-    newConnection   = pyqtSignal(DeviceObject)
-    disconnected    = pyqtSignal()
+    def __init__(self):
+        pass
     
+    def address(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+    
+    def isConnected(self):
+        raise NotImplementedError('You need to define this method in derived class!')
     
     def scanDevices(self):
         raise NotImplementedError('You need to define this method in derived class!')
     
-    def connect(self, itemIndex):
+    def connectTo(self, deviceAddr):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    #TODO: remove method
+    def connectByIndex(self, itemIndex):
         raise NotImplementedError('You need to define this method in derived class!')
     
     def reconnect(self):
@@ -45,5 +49,4 @@ class DeviceConnector(QObject):
 
     def disconnect(self):
         raise NotImplementedError('You need to define this method in derived class!')
-    
-    
+

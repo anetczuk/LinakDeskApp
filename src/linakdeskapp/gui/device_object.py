@@ -28,11 +28,14 @@ from .qt import QObject, pyqtSignal
 
 class DeviceObject(QObject):
     
+    #TODO: rename to prevent use of commont name
+    newConnection       = pyqtSignal()
+    disconnected        = pyqtSignal()
+    
     positionChanged     = pyqtSignal()
     speedChanged        = pyqtSignal()
     settingChanged      = pyqtSignal()
     favoritiesChanged   = pyqtSignal(int)
-    disconnected        = pyqtSignal()
     
     
     def __init__(self):

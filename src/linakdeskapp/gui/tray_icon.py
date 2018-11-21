@@ -89,18 +89,22 @@ class TrayIcon(QSystemTrayIcon):
         tray_menu.addAction( quit_action )
         self.setContextMenu( tray_menu )
     
-    def attachDevice(self, device):
+    def attachConnector(self, connector):
         if self.device != None:
             ## disconnect old object
+            self.device.newConnection.disconnect( self.updateFavMenu )
+            self.device.disconnected.disconnect( self.updateFavMenu )
             self.device.favoritiesChanged.disconnect( self.updateFavMenu )
              
-        self.device = device
+        self.device = connector
+        
         self.updateFavMenu()
 
         ## connect new object
         if self.device != None:
-            self.device.favoritiesChanged.connect( self.updateFavMenu )
-
+            self.device.newConnection.connect( self.updateFavMenu )
+            self.device.disconnected.connect( self.updateFavMenu )
+            self.device.favoritiesChanged.connect( self.updateFavMenu )         
     
     def setIconNeutral(self, icon):
         self.neutralIcon = icon
@@ -165,6 +169,8 @@ class TrayIcon(QSystemTrayIcon):
     def updateFavMenu(self):
         self.fav_menu.clear()
         if self.device == None:
+            return
+        if self.device.isConnected() == False:
             return
         positions = self.device.favPositions()
         for i in range( len(positions) ):

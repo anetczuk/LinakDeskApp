@@ -28,7 +28,7 @@ import unittest
 from PyQt5.QtWidgets import QApplication
 
 from linakdeskapp.gui.device_status_widget import DeviceStatusWidget as TestWidget
-from .device_object_mock import DeviceObjectMock
+from .device_connector_mock import DeviceConnectorMock
 
 
 
@@ -57,8 +57,8 @@ class DeviceStatusWidgetTest(unittest.TestCase):
         self.assertEqual(devicePosition, "")
         
     def test_labels_connectedDevice(self):
-        device = DeviceObjectMock("Device#1", "Owner", 83)
-        self.widget.attachDevice(device)
+        device = DeviceConnectorMock("Device#1", "Owner", 83)
+        self.widget.attachConnector(device)
         
         statusInfo = self.widget.ui.statusLabel.text()
         deviceName = self.widget.ui.deviceLabel.text()
@@ -70,8 +70,8 @@ class DeviceStatusWidgetTest(unittest.TestCase):
         self.assertEqual(devicePosition, "83 cm")
     
     def test_labels_positionChange(self):
-        device = DeviceObjectMock("Device#1", "Owner", 83)
-        self.widget.attachDevice(device)
+        device = DeviceConnectorMock("Device#1", "Owner", 83)
+        self.widget.attachConnector(device)
         
         devicePosition = self.widget.ui.positionLabel.text()
         self.assertEqual(devicePosition, "83 cm")
@@ -87,15 +87,15 @@ class DeviceStatusWidgetTest(unittest.TestCase):
         self.assertEqual(devicePosition, "99 cm")
         
     def test_attach_None(self):
-        device = DeviceObjectMock("Device#1", "Owner", 83)
-        self.widget.attachDevice(device)
+        device = DeviceConnectorMock("Device#1", "Owner", 83)
+        self.widget.attachConnector(device)
 
         statusInfo = self.widget.ui.statusLabel.text()
         devicePosition = self.widget.ui.positionLabel.text()
         self.assertEqual(statusInfo, "connected")
         self.assertEqual(devicePosition, "83 cm")
         
-        self.widget.attachDevice(None)
+        self.widget.attachConnector(None)
         
         device.setPosition(55)
         
@@ -105,11 +105,11 @@ class DeviceStatusWidgetTest(unittest.TestCase):
         self.assertEqual(devicePosition, "")
         
     def test_attach_twoDevices(self):
-        device1 = DeviceObjectMock("Device#1", "Owner", 83)
-        device2 = DeviceObjectMock("Device#2", "Guest", 93)
+        device1 = DeviceConnectorMock("Device#1", "Owner", 83)
+        device2 = DeviceConnectorMock("Device#2", "Guest", 93)
          
-        self.widget.attachDevice(device1)
-        self.widget.attachDevice(device2)
+        self.widget.attachConnector(device1)
+        self.widget.attachConnector(device2)
          
         devicePosition = self.widget.ui.positionLabel.text()
         self.assertEqual(devicePosition, "93 cm")

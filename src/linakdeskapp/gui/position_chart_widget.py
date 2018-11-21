@@ -57,17 +57,25 @@ class PositionChartWidget(QtBaseClass):
         self.toolbar = DynamicToolbar(self.ui.positionChart, self)
         self.ui.toolbarLayout.addWidget( self.toolbar )
         
-        self._setEnabledState()
+        self._refreshWidget()
 
     
-    def attachDevice(self, device):
+    def attachConnector(self, connector):
         if self.device != None:
             ## disconnect old object
+            self.device.newConnection.disconnect( self._refreshWidget )
+            self.device.disconnected.disconnect( self._refreshWidget )
             self.device.positionChanged.disconnect( self._updatePositionState )
             
-        self.device = device
+        self.device = connector
         
-        self._setEnabledState()
+        self._refreshWidget()
+        
+        if self.device != None:
+            ## connect new object
+            self.device.newConnection.connect( self._refreshWidget )
+            self.device.disconnected.connect( self._refreshWidget )
+            self.device.positionChanged.connect( self._updatePositionState )
         
     def loadSettings(self, settings):
         settings.beginGroup( self.objectName() )
@@ -82,31 +90,32 @@ class PositionChartWidget(QtBaseClass):
         settings.setValue("chart_enabled", enabledChart)
         settings.endGroup()
         
-    def _setEnabledState(self):
+    def _refreshWidget(self):
         ## _LOGGER.info("setting enabled: %s", enabled)
-        enabledChart = self.ui.enabledCB.isChecked()
-        if self.device != None:
+        connected = self.isDeviceConnected()
+        if connected == True:
+            enabledChart = self.ui.enabledCB.isChecked()
             self.toolbar.setEnabled( enabledChart )
             self.ui.positionChart.setEnabled( enabledChart )
-            if enabledChart == True:
-                self._updatePositionState()         ## add current position
-                self.device.positionChanged.connect( self._updatePositionState )
-            else:
-                try:
-                    self.device.positionChanged.disconnect( self._updatePositionState )
-                except TypeError:
-                    ## do nothing -- not connected
-                    pass
+            self._updatePositionState()         ## add current position
         else:
             self.toolbar.setEnabled( False )
             self.ui.positionChart.setEnabled( False )
-            
+        
+    def isDeviceConnected(self):
+        if self.device == None:
+            return False
+        return self.device.isConnected()
+
     def _updatePositionState(self):
+        enabledChart = self.ui.enabledCB.isChecked()
+        if enabledChart == False:
+            return
         deskHeight = self.device.currentPosition()
         self.ui.positionChart.addData( deskHeight )
     
     def _toggleEnabled(self, state):
         ## state: 0 -- unchecked
         ## state: 2 -- checked
-        self._setEnabledState()
+        self._refreshWidget()
         

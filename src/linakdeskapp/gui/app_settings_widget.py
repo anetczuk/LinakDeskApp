@@ -118,24 +118,33 @@ class AppSettingsWidget(QtBaseClass):
             return None
         return self.recentAddress
     
-    def attachDevice(self, device):
+    def attachConnector(self, connector):
         if self.device != None:
             ## disconnect old object
+            self.device.newConnection.disconnect( self._enableWidget )
+            self.device.disconnected.disconnect( self._disableWidget )
             self.device.positionChanged.disconnect( self._updatePositionState )
             
-        self.device = device
+        self.device = connector            
+        self.ui.positionChartWidget.attachConnector( connector )
         
-        if self.device != None:
-            self._enableWidget()
-        else:
-            self._disableWidget()
-            
-        self.ui.positionChartWidget.attachDevice( device )
+        self._updateDeviceStatus()
         
         ## connect new object
         if self.device != None:
+            self.device.newConnection.connect( self._enableWidget )
+            self.device.disconnected.connect( self._disableWidget )
             self.device.positionChanged.connect( self._updatePositionState )
 
+    def _updateDeviceStatus(self):
+        if self.device == None:
+            self._disableWidget()
+            return
+        if self.device.isConnected():
+            self._enableWidget()
+        else:
+            self._disableWidget()  
+    
 
     ## ================= slots ========================
 

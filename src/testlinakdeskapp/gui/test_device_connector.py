@@ -46,7 +46,7 @@ class DeviceConnectorTest(unittest.TestCase):
         self.assertEqual( self.connector.getItemIndex(), -1)
         self.assertEqual( self.connector.connectionCounter, 0 )
         
-        self.connector.connect(1)
+        self.connector.connectByIndex(1)
         
         self.assertTrue( self.connector.isConnected() )
         self.assertEqual( self.connector.getItemIndex(), 1)
@@ -54,7 +54,37 @@ class DeviceConnectorTest(unittest.TestCase):
         
         self.connector.scanDevices()
         
-        self.assertFalse( self.connector.isConnected() )
+        self.assertTrue( self.connector.isConnected() )
         self.assertEqual( self.connector.getItemIndex(), -1)
         self.assertEqual( self.connector.connectionCounter, 1 )
+    
+    def test_name(self):
+        self.connector.connectTo("Device#1")
+        
+        devName = self.connector.name()
+        self.assertEqual( devName, "Desk")
+                
+    def test_positionCm(self):
+        self.connector.connectTo("Device#1")
+        
+        self.assertEqual( self.connector.positionCounter, 0)
+        
+        self.connector.setPosition(33)
+        position = self.connector.positionCm()
+        self.assertEqual( position, "33 cm")
+        self.assertEqual( self.connector.positionCounter, 1)
+
+    def test_moveUp(self):
+        self.connector.connectTo("Device#1")
+        
+        self.assertEqual( self.connector.positionCounter, 0)
+        self.connector.moveUp()
+        self.assertEqual( self.connector.positionCounter, 1)
+        
+    def test_moveDown(self):
+        self.connector.connectTo("Device#1")
+        
+        self.assertEqual( self.connector.positionCounter, 0)
+        self.connector.moveDown()
+        self.assertEqual( self.connector.positionCounter, 1)
 

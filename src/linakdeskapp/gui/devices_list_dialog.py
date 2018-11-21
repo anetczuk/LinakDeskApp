@@ -74,6 +74,6 @@ class DevicesListDialog(QtBaseClass):
     def connectToIndexedItem(self, itemIndex):
         if itemIndex < 0:
             return
-        self.connector.connect(itemIndex)
+        self.connector.connectByIndex(itemIndex)
         self.accept()
     

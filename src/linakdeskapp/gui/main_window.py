@@ -43,7 +43,7 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 class MainWindow(QtBaseClass):
     def __init__(self):
         super().__init__()
-        self.connector = None
+        self.device = None
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
@@ -64,18 +64,15 @@ class MainWindow(QtBaseClass):
         self.trayIcon.show()
 
     def attachConnector(self, connector, address):
-        if self.connector != None:
-            ## disconnect slot from old object
-            self.connector.newConnection.disconnect( self.newConnection )
-            self.connector.disconnected.disconnect( self.disconnected )
-            
-        self.connector = connector
-        ## connect slot to new object
-        self.connector.newConnection.connect( self.newConnection )
-        self.connector.disconnected.connect( self.disconnected )
-
+        self.device = connector
+        
+        self.ui.deviceControl.attachConnector( self.device )
+        self.ui.deviceSettings.attachConnector( self.device )
+        self.ui.appSettings.attachConnector( self.device )
+        self.trayIcon.attachConnector( self.device )
+        
         if address != None:
-            self.connector.connectTo(address)
+            self.device.connectTo(address)
         else:
             self._tryReconnectOnStartup()
 
@@ -84,7 +81,7 @@ class MainWindow(QtBaseClass):
         if reconnectAddress == None:
             return
         _LOGGER.debug("trying reconnect on startup")
-        self.connector.connectTo( reconnectAddress )
+        self.device.connectTo( reconnectAddress )
 
     def setIconTheme(self, theme: tray_icon.TrayIconTheme):
         _LOGGER.debug("setting tray theme: %r", theme)
@@ -99,19 +96,6 @@ class MainWindow(QtBaseClass):
         iconPath = resources.getImagePath( fileName )
         appIcon = QIcon( iconPath )
         self.trayIcon.setIconIndicator( appIcon )
-        
-
-#         neutralPath = resources.getImagePath('office-chair-gray.png')
-#         indicatorPath = resources.getImagePath('office-chair-red-gray.png')
-#         self.setIconNeutral( QIcon( neutralPath ) )
-#         self.setIconIndicator( QIcon( indicatorPath ) )
-#         self.setNeutral()
-
-    def _setDevice(self, device):
-        self.ui.deviceControl.attachDevice( device )
-        self.ui.deviceSettings.attachDevice( device )
-        self.ui.appSettings.attachDevice( device )
-        self.trayIcon.attachDevice( device )
 
     def loadSettings(self):
         settings = self.getSettings()
@@ -177,12 +161,6 @@ class MainWindow(QtBaseClass):
 
     # ================================================================
 
-
-    ## slot
-    def newConnection(self, deviceObject):
-        if deviceObject == None:
-            return
-        self._setDevice( deviceObject )
         
     ## slot
     def closeApplication(self):
@@ -193,21 +171,16 @@ class MainWindow(QtBaseClass):
     ## slot
     def connectToDevice(self):
         deviceDialog = DevicesListDialog(self)
-        deviceDialog.attachConnector(self.connector)
+        deviceDialog.attachConnector(self.device)
         deviceDialog.exec_()                            ### modal mode
     
     ## slot    
-    def disconnectFromDevice(self):
-        self.connector.disconnect()
-        self._setDevice( None )
-        
-    ## slot    
-    def disconnected(self):
-        self._setDevice( None )
+    def reconnectDevice(self):
+        self.device.reconnect()
     
     ## slot    
-    def reconnectDevice(self):
-        self.connector.reconnect()
+    def disconnectFromDevice(self):
+        self.device.disconnect()
 
         
     # =======================================

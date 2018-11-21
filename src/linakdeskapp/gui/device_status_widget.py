@@ -39,31 +39,31 @@ class DeviceStatusWidget(QtBaseClass):
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
-        self.attachDevice(self.device)
+        self._refreshWidget()
  
-    def attachDevice(self, device):
+    def attachConnector(self, connector):
         if self.device != None:
             ## disconnect old object
+            self.device.newConnection.disconnect( self._refreshWidget )
+            self.device.disconnected.disconnect( self._refreshWidget )
+            self.device.settingChanged.disconnect( self._refreshWidget )
             self.device.positionChanged.disconnect( self._refreshPosition )
             self.device.speedChanged.disconnect( self._refreshSpeed )
-            self.device.settingChanged.disconnect( self._refreshContent )
             
-        self.device = device
-        if self.device == None:
-            self._refreshWidget(False)
-            return
+        self.device = connector
         
-        self._refreshWidget(True)
+        self._refreshWidget()
         
-        ## connect new object
-        self.device.positionChanged.connect( self._refreshPosition )
-        self.device.speedChanged.connect( self._refreshSpeed )
-        self.device.settingChanged.connect( self._refreshContent )
- 
-    def _refreshContent(self):
-        self._refreshWidget(True)
- 
-    def _refreshWidget(self, connected):
+        if self.device != None:
+            ## connect new object
+            self.device.newConnection.connect( self._refreshWidget )
+            self.device.disconnected.connect( self._refreshWidget )
+            self.device.settingChanged.connect( self._refreshWidget )
+            self.device.positionChanged.connect( self._refreshPosition )
+            self.device.speedChanged.connect( self._refreshSpeed )
+
+    def _refreshWidget(self):
+        connected = self.isDeviceConnected()
         if connected == False:
             self.ui.statusLabel.setText("disconnected")
             self.ui.deviceLabel.setText("")
@@ -85,6 +85,11 @@ class DeviceStatusWidget(QtBaseClass):
             self._refreshPosition()
             self._refreshSpeed()
         
+    def isDeviceConnected(self):
+        if self.device == None:
+            return False
+        return self.device.isConnected()
+
     def _refreshPosition(self):
         self.ui.positionLabel.setText( self.device.positionCm() )
         

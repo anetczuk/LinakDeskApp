@@ -90,11 +90,7 @@ try:
     
     connector = DeviceConnectorMock()
     
-    window.attachConnector(connector)
-    
-    if args.connect != None:
-        btAddress = args.connect
-        connector.connectTo( btAddress )
+    window.attachConnector(connector, args.connect)
     
     if args.minimized == False:
         window.show()

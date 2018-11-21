@@ -46,7 +46,7 @@ class DeviceControlWidget(QtBaseClass):
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
         
-        self.attachDevice(None)
+        self._refreshWidget()
         
         self.ui.upPB.pressed.connect(self._goingUp)
         self.ui.upPB.released.connect(self._stopMoving)
@@ -56,23 +56,26 @@ class DeviceControlWidget(QtBaseClass):
         self.ui.topPB.clicked.connect(self._goingTop)
         self.ui.bottomPB.clicked.connect(self._goingBottom)
 
-    def attachDevice(self, device):
+    def attachConnector(self, connector):
         if self.device != None:
             ## disconnect old object
+            self.device.newConnection.connect( self._refreshWidget )
+            self.device.disconnected.connect( self._refreshWidget )
             self.device.favoritiesChanged.disconnect( self._refreshFavLayout )
             
-        self.ui.deviceStatus.attachDevice(device)
-        self.device = device
-        if self.device == None:
-            self._refreshWidget(False)
-            return
-         
-        self._refreshWidget(True)
+        self.ui.deviceStatus.attachConnector(connector)
+        self.device = connector
+        
+        self._refreshWidget()
             
-        ## connect new object
-        self.device.favoritiesChanged.connect( self._refreshFavLayout )
+        if self.device != None:
+            ## connect new object
+            self.device.newConnection.connect( self._refreshWidget )
+            self.device.disconnected.connect( self._refreshWidget )
+            self.device.favoritiesChanged.connect( self._refreshFavLayout )
 
-    def _refreshWidget(self, connected):
+    def _refreshWidget(self):
+        connected = self.isDeviceConnected()
         if connected == False:
             self.ui.upPB.setEnabled(False)
             self.ui.downPB.setEnabled(False)
@@ -89,6 +92,11 @@ class DeviceControlWidget(QtBaseClass):
             self.ui.bottomPB.setEnabled(True)
             self.ui.favLayout.setEnabled(True)
             self._genFavButtons()
+
+    def isDeviceConnected(self):
+        if self.device == None:
+            return False
+        return self.device.isConnected()
 
     def _goingUp(self):
         if self.device == None:
@@ -141,7 +149,7 @@ class DeviceControlWidget(QtBaseClass):
             button.clicked.connect( favHandler )
             self.ui.favLayout.addWidget( button )
             self.favButtons.append(button)
-    
+
     def _refreshFavLayout(self, favIndex):
         self._refreshFavButton(favIndex)
         
