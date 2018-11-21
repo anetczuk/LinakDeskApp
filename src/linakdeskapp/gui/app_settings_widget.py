@@ -129,8 +129,8 @@ class AppSettingsWidget(QtBaseClass):
         
         self._updateDeviceStatus()
         
-        ## connect new object
         if self.device != None:
+            ## connect new object
             self.device.connectionStateChanged.connect( self._refreshWidget )
             self.device.positionChanged.connect( self._updatePositionState )
 

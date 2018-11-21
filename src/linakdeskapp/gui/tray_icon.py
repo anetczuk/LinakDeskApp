@@ -36,9 +36,26 @@ _LOGGER = logging.getLogger(__name__)
 
 @unique
 class TrayIconTheme(Enum):
-    WHITE           = ('office-chair-white.png', 'office-chair-red.png')
-    BLACK           = ('office-chair-black.png', 'office-chair-red.png')
-    BLACK_ON_GRAY   = ('office-chair-gray.png', 'office-chair-red-gray.png')
+    WHITE           = ('office-chair-gray.png', 'office-chair-white.png', 'office-chair-red.png')
+    BLACK           = ('office-chair-gray.png', 'office-chair-black.png', 'office-chair-red.png')
+    BLACK_ON_GRAY   = ('office-chair-gray-gray.png', 'office-chair-black-gray.png', 'office-chair-red-gray.png')
+
+    def __init__(self, disconnected, connected, indicating):
+        self._disconn = disconnected
+        self._conn = connected
+        self._indic = indicating
+
+    @property
+    def disconnected(self):
+        return self._disconn
+
+    @property
+    def connected(self):
+        return self._conn
+
+    @property
+    def indicating(self):
+        return self._indic
 
     @classmethod
     def findByName(cls, name):
@@ -57,16 +74,14 @@ class TrayIconTheme(Enum):
                 return index
             index = index + 1
         return -1
-    
+
+
     
 class TrayIcon(QSystemTrayIcon):
     def __init__(self, parent):
         super().__init__(parent)
 
         self.device = None
-        self.neutralIcon = None
-        self.indicatorIcon = None
-        self.currIconState = 1          ## 0 - unknown, 1 - neutral, 2 - indicator
 
         self.activated.connect( self._icon_activated )
 
@@ -104,52 +119,15 @@ class TrayIcon(QSystemTrayIcon):
             self.device.connectionStateChanged.connect( self.updateFavMenu )
             self.device.favoritiesChanged.connect( self.updateFavMenu )         
     
-    def setIconNeutral(self, icon):
-        self.neutralIcon = icon
-        if self.currIconState == 1:
-            self.setNeutral()
-    
-    def setIconIndicator(self, icon):
-        self.indicatorIcon = icon
-        if self.currIconState == 2:
-            self.setIndicator()
-    
-    def setNeutral(self):
-        if self.neutralIcon != None:
-            self.setIcon( self.neutralIcon )
-            self.currIconState = 1
-            
-    def setIndicator(self):
-        if self.indicatorIcon != None:
-            self.setIcon( self.indicatorIcon )
-            self.currIconState = 2
-    
     def displayMessage(self, message):
         timeout = 10000
         ## under xfce4 there is problem with balloon icon -- it changes tray icon, so
         ## it cannot be changed back to proper one. Workaround is to use NoIcon parameter
         self.showMessage("Desk", message, QSystemTrayIcon.NoIcon, timeout)
-        ##self.showMessage("Desk", message, QSystemTrayIcon.Information, timeout)
-        ##QtCore.QTimer.singleShot(timeout, self._refreshIcon)
         
     def setInfo(self, message):
         self.setToolTip("Desk: " + message)
-    
-    def changeIcon(self, state):
-        if state == True:
-            self.setIndicator()
-        else:
-            self.setNeutral()
-            
-    def _refreshIcon(self):
-        _LOGGER.warn("refreshing icon state: %s", self.currIconState)
-        if self.currIconState == 1:
-            self.setNeutral()
-        elif self.currIconState == 2:
-            self.setIndicator()
-        else:
-            _LOGGER.warn("unsupported state: %s", self.currIconState)
-    
+
     def _icon_activated(self, reason):
 #         print("tray clicked, reason:", reason)
         if reason == 3:

@@ -30,6 +30,7 @@ from . import resources
 from .qt import qApp, QIcon, QtCore
 
 from linakdeskapp.gui.devices_list_dialog import DevicesListDialog
+from linakdeskapp.gui.device_connector import ConnectionState
 
 
 
@@ -51,6 +52,10 @@ class MainWindow(QtBaseClass):
         
         self.statusBar().showMessage("Ready")
         
+        self.iconDict             = IconDictionary()
+        self.currentTheme         = None
+        self.currentPositionState = None
+        
         self.trayIcon = tray_icon.TrayIcon(self)
         self.trayIcon.setToolTip("Linak desk")
         
@@ -58,18 +63,26 @@ class MainWindow(QtBaseClass):
         
         self.ui.appSettings.showMessage.connect( self.trayIcon.displayMessage )
         self.ui.appSettings.stateInfoChanged.connect( self.trayIcon.setInfo )
-        self.ui.appSettings.indicatePositionChange.connect( self.trayIcon.changeIcon )
         self.ui.appSettings.iconThemeChanged.connect( self.setIconTheme )
+        self.ui.appSettings.indicatePositionChange.connect( self._changePositionIcon )
         
         self.trayIcon.show()
 
     def attachConnector(self, connector, address):
+        if self.device != None:
+            ## disconnect old object
+            self.device.connectionStateChanged.disconnect( self._updateConnectionInfo )
+            
         self.device = connector
         
         self.ui.deviceControl.attachConnector( self.device )
         self.ui.deviceSettings.attachConnector( self.device )
         self.ui.appSettings.attachConnector( self.device )
         self.trayIcon.attachConnector( self.device )
+        
+        if self.device != None:
+            ## connect new object
+            self.device.connectionStateChanged.connect( self._updateConnectionInfo )
         
         if address != None:
             self.device.connectTo(address)
@@ -86,16 +99,41 @@ class MainWindow(QtBaseClass):
     def setIconTheme(self, theme: tray_icon.TrayIconTheme):
         _LOGGER.debug("setting tray theme: %r", theme)
         
-        fileName = theme.value[0]
-        iconPath = resources.getImagePath( fileName )
-        appIcon = QIcon( iconPath )
-        self.setWindowIcon( appIcon )
-        self.trayIcon.setIconNeutral( appIcon )
+        self.currentTheme = theme
+        
+        connectedIcon = self.iconDict.getIcon( self.currentTheme.connected )
+        self.setWindowIcon( connectedIcon )
+        
+        self._updateTrayIcon()
 
-        fileName = theme.value[1]
-        iconPath = resources.getImagePath( fileName )
-        appIcon = QIcon( iconPath )
-        self.trayIcon.setIconIndicator( appIcon )
+    def _changePositionIcon(self, state):
+        ## state == True means indicating, otherwise nromal
+        self.currentPositionState = state
+        self._updateTrayIcon()
+
+    def _updateConnectionInfo(self):
+        ## whenever connection status changes then reset position status
+        self.currentPositionState = None    
+        self._updateTrayIcon()
+        
+    def _updateTrayIcon(self):
+        connection = self.getDeviceConnectionStatus()
+        if connection != ConnectionState.CONNECTED:
+            currIcon = self.iconDict.getIcon( self.currentTheme.disconnected )
+            self.trayIcon.setIcon( currIcon )
+            return
+        ## connected -- normal or indicating
+        if self.currentPositionState == True:
+            indicIcon = self.iconDict.getIcon( self.currentTheme.indicating )
+            self.trayIcon.setIcon( indicIcon )
+        else:
+            connectedIcon = self.iconDict.getIcon( self.currentTheme.connected )
+            self.trayIcon.setIcon( connectedIcon )
+
+    def getDeviceConnectionStatus(self):
+        if self.device == None:
+            return ConnectionState.DISCONNECTED
+        return self.device.getConnectionStatus()
 
     def loadSettings(self):
         settings = self.getSettings()
@@ -197,7 +235,22 @@ class MainWindow(QtBaseClass):
     
     def hideEvent(self, event):
         self.trayIcon.updateLabel()
+
+
+
+class IconDictionary():
     
+    def __init__(self):
+        self.icons = dict()
+    
+    def getIcon(self, fileName: str):
+        if fileName in self.icons:
+            return self.icons[fileName]
+        iconPath = resources.getImagePath( fileName )
+        appIcon = QIcon( iconPath )
+        self.icons[fileName] = appIcon
+        return appIcon
+
 
 def getWidgetKey(widget):
     if widget == None:
