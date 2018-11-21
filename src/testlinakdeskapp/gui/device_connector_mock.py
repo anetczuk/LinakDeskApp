@@ -23,7 +23,7 @@
 
 
 from linakdeskapp.gui.device_object import DeviceObject
-from linakdeskapp.gui.device_connector import DeviceConnector
+from linakdeskapp.gui.device_connector import DeviceConnector, ScanItem
 
 
 
@@ -110,8 +110,9 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
         DeviceConnector.__init__(self)
         DeviceObject.__init__(self)
         
-        self.itemIndex = -1
-        self.devList = ["Desk1", "Desk2"]
+        self.devList = []
+        self.devList.append( ScanItem("Desk1", "11:00:00:11") )
+        self.devList.append( ScanItem("Desk2", "22:00:00:22") )
         
         self.device = None
         self.recentAddress = None
@@ -129,7 +130,6 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
 
     
     def scanDevices(self):
-        self.itemIndex = -1
         return self.devList
 
 
@@ -141,22 +141,19 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
     def isConnected(self):
         return (self.device != None)
     
-    def getItemIndex(self):
-        return self.itemIndex
-    
     def connectTo(self, deviceAddress):
         self.recentAddress = deviceAddress
         if deviceAddress == None:
             return False
-        name = "Desk"
-        if self.itemIndex > -1:
-            name = self.devList[self.itemIndex]
+        name = self._findItemByAddress( deviceAddress )
         self.device = DeviceMock( name, "Owner" )
         self.newConnection.emit()
     
-    def connectByIndex(self, itemIndex):
-        self.itemIndex = itemIndex
-        return self.connectTo("11:22:33:44")
+    def _findItemByAddress(self, addr):
+        for item in self.devList:
+            if item.address == addr:
+                return item.name
+        return "Custom Desk"
     
     def _connectionArrived(self):
         self.connectionCounter += 1

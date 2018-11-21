@@ -32,7 +32,7 @@ except ImportError as e:
     exit(1)
 
 from .gui.device_object import DeviceObject
-from .gui.device_connector import DeviceConnector
+from .gui.device_connector import DeviceConnector, ScanItem
 
 from linak_dpg_bt.linak_device import LinakDesk
 from linak_dpg_bt.desk_mover import DeskMoverThread
@@ -68,7 +68,8 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         for dev in devices:
             self.devList.append( dev.addr )
             devName = "%s (%s)" % (dev.addr, dev.getValueText(9))
-            retList.append( devName )
+            item = ScanItem( devName, dev.addr )
+            retList.append( item )
 #             print( "Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi) )
 #             for (adtype, desc, value) in dev.getScanData():
 #                 print( "  %s = %s" % (desc, value) )
@@ -112,10 +113,6 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         
         self.newConnection.emit()
         return True
-    
-    def connectByIndex(self, itemIndex):
-        address = self.devList[itemIndex]
-        return self.connectTo(address)
     
     def reconnect(self):
         if self.recentAddress == None:

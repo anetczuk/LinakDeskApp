@@ -39,30 +39,31 @@ class DeviceConnectorTest(unittest.TestCase):
        
     def test_scanDevices(self):
         devices = self.connector.scanDevices()
-        self.assertEqual(devices, ["Desk1", "Desk2"])
+        self.assertEqual(devices[0].name, "Desk1")
+        self.assertEqual(devices[1].name, "Desk2")
         
     def test_connect(self):
         self.assertFalse( self.connector.isConnected() )
-        self.assertEqual( self.connector.getItemIndex(), -1)
+        self.assertEqual( self.connector.address(), None )
         self.assertEqual( self.connector.connectionCounter, 0 )
         
-        self.connector.connectByIndex(1)
+        self.connector.connectTo("aaa")
         
         self.assertTrue( self.connector.isConnected() )
-        self.assertEqual( self.connector.getItemIndex(), 1)
+        self.assertEqual( self.connector.address(), "aaa" )
         self.assertEqual( self.connector.connectionCounter, 1 )
         
         self.connector.scanDevices()
         
         self.assertTrue( self.connector.isConnected() )
-        self.assertEqual( self.connector.getItemIndex(), -1)
+        self.assertEqual( self.connector.address(), "aaa" )
         self.assertEqual( self.connector.connectionCounter, 1 )
     
     def test_name(self):
         self.connector.connectTo("Device#1")
         
         devName = self.connector.name()
-        self.assertEqual( devName, "Desk")
+        self.assertEqual( devName, "Custom Desk")
                 
     def test_positionCm(self):
         self.connector.connectTo("Device#1")

@@ -36,6 +36,7 @@ class DevicesListDialog(QtBaseClass):
         
         self.connector = None
         self.finishedState = 0
+        self.foundItems = list()
         
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
@@ -57,12 +58,12 @@ class DevicesListDialog(QtBaseClass):
     def _scanDevices(self):
 #         print "Scanning for devices"
         self.ui.devicesView.clear()
-        foundItems = self.connector.scanDevices()
-        if foundItems == None:
+        self.foundItems = self.connector.scanDevices()
+        if self.foundItems == None:
             return
 #         print "Found:", foundItems
-        for item in foundItems:
-            self.ui.devicesView.addItem(item)
+        for item in self.foundItems:
+            self.ui.devicesView.addItem( item.name )
         
     def _connectToSelected(self):
         currRow = self.ui.devicesView.currentRow()
@@ -74,6 +75,7 @@ class DevicesListDialog(QtBaseClass):
     def connectToIndexedItem(self, itemIndex):
         if itemIndex < 0:
             return
-        self.connector.connectByIndex(itemIndex)
+        item = self.foundItems[itemIndex]
+        self.connector.connectTo( item.address )
         self.accept()
     

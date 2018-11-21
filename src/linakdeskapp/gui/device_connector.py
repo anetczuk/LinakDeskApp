@@ -40,13 +40,25 @@ class DeviceConnector():
     def connectTo(self, deviceAddr):
         raise NotImplementedError('You need to define this method in derived class!')
 
-    #TODO: remove method
-    def connectByIndex(self, itemIndex):
-        raise NotImplementedError('You need to define this method in derived class!')
-    
     def reconnect(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
     def disconnect(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+
+class ScanItem():
+    
+    def __init__(self, name, address):
+        self._name = name
+        self._address = address
+    
+    @property
+    def name(self):
+        return self._name
+    
+    @property
+    def address(self):
+        return self._address
+    
+    

@@ -63,19 +63,19 @@ class DevicesListDialogTest(unittest.TestCase):
         self.assertEqual(0, self.widget.ui.devicesView.count())
         
     def test_connect(self):
-        self.widget.ui.devicesView.addItem("Device1")
-        self.widget.ui.devicesView.addItem("Device2")
+        pButton = self.widget.ui.scanBTPB
+        QTest.mouseClick(pButton, Qt.LeftButton)
         self.widget.ui.devicesView.setCurrentRow(1)
 
         self.assertFalse( self.connector.isConnected() )
-        self.assertEqual( self.connector.getItemIndex(), -1 )
+        self.assertEqual( self.connector.address(), None )
         self.assertEqual( 0, self.widget.getFinishedState() )
 
         pButton = self.widget.ui.connectPB
         QTest.mouseClick(pButton, Qt.LeftButton)
         
         self.assertTrue( self.connector.isConnected() )
-        self.assertEqual( self.connector.getItemIndex(), 1 )
+        self.assertEqual( self.connector.address(), "22:00:00:22" )
         self.assertEqual( QDialog.Accepted, self.widget.getFinishedState() )
         
         
