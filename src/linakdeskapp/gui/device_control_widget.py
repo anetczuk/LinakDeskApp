@@ -59,8 +59,7 @@ class DeviceControlWidget(QtBaseClass):
     def attachConnector(self, connector):
         if self.device != None:
             ## disconnect old object
-            self.device.newConnection.connect( self._refreshWidget )
-            self.device.disconnected.connect( self._refreshWidget )
+            self.device.connectionStateChanged.connect( self._refreshWidget )
             self.device.favoritiesChanged.disconnect( self._refreshFavLayout )
             
         self.ui.deviceStatus.attachConnector(connector)
@@ -70,8 +69,7 @@ class DeviceControlWidget(QtBaseClass):
             
         if self.device != None:
             ## connect new object
-            self.device.newConnection.connect( self._refreshWidget )
-            self.device.disconnected.connect( self._refreshWidget )
+            self.device.connectionStateChanged.connect( self._refreshWidget )
             self.device.favoritiesChanged.connect( self._refreshFavLayout )
 
     def _refreshWidget(self):

@@ -121,8 +121,7 @@ class AppSettingsWidget(QtBaseClass):
     def attachConnector(self, connector):
         if self.device != None:
             ## disconnect old object
-            self.device.newConnection.disconnect( self._enableWidget )
-            self.device.disconnected.disconnect( self._disableWidget )
+            self.device.connectionStateChanged.disconnect( self._refreshWidget )
             self.device.positionChanged.disconnect( self._updatePositionState )
             
         self.device = connector            
@@ -132,8 +131,7 @@ class AppSettingsWidget(QtBaseClass):
         
         ## connect new object
         if self.device != None:
-            self.device.newConnection.connect( self._enableWidget )
-            self.device.disconnected.connect( self._disableWidget )
+            self.device.connectionStateChanged.connect( self._refreshWidget )
             self.device.positionChanged.connect( self._updatePositionState )
 
     def _updateDeviceStatus(self):
@@ -218,6 +216,18 @@ class AppSettingsWidget(QtBaseClass):
     ## =================================================
     
 
+    def _refreshWidget(self):
+        connected = self.isDeviceConnected()
+        if connected == True:
+            self._enableWidget()
+        else:
+            self._disableWidget()
+    
+    def isDeviceConnected(self):
+        if self.device == None:
+            return False
+        return self.device.isConnected()
+    
     def _enableWidget(self):
         self.recentAddress = self.device.address()
         self._updatePositionState()

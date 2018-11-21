@@ -92,8 +92,7 @@ class TrayIcon(QSystemTrayIcon):
     def attachConnector(self, connector):
         if self.device != None:
             ## disconnect old object
-            self.device.newConnection.disconnect( self.updateFavMenu )
-            self.device.disconnected.disconnect( self.updateFavMenu )
+            self.device.connectionStateChanged.disconnect( self.updateFavMenu )
             self.device.favoritiesChanged.disconnect( self.updateFavMenu )
              
         self.device = connector
@@ -102,8 +101,7 @@ class TrayIcon(QSystemTrayIcon):
 
         ## connect new object
         if self.device != None:
-            self.device.newConnection.connect( self.updateFavMenu )
-            self.device.disconnected.connect( self.updateFavMenu )
+            self.device.connectionStateChanged.connect( self.updateFavMenu )
             self.device.favoritiesChanged.connect( self.updateFavMenu )         
     
     def setIconNeutral(self, icon):

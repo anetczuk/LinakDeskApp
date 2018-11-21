@@ -23,7 +23,7 @@
 
 
 from linakdeskapp.gui.device_object import DeviceObject
-from linakdeskapp.gui.device_connector import DeviceConnector, ScanItem
+from linakdeskapp.gui.device_connector import DeviceConnector, ScanItem, ConnectionState
 
 
 
@@ -114,10 +114,12 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
         self.devList.append( ScanItem("Desk1", "11:00:00:11") )
         self.devList.append( ScanItem("Desk2", "22:00:00:22") )
         
+        self.connectionStatus = ConnectionState.DISCONNECTED
         self.device = None
         self.recentAddress = None
         if name != None:
             self.device = DeviceMock(name, userType, position)
+            self.connectionStatus = ConnectionState.CONNECTED
         
         self.connectionCounter = 0
         self.positionCounter = 0
@@ -125,7 +127,7 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
         self.downCounter = 0
         self.stopCounter = 0
         
-        self.newConnection.connect( self._connectionArrived )        
+        self.connectionStateChanged.connect( self._connectionChanged )        
         self.positionChanged.connect( self._positionChanged )
 
     
@@ -138,32 +140,44 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
     def address(self):
         return self.recentAddress
     
-    def isConnected(self):
-        return (self.device != None)
+    def getConnectionStatus(self) -> ConnectionState:
+        return self.connectionStatus
     
     def connectTo(self, deviceAddress):
+        self.disconnect()
         self.recentAddress = deviceAddress
         if deviceAddress == None:
             return False
+        self._changeConnectionStatus(ConnectionState.CONN_IN_PROGRESS)
         name = self._findItemByAddress( deviceAddress )
         self.device = DeviceMock( name, "Owner" )
-        self.newConnection.emit()
+        self._changeConnectionStatus(ConnectionState.CONNECTED)
     
     def _findItemByAddress(self, addr):
         for item in self.devList:
             if item.address == addr:
                 return item.name
         return "Custom Desk"
-    
-    def _connectionArrived(self):
+        
+    def reconnect(self):
+        self.connectTo( self.recentAddress )
+        
+    def disconnect(self):
+        self.device = None
+        self._changeConnectionStatus(ConnectionState.DISCONNECTED)
+        
+    def _connectionChanged(self):
         self.connectionCounter += 1
         
     def _positionChanged(self):
         self.positionCounter += 1
-        
-    def disconnect(self):
-        self.device = None
     
+    def _changeConnectionStatus(self, newStatus):
+        if self.connectionStatus == newStatus:
+            return
+        self.connectionStatus = newStatus
+        self.connectionStateChanged.emit()
+        
     
     ### ===========================================================
     

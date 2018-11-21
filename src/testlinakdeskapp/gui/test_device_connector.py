@@ -51,13 +51,13 @@ class DeviceConnectorTest(unittest.TestCase):
         
         self.assertTrue( self.connector.isConnected() )
         self.assertEqual( self.connector.address(), "aaa" )
-        self.assertEqual( self.connector.connectionCounter, 1 )
+        self.assertEqual( self.connector.connectionCounter, 2 )
         
         self.connector.scanDevices()
         
         self.assertTrue( self.connector.isConnected() )
         self.assertEqual( self.connector.address(), "aaa" )
-        self.assertEqual( self.connector.connectionCounter, 1 )
+        self.assertEqual( self.connector.connectionCounter, 2 )
     
     def test_name(self):
         self.connector.connectTo("Device#1")

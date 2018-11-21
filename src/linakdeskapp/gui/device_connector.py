@@ -22,6 +22,17 @@
 #
 
 
+from enum import Enum, unique, auto
+
+
+
+@unique
+class ConnectionState(Enum):
+    CONNECTED           = auto()
+    CONN_IN_PROGRESS    = auto()
+    DISCONNECTED        = auto()
+
+
 
 class DeviceConnector():
     
@@ -32,6 +43,10 @@ class DeviceConnector():
         raise NotImplementedError('You need to define this method in derived class!')
     
     def isConnected(self):
+        status = self.getConnectionStatus()
+        return status == ConnectionState.CONNECTED
+    
+    def getConnectionStatus(self) -> ConnectionState:
         raise NotImplementedError('You need to define this method in derived class!')
     
     def scanDevices(self):

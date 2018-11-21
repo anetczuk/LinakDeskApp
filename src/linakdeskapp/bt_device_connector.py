@@ -32,7 +32,7 @@ except ImportError as e:
     exit(1)
 
 from .gui.device_object import DeviceObject
-from .gui.device_connector import DeviceConnector, ScanItem
+from .gui.device_connector import DeviceConnector, ScanItem, ConnectionState
 
 from linak_dpg_bt.linak_device import LinakDesk
 from linak_dpg_bt.desk_mover import DeskMoverThread
@@ -45,6 +45,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         DeviceConnector.__init__(self)
         DeviceObject.__init__(self)
         
+        self.connectionStatus = ConnectionState.DISCONNECTED
         self.devList = []
         
         self.desk = None
@@ -85,22 +86,21 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
     def address(self):
         return self.recentAddress
     
-    def isConnected(self):
-        if self.desk == None:
-            return False
-        return self.desk.is_connected()
+    def getConnectionStatus(self) -> ConnectionState:
+        return self.connectionStatus
     
     def connectTo(self, deviceAddr):
-        if self.desk != None:
-            self.desk.disconnect()
+        self.disconnect()
         self.recentAddress = deviceAddr
         if deviceAddr == None:
             return False
+        self._changeConnectionStatus(ConnectionState.CONN_IN_PROGRESS)
         self.desk = LinakDesk( deviceAddr )
         ##self.desk.read_dpg_data()
         connected = self.desk.initialize()
         if connected == False:
             self.desk = None
+            self._changeConnectionStatus(ConnectionState.DISCONNECTED)
             return False
         
         self.desk.set_position_change_callback( self._handleBTPositionChange )
@@ -111,18 +111,24 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
  
         self.mover = DeskMoverThread( self.desk )
         
-        self.newConnection.emit()
+        self._changeConnectionStatus(ConnectionState.CONNECTED)
         return True
     
     def reconnect(self):
-        if self.recentAddress == None:
-            return
         self.connectTo( self.recentAddress )
     
     def disconnect(self):
         if self.desk == None:
+            self._changeConnectionStatus(ConnectionState.DISCONNECTED)
             return
         self.desk.disconnect()
+        self._changeConnectionStatus(ConnectionState.DISCONNECTED)
+        
+    def _changeConnectionStatus(self, newStatus):
+        if self.connectionStatus == newStatus:
+            return
+        self.connectionStatus = newStatus
+        self.connectionStateChanged.emit()
     
     
     ### =================================================================
@@ -215,6 +221,9 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         self.mover.stopMoving()
 
 
+    ## =====================================================
+
+
     def _handleBTPositionChange(self):
         self.positionChanged.emit()
         
@@ -228,7 +237,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         self.favoritiesChanged.emit(favNumber-1)
         
     def _handleBTDisconnection(self):
-        self.disconnected.emit()
+        self._changeConnectionStatus(ConnectionState.DISCONNECTED)
         
     @staticmethod
     def printDescription(deviceAddr):
