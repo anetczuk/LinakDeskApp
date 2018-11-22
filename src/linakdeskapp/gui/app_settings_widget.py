@@ -30,6 +30,7 @@ from . import uiloader
 from .qt import QtCore
 from .qt import pyqtSignal
 from .tray_icon import TrayIconTheme
+from linakdeskapp.gui.device_connector import ConnectionState
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -92,6 +93,10 @@ class AppSettingsWidget(QtBaseClass):
         self.totalSit = datetime.timedelta()
         self.totalStand = datetime.timedelta()
         
+        self.autoReconnectTimer = QtCore.QTimer()
+        self.autoReconnectTimer.setSingleShot(True)
+        self.autoReconnectTimer.timeout.connect( self._autoReconnectTimeout )
+        
         ## timer reminds to change position after given amount of time
         self.reminderTimer = QtCore.QTimer()
         self.reminderTimer.timeout.connect( self._reminderTimeout )
@@ -104,6 +109,9 @@ class AppSettingsWidget(QtBaseClass):
         self.labelTimer = QtCore.QTimer()
         self.labelTimer.timeout.connect( self._updateStateInfo )
         self.labelTimer.setInterval(300)
+        
+        self.ui.autoReconnectCB.stateChanged.connect( self._tryAutoReconnect )
+        self.ui.reconnectTimeSB.valueChanged.connect( self._toggleAutoReconnectTime )
         
         ## tray combo box
         self.ui.trayThemeCB.currentIndexChanged.connect( self._trayThemeChanged )
@@ -121,7 +129,7 @@ class AppSettingsWidget(QtBaseClass):
     def attachConnector(self, connector):
         if self.device != None:
             ## disconnect old object
-            self.device.connectionStateChanged.disconnect( self._refreshWidget )
+            self.device.connectionStateChanged.disconnect( self._connectionStateChanged )
             self.device.positionChanged.disconnect( self._updatePositionState )
             
         self.device = connector            
@@ -131,7 +139,7 @@ class AppSettingsWidget(QtBaseClass):
         
         if self.device != None:
             ## connect new object
-            self.device.connectionStateChanged.connect( self._refreshWidget )
+            self.device.connectionStateChanged.connect( self._connectionStateChanged )
             self.device.positionChanged.connect( self._updatePositionState )
 
     def _updateDeviceStatus(self):
@@ -147,6 +155,31 @@ class AppSettingsWidget(QtBaseClass):
     ## ================= slots ========================
 
 
+    def _tryAutoReconnect(self):
+        if self.device == None:
+            return 
+        if self.device.getConnectionStatus() != ConnectionState.DISCONNECTED:
+            return 
+        if self.ui.autoReconnectCB.isChecked():
+            _LOGGER.debug("starting auto reconnect timer" )
+            self.autoReconnectTimer.start()
+        else:
+            self.autoReconnectTimer.stop()
+    
+    def _autoReconnectTimeout(self):
+        if self.device == None:
+            _LOGGER.debug("auto reconnect failed: no device")
+            return
+        if self.device.isConnected() == True:
+            _LOGGER.debug("auto reconnect failed: device already connected")
+            return
+        _LOGGER.debug("triggering auto reconnect")
+        self.device.reconnect()
+    
+    def _toggleAutoReconnectTime(self, value):
+        _LOGGER.debug("setting auto reconnect timer to %s", value)
+        self.autoReconnectTimer.setInterval( value * 1000 )
+        
     def _trayThemeChanged(self):
         selectedTheme = self.ui.trayThemeCB.currentData()
         self.iconThemeChanged.emit( selectedTheme )
@@ -216,12 +249,13 @@ class AppSettingsWidget(QtBaseClass):
     ## =================================================
     
 
-    def _refreshWidget(self):
+    def _connectionStateChanged(self):
         connected = self.isDeviceConnected()
         if connected == True:
             self._enableWidget()
         else:
             self._disableWidget()
+        self._tryAutoReconnect()
     
     def isDeviceConnected(self):
         if self.device == None:
@@ -246,6 +280,8 @@ class AppSettingsWidget(QtBaseClass):
         settings.beginGroup( self.objectName() )
         
         connectOnStartup = settings.value("connectOnStartup", True, type=bool)
+        autoReconnect = settings.value("autoReconnect", False, type=bool)
+        reconnectTime = settings.value("reconnectTime", 60, int)
         self.recentAddress = settings.value("recentAddress", None, type=str)
         
         enabled = settings.value("enabled", True, type=bool)
@@ -264,6 +300,10 @@ class AppSettingsWidget(QtBaseClass):
         settings.endGroup()
         
         self.ui.connectOnStartupCB.setChecked( connectOnStartup )
+        
+        self.ui.autoReconnectCB.setChecked( autoReconnect )
+        self.ui.reconnectTimeSB.setValue( reconnectTime )
+        self._toggleAutoReconnectTime( reconnectTime )
         
         ## update reminder
         self._setCurrentTrayTheme( trayTheme )
@@ -286,6 +326,8 @@ class AppSettingsWidget(QtBaseClass):
         settings.beginGroup( self.objectName() )
         
         settings.setValue("connectOnStartup", self.ui.connectOnStartupCB.isChecked())
+        settings.setValue("autoReconnect", self.ui.autoReconnectCB.isChecked())
+        settings.setValue("reconnectTime", self.ui.reconnectTimeSB.value())
         settings.setValue("recentAddress", self.recentAddress)
         
         settings.setValue("enabled", self.reminder.enabled)
