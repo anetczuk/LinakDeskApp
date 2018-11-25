@@ -126,8 +126,8 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         device.add_favorities_callback( self._handleBTFavoritiesChange )
         device.set_disconnected_callback( self._handleBTDisconnection )
  
-        self.mover = DeskMoverThread( self.desk )
         self.desk = device
+        self.mover = DeskMoverThread( self.desk )
         self._changeConnectionStatus(ConnectionState.CONNECTED)
         
     def reconnect(self):
