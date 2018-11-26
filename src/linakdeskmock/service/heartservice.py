@@ -14,7 +14,6 @@ from service import GATT_CHRC_IFACE
 from exception import InvalidValueLengthException, FailedException
 
 
-
 class HeartRateService(Service):
     """
     Fake Heart Rate Service that simulates a fake heart beat and control point
@@ -54,8 +53,7 @@ class HeartRateMeasurementChrc(Characteristic):
             value.append(dbus.Byte(self.service.energy_expended & 0xff))
             value.append(dbus.Byte((self.service.energy_expended >> 8) & 0xff))
 
-        self.service.energy_expended = \
-                min(0xffff, self.service.energy_expended + 1)
+        self.service.energy_expended = min(0xffff, self.service.energy_expended + 1)
         self.hr_ee_count += 1
 
         print('Updating value: ' + repr(value))
@@ -88,6 +86,7 @@ class HeartRateMeasurementChrc(Characteristic):
         self.notifying = False
         self._update_hr_msrmt_simulation()
 
+
 class BodySensorLocationChrc(Characteristic):
     BODY_SNSR_LOC_UUID = '00002a38-0000-1000-8000-00805f9b34fb'
 
@@ -101,6 +100,7 @@ class BodySensorLocationChrc(Characteristic):
     def ReadValue(self):
         # Return 'Chest' as the sensor location.
         return [ 0x01 ]
+
 
 class HeartRateControlPointChrc(Characteristic):
     HR_CTRL_PT_UUID = '00002a39-0000-1000-8000-00805f9b34fb'

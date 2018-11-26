@@ -44,9 +44,7 @@ from linakdeskapp.gui.main_window import MainWindow
 from testlinakdeskapp.gui.device_connector_mock import DeviceConnectorMock
 
 
-
 ## ============================= main section ===================================
-
 
 
 if __name__ != '__main__':
@@ -104,7 +102,7 @@ try:
 
     _LOGGER.info("Done with exit code: %s", exitCode)
 
-except:
+except BaseException:
     exitCode = 1
     _LOGGER.exception("Exception occured")
     raise

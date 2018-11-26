@@ -22,14 +22,10 @@
 # SOFTWARE.
 #
 
-import gobject
-import dbus
 
-from service import Service, Characteristic, RNCharacteristic, WWCharacteristic
-from service import GATT_CHRC_IFACE
+from service import Service, RNCharacteristic, WWCharacteristic
 
 import linak_dpg_bt.linak_service as linak_service
-
 
 
 class ControlService(Service):
@@ -71,7 +67,6 @@ class ControlCharacteristic(WWCharacteristic):
             return
 
         print "Unknown CONTROL command code:", command, hex(command)
-
 
 
 class ErrorCharacteristic(RNCharacteristic):

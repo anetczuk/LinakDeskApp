@@ -12,14 +12,12 @@ import gobject
 from exception import *
 
 
+DBUS_OM_IFACE       = 'org.freedesktop.DBus.ObjectManager'
+DBUS_PROP_IFACE     = 'org.freedesktop.DBus.Properties'
 
-DBUS_OM_IFACE =      'org.freedesktop.DBus.ObjectManager'
-DBUS_PROP_IFACE =    'org.freedesktop.DBus.Properties'
-
-GATT_SERVICE_IFACE = 'org.bluez.GattService1'
-GATT_CHRC_IFACE =    'org.bluez.GattCharacteristic1'
-GATT_DESC_IFACE =    'org.bluez.GattDescriptor1'
-
+GATT_SERVICE_IFACE  = 'org.bluez.GattService1'
+GATT_CHRC_IFACE     = 'org.bluez.GattCharacteristic1'
+GATT_DESC_IFACE     = 'org.bluez.GattDescriptor1'
 
 
 class Service(dbus.service.Object):
@@ -166,9 +164,9 @@ class Characteristic(dbus.service.Object):
         try:
             value = self.readValueHandler()
             wrapped = self._wrap(value)
-            print self.__class__.__name__, "sending data:", repr(value), "->", repr(wrapped)
+            print( self.__class__.__name__, "sending data:", repr(value), "->", repr(wrapped) )
             return wrapped
-        except:
+        except BaseException:
             logging.exception("Exception occured")
             raise
 
@@ -177,9 +175,9 @@ class Characteristic(dbus.service.Object):
     def WriteValue(self, value):
         try:
             unwrapped = self._unwrap(value)
-            print self.__class__.__name__, "received data:", repr(value), "->", repr(unwrapped), [hex(no) for no in unwrapped]
+            print( self.__class__.__name__, "received data:", repr(value), "->", repr(unwrapped), [hex(no) for no in unwrapped] )
             self.writeValueHandler(unwrapped)
-        except:
+        except BaseException:
             logging.exception("Exception occured")
             raise
 
@@ -201,14 +199,14 @@ class Characteristic(dbus.service.Object):
             return vallist
         if isinstance(value, dbus.Byte):
             return int(value)
-        print 'Unsupported type:', repr(value)
+        print( 'Unsupported type:', repr(value) )
         return None
 
     @dbus.service.method(GATT_CHRC_IFACE)
     def StartNotify(self):
         try:
             self.startNotifyHandler()
-        except:
+        except BaseException:
             logging.exception("Exception occured")
             raise
 
@@ -216,7 +214,7 @@ class Characteristic(dbus.service.Object):
     def StopNotify(self):
         try:
             self.stopNotifyHandler()
-        except:
+        except BaseException:
             logging.exception("Exception occured")
             raise
 
@@ -239,7 +237,6 @@ class Characteristic(dbus.service.Object):
     @dbus.service.signal(DBUS_PROP_IFACE, signature='sa{sv}as')
     def PropertiesChanged(self, interface, changed, invalidated):
         pass
-
 
 
 class RCharacteristic(Characteristic):
@@ -395,11 +392,10 @@ class Descriptor(dbus.service.Object):
 
     def get_properties(self):
         return {
-                GATT_DESC_IFACE: {
-                        'Characteristic': self.chrc.get_path(),
-                        'UUID': self.uuid,
-                        'Flags': self.flags,
-                }
+                GATT_DESC_IFACE: {'Characteristic': self.chrc.get_path(),
+                                  'UUID': self.uuid,
+                                  'Flags': self.flags
+                                  }
         }
 
     def get_path(self):
@@ -416,7 +412,7 @@ class Descriptor(dbus.service.Object):
 
     @dbus.service.method(GATT_DESC_IFACE, out_signature='ay')
     def ReadValue(self):
-        print ('Default ReadValue called, returning error')
+        print('Default ReadValue called, returning error')
         raise NotSupportedException()
 
     @dbus.service.method(GATT_DESC_IFACE, in_signature='ay')

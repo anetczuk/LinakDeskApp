@@ -34,9 +34,7 @@ from linakdeskapp.gui.devices_list_dialog import DevicesListDialog as TestWidget
 from .device_connector_mock import DeviceConnectorMock
 
 
-
 app = QApplication(sys.argv)
-
 
 
 class DevicesListDialogTest(unittest.TestCase):

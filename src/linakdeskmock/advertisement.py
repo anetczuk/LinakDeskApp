@@ -85,6 +85,7 @@ class Advertisement(dbus.service.Object):
     def Release(self):
         print( '%s: Released!' % self.path )
 
+
 class TestAdvertisement(Advertisement):
 
     def __init__(self, bus, index):

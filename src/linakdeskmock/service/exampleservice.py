@@ -11,7 +11,6 @@ from service import Service, Characteristic, Descriptor
 from exception import NotPermittedException
 
 
-
 class ExampleService(Service):
     """
     Dummy test service that provides characteristics and descriptors that
@@ -24,6 +23,7 @@ class ExampleService(Service):
         Service.__init__(self, bus, index, self.TEST_SVC_UUID, False)
         self.add_characteristic(ExampleCharacteristic(bus, 0, self))
         self.add_characteristic(ExampleEncryptCharacteristic(bus, 1, self))
+
 
 class ExampleCharacteristic(Characteristic):
     """
@@ -98,6 +98,7 @@ class CharacteristicUserDescriptionDescriptor(Descriptor):
             raise NotPermittedException()
         self.value = value
 
+
 class ExampleEncryptCharacteristic(Characteristic):
     """
     Dummy test characteristic requiring encryption.
@@ -123,6 +124,7 @@ class ExampleEncryptCharacteristic(Characteristic):
     def WriteValue(self, value):
         print('ExampleCharacteristic Write: ' + repr(value))
         self.value = value
+
 
 class ExampleEncryptDescriptor(Descriptor):
     """

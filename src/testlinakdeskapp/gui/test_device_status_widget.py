@@ -31,9 +31,7 @@ from linakdeskapp.gui.device_status_widget import DeviceStatusWidget as TestWidg
 from .device_connector_mock import DeviceConnectorMock
 
 
-
 app = QApplication(sys.argv)
-
 
 
 class DeviceStatusWidgetTest(unittest.TestCase):

@@ -33,14 +33,9 @@ from service.dpgservice import DpgService
 mainloop = None
 
 
-
-
-BLUEZ_SERVICE_NAME = 'org.bluez'
-
-GATT_MANAGER_IFACE = 'org.bluez.GattManager1'
-
-LE_ADVERTISING_MANAGER_IFACE = 'org.bluez.LEAdvertisingManager1'
-
+BLUEZ_SERVICE_NAME              = 'org.bluez'
+GATT_MANAGER_IFACE              = 'org.bluez.GattManager1'
+LE_ADVERTISING_MANAGER_IFACE    = 'org.bluez.LEAdvertisingManager1'
 
 
 def register_service_cb():
@@ -58,10 +53,11 @@ def find_gatt_adapter(bus):
     objects = remote_om.GetManagedObjects()
 
     for o, props in objects.iteritems():
-        if props.has_key(GATT_MANAGER_IFACE):
+        if GATT_MANAGER_IFACE in props:
             return o
 
     return None
+
 
 def register_ad_cb():
     print( 'Advertisement registered' )
@@ -101,9 +97,8 @@ def main():
         print('GattManager1 interface not found')
         return
 
-
     adapter_props = dbus.Interface(bus.get_object(BLUEZ_SERVICE_NAME, advertise_adapter),
-                                   DBUS_PROP_IFACE);
+                                   DBUS_PROP_IFACE)
 
     adapter_props.Set("org.bluez.Adapter1", "Powered", dbus.Boolean(1))
 
@@ -112,11 +107,9 @@ def main():
 
     test_advertisement = TestAdvertisement(bus, 0)
 
-
     service_manager = dbus.Interface(
             bus.get_object(BLUEZ_SERVICE_NAME, gatt_adapter),
             GATT_MANAGER_IFACE)
-
 
     mainloop = gobject.MainLoop()
 

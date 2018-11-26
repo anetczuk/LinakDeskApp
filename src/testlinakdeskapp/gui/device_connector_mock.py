@@ -26,15 +26,13 @@ from linakdeskapp.gui.device_object import DeviceObject
 from linakdeskapp.gui.device_connector import DeviceConnector, ScanItem, ConnectionState
 
 
-
 def to_bin_string7(data):
     return " ".join( '{:07b}'.format(x) for x in data )
 
 
-
 class DeviceMock():
 
-    def __init__(self, name, userType, position = None):
+    def __init__(self, name, userType, position=None):
         self.connected = True
         self.deviceName = name
         self.devType = "DPG Linak"
@@ -45,7 +43,6 @@ class DeviceMock():
             self.currPosition = position
         else:
             self.currPosition = 90
-
 
     def name(self):
         return self.deviceName
@@ -103,10 +100,9 @@ class DeviceMock():
         return []
 
 
-
 class DeviceConnectorMock(DeviceConnector, DeviceObject):
 
-    def __init__(self, name = None, userType = None, position = None):
+    def __init__(self, name=None, userType=None, position=None):
         DeviceConnector.__init__(self)
         DeviceObject.__init__(self)
 
@@ -130,10 +126,8 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
         self.connectionStateChanged.connect( self._connectionChanged )
         self.positionChanged.connect( self._positionChanged )
 
-
     def scanDevices(self):
         return self.devList
-
 
     # ==============================================================
 
@@ -178,9 +172,7 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
         self.connectionStatus = newStatus
         self.connectionStateChanged.emit()
 
-
     ### ===========================================================
-
 
     def name(self):
         return self.device.name()
@@ -232,7 +224,6 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
 
     def favorities(self):
         return self.device.favorities()
-
 
     def moveUp(self):
         self.upCounter += 1

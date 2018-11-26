@@ -34,9 +34,7 @@ from PyQt5.QtWidgets import QApplication
 from linakdeskapp.gui.main_window import MainWindow as TestWidget
 
 
-
 app = QApplication(sys.argv)
-
 
 
 class MainWindowTest(unittest.TestCase):

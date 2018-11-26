@@ -22,14 +22,10 @@
 # SOFTWARE.
 #
 
-import gobject
-import dbus
 
-from service import Service, Characteristic, RWWNCharacteristic
-from service import GATT_CHRC_IFACE
+from service import Service, RWWNCharacteristic
 
 import linak_dpg_bt.linak_service as linak_service
-
 
 
 class DpgService(Service):

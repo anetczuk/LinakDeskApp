@@ -61,7 +61,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-
     coverageData = None
     ## start code coverage
     if args.coverage is True:
@@ -71,12 +70,10 @@ if __name__ == '__main__':
         ##coverageData.load()
         coverageData.start()
 
-
     if len(args.runtest) > 0:
         suite = unittest.TestLoader().loadTestsFromName( args.runtest )
     else:
         suite = unittest.TestLoader().discover( script_dir )
-
 
     testsRepeats = int(args.repeat)
 
@@ -98,14 +95,14 @@ if __name__ == '__main__':
                 counter += 1
                 testResult = unittest.TextTestRunner().run(suite)
                 if testResult.wasSuccessful() is False:
-                    break;
+                    break
                 print( "\n" )
         elif testsRepeats > 0:
-            for counter in xrange(1, testsRepeats+1):
+            for counter in xrange(1, testsRepeats + 1):
                 print( "Tests iteration:", counter )
                 testResult = unittest.TextTestRunner().run(suite)
                 if testResult.wasSuccessful() is False:
-                    break;
+                    break
                 print( "\n" )
         else:
             unittest.TextTestRunner().run(suite)
@@ -129,14 +126,14 @@ if __name__ == '__main__':
         ## prepare coverage results
         if coverageData is not None:
             ## convert results to html
-            tmprootdir=tempfile.gettempdir()
-            revCrcTmpDir=tmprootdir+"/revcrc"
+            tmprootdir = tempfile.gettempdir()
+            revCrcTmpDir = tmprootdir + "/revcrc"
             if not os.path.exists(revCrcTmpDir):
                 os.makedirs(revCrcTmpDir)
-            htmlcovdir=revCrcTmpDir+"/htmlcov"
+            htmlcovdir = revCrcTmpDir + "/htmlcov"
 
             coverageData.stop()
             coverageData.save()
             coverageData.html_report(directory=htmlcovdir)
-            print( "\nCoverage HTML output:", (htmlcovdir+"/index.html") )
+            print( "\nCoverage HTML output:", (htmlcovdir + "/index.html") )
 

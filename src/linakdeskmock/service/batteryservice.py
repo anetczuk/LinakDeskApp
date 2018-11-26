@@ -11,7 +11,6 @@ from service import Service, Characteristic
 from service import GATT_CHRC_IFACE
 
 
-
 class BatteryService(Service):
     """
     Fake Battery service that emulates a draining battery.

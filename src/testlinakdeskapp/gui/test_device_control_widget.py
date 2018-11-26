@@ -33,9 +33,7 @@ from linakdeskapp.gui.device_control_widget import DeviceControlWidget as TestWi
 from .device_connector_mock import DeviceConnectorMock
 
 
-
 app = QApplication(sys.argv)
-
 
 
 class DeviceControlWidgetTest(unittest.TestCase):
@@ -66,7 +64,7 @@ class DeviceControlWidgetTest(unittest.TestCase):
         self.assertEquals(0, device.downCounter)
         self.assertEquals(0, device.stopCounter)
 
-        QTest.qSleep(1000);
+        QTest.qSleep(1000)
 
         QTest.mouseRelease(upPB, Qt.LeftButton)
         self.assertEquals(1, device.upCounter)
@@ -88,7 +86,7 @@ class DeviceControlWidgetTest(unittest.TestCase):
         self.assertEquals(1, device.downCounter)
         self.assertEquals(0, device.stopCounter)
 
-        QTest.qSleep(1000);
+        QTest.qSleep(1000)
 
         QTest.mouseRelease(downPB, Qt.LeftButton)
         self.assertEquals(0, device.upCounter)

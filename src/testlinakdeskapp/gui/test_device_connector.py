@@ -27,7 +27,6 @@ import unittest
 from .device_connector_mock import DeviceConnectorMock
 
 
-
 class DeviceConnectorTest(unittest.TestCase):
     def setUp(self):
         ## Called before testfunction is executed
