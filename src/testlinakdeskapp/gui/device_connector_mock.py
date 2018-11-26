@@ -41,7 +41,7 @@ class DeviceMock():
         self.caps = "a b c"
         self.typeOfUser = userType
         self.reminderData = "50 10"
-        if position != None:
+        if position is not None:
             self.currPosition = position
         else:
             self.currPosition = 90
@@ -117,7 +117,7 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
         self.connectionStatus = ConnectionState.DISCONNECTED
         self.device = None
         self.recentAddress = None
-        if name != None:
+        if name is not None:
             self.device = DeviceMock(name, userType, position)
             self.connectionStatus = ConnectionState.CONNECTED
         
@@ -146,7 +146,7 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
     def connectTo(self, deviceAddress):
         self.disconnect()
         self.recentAddress = deviceAddress
-        if deviceAddress == None:
+        if deviceAddress is None:
             return False
         self._changeConnectionStatus(ConnectionState.CONN_IN_PROGRESS)
         name = self._findItemByAddress( deviceAddress )
@@ -275,7 +275,7 @@ class ReminderSettingMock():
         return self.cmEnabled
     
     def setCmUnit(self, useCm):
-        if useCm == True:
+        if useCm is True:
             self.cmEnabled = True
         else:
             self.cmEnabled = False
@@ -284,7 +284,7 @@ class ReminderSettingMock():
         return self.impulseUp
     
     def setAutomaticUp(self, state):
-        if state == True:
+        if state is True:
             self.impulseUp = True
         else:
             self.impulseUp = False
@@ -293,7 +293,7 @@ class ReminderSettingMock():
         return self.impulseDown
     
     def setAutomaticDown(self, state):
-        if state == True:
+        if state is True:
             self.impulseDown = True
         else:
             self.impulseDown = False
@@ -302,7 +302,7 @@ class ReminderSettingMock():
         return self.wake
         
     def setWake(self, state):
-        if state == True:
+        if state is True:
             self.wake = True
         else: 
             self.wake = False
@@ -311,7 +311,7 @@ class ReminderSettingMock():
         return self.lightGuide
         
     def setLights(self, state):
-        if state == True:
+        if state is True:
             self.lightGuide = True
         else: 
             self.lightGuide = False

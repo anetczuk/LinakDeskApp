@@ -25,13 +25,11 @@
 from . import uiloader
 
 
-
 UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
-
 class DevicesListDialog(QtBaseClass):
-    def __init__(self, parentWidget = None):
+    def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
         
         self.connector = None
@@ -59,7 +57,7 @@ class DevicesListDialog(QtBaseClass):
 #         print "Scanning for devices"
         self.ui.devicesView.clear()
         self.foundItems = self.connector.scanDevices()
-        if self.foundItems == None:
+        if self.foundItems is None:
             return
 #         print "Found:", foundItems
         for item in self.foundItems:

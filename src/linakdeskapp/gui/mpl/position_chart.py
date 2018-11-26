@@ -34,14 +34,12 @@ except ImportError as e:
 from .mpl_canvas import matplotlib, DynamicMplCanvas
 
 
-
 _LOGGER = logging.getLogger(__name__)
-
 
 
 class PositionChart(DynamicMplCanvas):
      
-    def __init__(self, parentWidget = None):
+    def __init__(self, parentWidget=None):
 #         super().__init__(parentWidget, 5, 4, 50)
         super().__init__(parentWidget, 10, 10, 50)
         
@@ -55,7 +53,7 @@ class PositionChart(DynamicMplCanvas):
         formatter = matplotlib.dates.DateFormatter('%H:%M:%S')
         self.plot.xaxis.set_major_formatter( formatter )
 
-        self.plot.margins(y = 0.2)
+        self.plot.margins( y=0.2 )
         self.plot.set_xmargin(0.0)      ## prevents empty space between first tick and y axis
 
         # rotates and right aligns the x labels, and moves the bottom of the
@@ -121,19 +119,19 @@ class PositionChart(DynamicMplCanvas):
         if number < 1:
             return list()
         start = self.xdata[0].timestamp()
-        tzoffset = start - pandas.Timestamp( start, unit = "s" ).timestamp()
+        tzoffset = start - pandas.Timestamp( start, unit="s" ).timestamp()
         if number < 2:
             middle = (start + self.xdata[-1].timestamp()) / 2 + tzoffset
-            ts = pandas.Timestamp( middle, unit = "s" )
+            ts = pandas.Timestamp( middle, unit="s" )
             ticks = [ts]
             return ticks
-        delta = (self.xdata[-1].timestamp() - start) / (number-1)
+        delta = (self.xdata[-1].timestamp() - start) / (number - 1)
         ticks = list()
         ticks.append( self.xdata[0] )
         currTs = start + tzoffset
         for _ in range(1, number):
             currTs += delta
-            ts = pandas.Timestamp( currTs, unit = "s" )
+            ts = pandas.Timestamp( currTs, unit="s" )
             ticks.append( ts )
         return ticks
     

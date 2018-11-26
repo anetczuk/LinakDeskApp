@@ -31,16 +31,14 @@ from .qt import QPushButton, QSpinBox, QCheckBox, QHBoxLayout, QLabel
 from .qt import clearLayout
 
 
-
 _LOGGER = logging.getLogger(__name__)
 
 
 UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
-
 class DeviceSettingsWidget(QtBaseClass):
-    def __init__(self, parentWidget = None):
+    def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
         
         self.device = None
@@ -55,7 +53,7 @@ class DeviceSettingsWidget(QtBaseClass):
         self.ui.remUpdatePB.pressed.connect( self._updateReminderSettings )
  
     def attachConnector(self, connector):
-        if self.device != None:
+        if self.device is not None:
             ## disconnect old object
             self.device.connectionStateChanged.disconnect( self._refreshWidget )
             self.device.settingChanged.disconnect( self._refreshWidget )
@@ -66,7 +64,7 @@ class DeviceSettingsWidget(QtBaseClass):
         
         self._refreshWidget()
 
-        if self.device != None:
+        if self.device is not None:
             ## connect new object
             self.device.connectionStateChanged.connect( self._refreshWidget )
             self.device.settingChanged.connect( self._refreshWidget )
@@ -74,7 +72,7 @@ class DeviceSettingsWidget(QtBaseClass):
             self._enableFavSlot(True)
  
     def _enableFavSlot(self, state):
-        if state == True:
+        if state is True:
             self.device.favoritiesChanged.connect( self._refreshWidget )
         else:
             self.device.favoritiesChanged.disconnect( self._refreshWidget )
@@ -94,12 +92,12 @@ class DeviceSettingsWidget(QtBaseClass):
         self._refreshFavoritiesWidget(connected)
         
     def isDeviceConnected(self):
-        if self.device == None:
+        if self.device is None:
             return False
         return self.device.isConnected()
         
     def _refreshReminderWidget(self, connected):
-        if connected == False:
+        if connected is False:
             self.ui.refreshPB.setEnabled(False)
             self.ui.capsLabel.setText("")
             
@@ -136,7 +134,7 @@ class DeviceSettingsWidget(QtBaseClass):
         self.device.readReminderState()
 
     def _getReminderList(self):
-        if self.device == None:
+        if self.device is None:
             return []        
         return self.device.reminderValues()
         
@@ -150,7 +148,7 @@ class DeviceSettingsWidget(QtBaseClass):
         
         button = QPushButton(self)
         favHandler = None
-        if reminderSettings.getLights() == True:
+        if reminderSettings.getLights() is True:
             button.setText("Lights On")
             favHandler = functools.partial(self._toggleLights, False)
         else:
@@ -161,7 +159,7 @@ class DeviceSettingsWidget(QtBaseClass):
         
         button = QPushButton(self)
         favHandler = None
-        if reminderSettings.getWake() == True:
+        if reminderSettings.getWake() is True:
             button.setText("Wake On")
             favHandler = functools.partial(self._toggleWake, False)
         else:
@@ -172,7 +170,7 @@ class DeviceSettingsWidget(QtBaseClass):
         
         button = QPushButton(self)
         favHandler = None
-        if reminderSettings.getAutomaticDown() == True:
+        if reminderSettings.getAutomaticDown() is True:
             button.setText("AutoDown On")
             favHandler = functools.partial(self._toggleAutoDown, False)
         else:
@@ -183,7 +181,7 @@ class DeviceSettingsWidget(QtBaseClass):
         
         button = QPushButton(self)
         favHandler = None
-        if reminderSettings.getAutomaticUp() == True:
+        if reminderSettings.getAutomaticUp() is True:
             button.setText("AutoUp On")
             favHandler = functools.partial(self._toggleAutoUp, False)
         else:
@@ -194,7 +192,7 @@ class DeviceSettingsWidget(QtBaseClass):
         
         button = QPushButton(self)
         favHandler = None
-        if reminderSettings.getCmUnit() == True:
+        if reminderSettings.getCmUnit() is True:
             button.setText("Cm unit")
             favHandler = functools.partial(self._toggleCmUnit, False)
         else:
@@ -246,7 +244,7 @@ class DeviceSettingsWidget(QtBaseClass):
         
         for i in range(0, len(reminders)):
             rem = reminders[i]
-            remIndex = i+1
+            remIndex = i + 1
             
             button = QPushButton(self)
             ##button.setText("R" + str(remIndex))
@@ -292,12 +290,10 @@ class DeviceSettingsWidget(QtBaseClass):
         currReminder = reminderSettings.getReminderByIndex(remIndex)
         currReminder.stand = value
 
-
-    # =============================================================
-
+    # =================================================================
 
     def _refreshFavoritiesWidget(self, connected):
-        if connected == False:
+        if connected is False:
             self._clearFavLayout()
         else:
             self._genFavButtons()
@@ -331,7 +327,7 @@ class DeviceSettingsWidget(QtBaseClass):
         layout.addSpacing( 6 )
 
         check = QCheckBox(self)
-        if favValue != None:
+        if favValue is not None:
             check.setChecked(True)
         else:
             check.setChecked(False)
@@ -344,7 +340,7 @@ class DeviceSettingsWidget(QtBaseClass):
         spin = QSpinBox(self)
         spin.setMinimum(1)
         spin.setMaximum(255)
-        if favValue != None:
+        if favValue is not None:
             spin.setEnabled(True)
             spin.setValue( favValue )
         else:
@@ -359,7 +355,7 @@ class DeviceSettingsWidget(QtBaseClass):
         layout.addSpacing( 6 )
         
         button = QPushButton("Move To", self)
-        if favValue == None:
+        if favValue is None:
             button.setEnabled( False )
         favHandler = functools.partial(self._moveToFav, favIndex)
         button.clicked.connect( favHandler )

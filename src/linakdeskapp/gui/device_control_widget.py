@@ -30,14 +30,12 @@ from .qt import QPushButton
 from .qt import clearLayout
 
 
-
 UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
-
 
 
 class DeviceControlWidget(QtBaseClass):
     
-    def __init__(self, parentWidget = None):
+    def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
         
         self.device = None
@@ -57,7 +55,7 @@ class DeviceControlWidget(QtBaseClass):
         self.ui.bottomPB.clicked.connect(self._goingBottom)
 
     def attachConnector(self, connector):
-        if self.device != None:
+        if self.device is not None:
             ## disconnect old object
             self.device.connectionStateChanged.connect( self._refreshWidget )
             self.device.favoritiesChanged.disconnect( self._refreshFavLayout )
@@ -67,14 +65,14 @@ class DeviceControlWidget(QtBaseClass):
         
         self._refreshWidget()
             
-        if self.device != None:
+        if self.device is not None:
             ## connect new object
             self.device.connectionStateChanged.connect( self._refreshWidget )
             self.device.favoritiesChanged.connect( self._refreshFavLayout )
 
     def _refreshWidget(self):
         connected = self.isDeviceConnected()
-        if connected == False:
+        if connected is False:
             self.ui.upPB.setEnabled(False)
             self.ui.downPB.setEnabled(False)
             self.ui.stopPB.setEnabled(False)
@@ -92,42 +90,42 @@ class DeviceControlWidget(QtBaseClass):
             self._genFavButtons()
 
     def isDeviceConnected(self):
-        if self.device == None:
+        if self.device is None:
             return False
         return self.device.isConnected()
 
     def _goingUp(self):
-        if self.device == None:
+        if self.device is None:
             return
         self.device.moveUp()
     
     def _goingDown(self):
-        if self.device == None:
+        if self.device is None:
             return
         self.device.moveDown()
     
     def _goingTop(self):
-        if self.device == None:
+        if self.device is None:
             return
         self.device.moveToTop()
     
     def _goingBottom(self):
-        if self.device == None:
+        if self.device is None:
             return
         self.device.moveToBottom()
         
     def _stopMoving(self):
-        if self.device == None:
+        if self.device is None:
             return
         self.device.stopMoving()
     
     def _moveToFav(self, favIndex):
-        if self.device == None:
+        if self.device is None:
             return
         self.device.moveToFav( favIndex )
         
     def _getFavList(self):
-        if self.device == None:
+        if self.device is None:
             return []        
         return self.device.favValues()
         
@@ -162,7 +160,7 @@ class DeviceControlWidget(QtBaseClass):
     def _updateFavButton(self, button, favValue):
         label = str( favValue )
         button.setText( label )
-        if favValue != None:
+        if favValue is not None:
             button.setEnabled( True )
         else:
             button.setEnabled( False )

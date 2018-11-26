@@ -26,29 +26,28 @@ import sys
 import logging
 
 
-
 script_dir = os.path.dirname(__file__)
 log_file = None
 
 
 def getLoggingOutputFile():
     logDir = os.path.join(script_dir, "../../tmp")
-    if os.path.isdir( logDir ) == False:
+    if os.path.isdir( logDir ) is False:
         logDir = os.getcwd()
         
     logFile = os.path.join(logDir, "log.txt")
     return logFile
 
 
-def configure( logFile = None ):
+def configure( logFile=None ):
     global log_file
     
     log_file = logFile
-    if log_file == None:
+    if log_file is None:
         log_file = getLoggingOutputFile()
         
-    fileHandler    = logging.FileHandler( filename = log_file, mode = "a+" )
-    consoleHandler = logging.StreamHandler( stream = sys.stdout )
+    fileHandler    = logging.FileHandler( filename=log_file, mode="a+" )
+    consoleHandler = logging.StreamHandler( stream=sys.stdout )
     
     formatter = createFormatter()
     
@@ -67,12 +66,12 @@ def configure( logFile = None ):
 ##                          handlers = [ fileHandler, consoleHandler ]
 ##                        )
 
+
 def createFormatter():
     loggerFormat   = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
     dateFormat     = '%Y-%m-%d %H:%M:%S'
     return EmptyLineFormatter( loggerFormat, dateFormat )
     ## return logging.Formatter( loggerFormat, dateFormat )
-
 
 
 class EmptyLineFormatter(logging.Formatter):

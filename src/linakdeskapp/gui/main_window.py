@@ -33,12 +33,10 @@ from linakdeskapp.gui.devices_list_dialog import DevicesListDialog
 from linakdeskapp.gui.device_connector import ConnectionState
 
 
-
 _LOGGER = logging.getLogger(__name__)
 
 
 UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
-
 
 
 class MainWindow(QtBaseClass):
@@ -69,7 +67,7 @@ class MainWindow(QtBaseClass):
         self.trayIcon.show()
 
     def attachConnector(self, connector, address):
-        if self.device != None:
+        if self.device is not None:
             ## disconnect old object
             self.device.connectionStateChanged.disconnect( self._updateConnectionInfo )
             
@@ -80,18 +78,18 @@ class MainWindow(QtBaseClass):
         self.ui.appSettings.attachConnector( self.device )
         self.trayIcon.attachConnector( self.device )
         
-        if self.device != None:
+        if self.device is not None:
             ## connect new object
             self.device.connectionStateChanged.connect( self._updateConnectionInfo )
         
-        if address != None:
+        if address is not None:
             self.device.connectTo(address)
         else:
             self._tryReconnectOnStartup()
 
     def _tryReconnectOnStartup(self):
         reconnectAddress = self.ui.appSettings.startupReconnectAddress()
-        if reconnectAddress == None:
+        if reconnectAddress is None:
             return
         _LOGGER.debug("trying reconnect on startup")
         self.device.connectTo( reconnectAddress )
@@ -107,7 +105,7 @@ class MainWindow(QtBaseClass):
         self._updateTrayIcon()
 
     def _changePositionIcon(self, state):
-        ## state == True means indicating, otherwise nromal
+        ## state is True means indicating, otherwise nromal
         self.currentPositionState = state
         self._updateTrayIcon()
 
@@ -123,7 +121,7 @@ class MainWindow(QtBaseClass):
             self.trayIcon.setIcon( currIcon )
             return
         ## connected -- normal or indicating
-        if self.currentPositionState == True:
+        if self.currentPositionState is True:
             indicIcon = self.iconDict.getIcon( self.currentTheme.indicating )
             self.trayIcon.setIcon( indicIcon )
         else:
@@ -131,7 +129,7 @@ class MainWindow(QtBaseClass):
             self.trayIcon.setIcon( connectedIcon )
 
     def getDeviceConnectionStatus(self):
-        if self.device == None:
+        if self.device is None:
             return ConnectionState.DISCONNECTED
         return self.device.getConnectionStatus()
 
@@ -144,10 +142,10 @@ class MainWindow(QtBaseClass):
         settings.beginGroup( self.objectName() )
         geometry = settings.value("geometry")
         state = settings.value("windowState")
-        if geometry != None:
-            self.restoreGeometry( geometry );
-        if state != None:
-            self.restoreState( state );
+        if geometry is not None:
+            self.restoreGeometry( geometry )
+        if state is not None:
+            self.restoreState( state )
         settings.endGroup()
         
 #         ## store geometry of all widgets        
@@ -156,7 +154,7 @@ class MainWindow(QtBaseClass):
 #             wKey = getWidgetKey(w)
 #             settings.beginGroup( wKey )
 #             geometry = settings.value("geometry")
-#             if geometry != None:
+#             if geometry is not None:
 #                 w.restoreGeometry( geometry );            
 #             settings.endGroup()
     
@@ -167,8 +165,8 @@ class MainWindow(QtBaseClass):
         
         ## store widget state and geometry
         settings.beginGroup( self.objectName() )
-        settings.setValue("geometry", self.saveGeometry() );
-        settings.setValue("windowState", self.saveState() );
+        settings.setValue("geometry", self.saveGeometry() )
+        settings.setValue("windowState", self.saveState() )
         settings.endGroup()
 
 #         ## store geometry of all widgets        
@@ -184,7 +182,7 @@ class MainWindow(QtBaseClass):
 
     def getSettings(self):
 #         ## store in app directory
-#         if self.settingsFilePath == None:
+#         if self.settingsFilePath is None:
 # #             scriptDir = os.path.dirname(os.path.realpath(__file__))
 # #             self.settingsFilePath = os.path.realpath( scriptDir + "../../../../tmp/settings.ini" )
 #             self.settingsFilePath = "settings.ini"
@@ -195,37 +193,33 @@ class MainWindow(QtBaseClass):
         appName = qApp.applicationName()
         settings = QtCore.QSettings(QtCore.QSettings.IniFormat, QtCore.QSettings.UserScope, orgName, appName, self)
         return settings
-        
-
+    
     # ================================================================
 
-        
-    ## slot
     def closeApplication(self):
+        ## slot
         ##self.close()
         self.disconnectFromDevice()
         qApp.quit()
 
-    ## slot
     def connectToDevice(self):
+        ## slot
         deviceDialog = DevicesListDialog(self)
         deviceDialog.attachConnector(self.device)
         deviceDialog.exec_()                            ### modal mode
     
-    ## slot    
     def reconnectDevice(self):
+        ## slot    
         self.device.reconnect()
     
-    ## slot    
     def disconnectFromDevice(self):
+        ## slot    
         self.device.disconnect()
-
         
-    # =======================================
+    # ===============================================================
 
-
-    # Override closeEvent, to intercept the window closing event
     def closeEvent(self, event):
+        # Override closeEvent, to intercept the window closing event
         event.ignore()
         self.hide()
         self.trayIcon.show()
@@ -235,7 +229,6 @@ class MainWindow(QtBaseClass):
     
     def hideEvent(self, event):
         self.trayIcon.updateLabel()
-
 
 
 class IconDictionary():
@@ -253,12 +246,12 @@ class IconDictionary():
 
 
 def getWidgetKey(widget):
-    if widget == None:
+    if widget is None:
         return None
     retKey = widget.objectName()
     widget = widget.parent()
-    while widget != None:
-        retKey = widget.objectName() + "-"+ retKey
+    while widget is not None:
+        retKey = widget.objectName() + "-" + retKey
         widget = widget.parent()
     return retKey
 

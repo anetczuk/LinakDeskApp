@@ -39,7 +39,6 @@ _LOGGER = logging.getLogger(__name__)
 UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
-
 def formatTimeDelta(timeDelta):
     ret = ""
     seconds = int( timeDelta.seconds % 60 )
@@ -65,8 +64,7 @@ class Reminder():
     def setEnabled(self, state):
         self.enabled = state
         
-        
-
+    
 class AppSettingsWidget(QtBaseClass):
     
     STAND_HEIGHT = 96
@@ -75,9 +73,8 @@ class AppSettingsWidget(QtBaseClass):
     stateInfoChanged        = pyqtSignal(str)
     indicatePositionChange  = pyqtSignal(bool)
     iconThemeChanged        = pyqtSignal( TrayIconTheme )
-    
-    
-    def __init__(self, parentWidget = None):
+        
+    def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
 
         self.ui = UiTargetClass()
@@ -122,12 +119,12 @@ class AppSettingsWidget(QtBaseClass):
         self._disableWidget()
     
     def startupReconnectAddress(self):
-        if self.ui.connectOnStartupCB.isChecked() == False:
+        if self.ui.connectOnStartupCB.isChecked() is False:
             return None
         return self.recentAddress
     
     def attachConnector(self, connector):
-        if self.device != None:
+        if self.device is not None:
             ## disconnect old object
             self.device.connectionStateChanged.disconnect( self._connectionStateChanged )
             self.device.positionChanged.disconnect( self._updatePositionState )
@@ -137,13 +134,13 @@ class AppSettingsWidget(QtBaseClass):
         
         self._updateDeviceStatus()
         
-        if self.device != None:
+        if self.device is not None:
             ## connect new object
             self.device.connectionStateChanged.connect( self._connectionStateChanged )
             self.device.positionChanged.connect( self._updatePositionState )
 
     def _updateDeviceStatus(self):
-        if self.device == None:
+        if self.device is None:
             self._disableWidget()
             return
         if self.device.isConnected():
@@ -151,12 +148,10 @@ class AppSettingsWidget(QtBaseClass):
         else:
             self._disableWidget()  
     
-
     ## ================= slots ========================
 
-
     def _tryAutoReconnect(self):
-        if self.device == None:
+        if self.device is None:
             return 
         if self.device.getConnectionStatus() != ConnectionState.DISCONNECTED:
             return 
@@ -167,10 +162,10 @@ class AppSettingsWidget(QtBaseClass):
             self.autoReconnectTimer.stop()
     
     def _autoReconnectTimeout(self):
-        if self.device == None:
+        if self.device is None:
             _LOGGER.debug("auto reconnect failed: no device")
             return
-        if self.device.isConnected() == True:
+        if self.device.isConnected() is True:
             _LOGGER.debug("auto reconnect failed: device already connected")
             return
         _LOGGER.debug("triggering auto reconnect")
@@ -196,29 +191,29 @@ class AppSettingsWidget(QtBaseClass):
     ## sitting spin button changed
     def _toggleSitValue(self, value):
         self.reminder.sitTime = value
-        if self.sitting == True:
+        if self.sitting is True:
             self._setReminderTimeout()                  ## spin values changed
             self.indicatePositionChange.emit(False)
     
     ## standing spin button changed
-    def _toggleStandValue(self,  value):
+    def _toggleStandValue(self, value):
         self.reminder.standTime = value
-        if self.sitting == False:
+        if self.sitting is False:
             self._setReminderTimeout()                  ## spin values changed
             self.indicatePositionChange.emit(False)
     
     def _reminderTimeout(self):
         self._displayStateInfo()
         
-        if self.device == None:
+        if self.device is None:
             _LOGGER.debug("device not attached -- do nothing")
             return
         _LOGGER.debug("reminder timer timeout handler")
         
-        if self.sitting == True:
+        if self.sitting is True:
             ## is sitting -- time to stand
             self.showMessage.emit("It's time to stand up")
-        elif self.sitting == False:
+        elif self.sitting is False:
             self.showMessage.emit("It's time to sit down")
         else:
             self.showMessage.emit("waiting for device")
@@ -239,26 +234,24 @@ class AppSettingsWidget(QtBaseClass):
         self._updateTotalTime()         ## update previous state time
         self.sitting = devicePosition
         self._displayStateInfo()
-        if self.reminder.isEnabled() == False:
+        if self.reminder.isEnabled() is False:
             return
         self._setReminderTimeout()                  ## position has changed
         self.reminderTimer.start()
         self.indicatePositionChange.emit(False)
 
+    ## ===================================================================
     
-    ## =================================================
-    
-
     def _connectionStateChanged(self):
         connected = self.isDeviceConnected()
-        if connected == True:
+        if connected is True:
             self._enableWidget()
         else:
             self._disableWidget()
         self._tryAutoReconnect()
     
     def isDeviceConnected(self):
-        if self.device == None:
+        if self.device is None:
             return False
         return self.device.isConnected()
     
@@ -292,8 +285,8 @@ class AppSettingsWidget(QtBaseClass):
         
         sitTotalTime = settings.value("sitTotalTime", 0, type=float)
         standTotalTime = settings.value("standTotalTime", 0, type=float)
-        self.totalSit += datetime.timedelta(seconds = sitTotalTime)
-        self.totalStand += datetime.timedelta(seconds = standTotalTime)
+        self.totalSit += datetime.timedelta( seconds=sitTotalTime )
+        self.totalStand += datetime.timedelta( seconds=standTotalTime )
         
         trayTheme = settings.value("trayIcon", None, type=str)
         
@@ -341,24 +334,23 @@ class AppSettingsWidget(QtBaseClass):
         settings.setValue("trayIcon", selectedTheme.name)
         
         settings.endGroup()
-
     
-    ## might be toggled by user in anytime
     def _setReminderTimer(self, enable):
-        if enable == False:
+        ## might be toggled by user in anytime
+        if enable is False:
             ## disable reminder
             self.reminderTimer.stop()
             self.indicatePositionChange.emit(False)
             return
-        if self.sitting != None:
+        if self.sitting is not None:
             ## enable reminder
             self._setReminderTimeout()          ## enabling timer
             self.reminderTimer.start()
     
     def _setReminderTimeout(self):
-        if self.sitting == None:
+        if self.sitting is None:
             return
-        if self.sitting == True:
+        if self.sitting is True:
             ## started sitting
             _LOGGER.debug("sitting started")
             timeout = self.reminder.sitTime * 1000 * 60
@@ -370,18 +362,18 @@ class AppSettingsWidget(QtBaseClass):
             self.reminderTimer.setInterval( timeout )
     
     def _updateTotalTime(self):
-        if self.device == None:
+        if self.device is None:
             return
-        if self.sitting == None:
+        if self.sitting is None:
             return
-        if self.positionTime == None:
+        if self.positionTime is None:
             self.positionTime = time.time()
             return
         curr = time.time()
         diff = curr - self.positionTime
-        passedTime = datetime.timedelta(seconds = diff)
+        passedTime = datetime.timedelta( seconds=diff )
         self.positionTime = curr
-        if self.sitting == True:
+        if self.sitting is True:
             self.totalSit += passedTime
         else:
             self.totalStand += passedTime
@@ -398,24 +390,24 @@ class AppSettingsWidget(QtBaseClass):
         self.stateInfoChanged.emit( stateInfo )
     
     def _getStateInfo(self):
-        if self.device == None:
+        if self.device is None:
             return "device disconnected"            
-        if self.reminder.isEnabled() == False:
+        if self.reminder.isEnabled() is False:
             return "stopped" 
-        if self.reminderTimer.isActive() == False:
+        if self.reminderTimer.isActive() is False:
             ## reminder timed out
-            if self.sitting == True:
+            if self.sitting is True:
                 return "waiting for stand up" 
-            elif self.sitting == False:
+            elif self.sitting is False:
                 return "waiting for sit down"
             else:
                 return "waiting for device"
         remaining = self.reminderTimer.remainingTime()
         remainingTime = datetime.timedelta(milliseconds=remaining)
         formattedTime = formatTimeDelta( remainingTime )
-        if self.sitting == True:
+        if self.sitting is True:
             return "sitting countdown: " + formattedTime
-        elif self.sitting == False:
+        elif self.sitting is False:
             return "standing countdown: " + formattedTime
         else:
             return "waiting for device"

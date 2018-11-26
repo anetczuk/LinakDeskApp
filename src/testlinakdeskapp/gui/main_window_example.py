@@ -92,7 +92,7 @@ try:
     
     window.attachConnector(connector, args.connect)
     
-    if args.minimized == False:
+    if args.minimized is False:
         window.show()
     
     setup_interrupt_handling()

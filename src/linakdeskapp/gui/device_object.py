@@ -25,7 +25,6 @@
 from .qt import QObject, pyqtSignal
 
 
-
 class DeviceObject(QObject):
     
     connectionStateChanged  = pyqtSignal()
@@ -33,8 +32,7 @@ class DeviceObject(QObject):
     speedChanged            = pyqtSignal()
     settingChanged          = pyqtSignal()
     favoritiesChanged       = pyqtSignal(int)
-    
-    
+        
     def __init__(self):
         super().__init__()
 

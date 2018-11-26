@@ -41,9 +41,7 @@ from linak_dpg_bt.linak_device import LinakDesk
 from linak_dpg_bt.desk_mover import DeskMoverThread
 
 
-
 _LOGGER = logging.getLogger(__name__)
-
 
 
 class BTDeviceConnector(DeviceConnector, DeviceObject):
@@ -60,7 +58,6 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         self.recentAddress = None
         
         self.threadpool = QtCore.QThreadPool()
-        
     
     def scanDevices(self):
         self.devList = []
@@ -89,9 +86,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
 
         return retList
     
-    
     ## ==================================================================
-    
         
     def address(self):
         return self.recentAddress
@@ -105,7 +100,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
             return
         self.disconnect()
         self.recentAddress = deviceAddr
-        if deviceAddr == None:
+        if deviceAddr is None:
             return
         self._changeConnectionStatus(ConnectionState.CONN_IN_PROGRESS)
         worker = ThreadWorker( self._initializeDevice )
@@ -115,7 +110,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         device = LinakDesk( self.recentAddress )
         ##self.desk.read_dpg_data()
         connected = device.initialize()
-        if connected == False:
+        if connected is False:
             self.desk = None
             self._changeConnectionStatus(ConnectionState.DISCONNECTED)
             return
@@ -137,7 +132,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         if self.connectionStatus == ConnectionState.CONN_IN_PROGRESS:
             _LOGGER.debug("unable to disconnect -- connection in progress")
             return
-        if self.desk == None:
+        if self.desk is None:
             self._changeConnectionStatus(ConnectionState.DISCONNECTED)
             return
         self.desk.disconnect()
@@ -150,9 +145,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         self.connectionStatus = newStatus
         self.connectionStateChanged.emit()
     
-    
     ### =================================================================
-    
     
     def name(self):
         return self.desk.name
@@ -221,7 +214,6 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
     def sendFavoritiesState(self):
         return self.desk.send_favorities_state()
     
-    
     def moveUp(self):
         self.mover.moveUp()
          
@@ -240,9 +232,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
     def stopMoving(self):
         self.mover.stopMoving()
 
-
     ## =====================================================
-
 
     def _handleBTPositionChange(self):
         self.positionChanged.emit()
@@ -254,21 +244,20 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         self.settingChanged.emit()
         
     def _handleBTFavoritiesChange(self, favNumber):
-        self.favoritiesChanged.emit(favNumber-1)
+        self.favoritiesChanged.emit(favNumber - 1)
         
     def _handleBTDisconnection(self):
         self._changeConnectionStatus(ConnectionState.DISCONNECTED)
         
     @staticmethod
     def printDescription(deviceAddr):
-        if deviceAddr == None:
+        if deviceAddr is None:
             return False
         desk = LinakDesk( deviceAddr )
         desk.print_services()
         return True
     
-    
-    
+        
 class ThreadWorker(QtCore.QRunnable):
     '''
     Worker thread
@@ -278,7 +267,6 @@ class ThreadWorker(QtCore.QRunnable):
         self.setAutoDelete(True)
         self.call = function
         
-
     def run(self):
         '''
         Your code goes in this function

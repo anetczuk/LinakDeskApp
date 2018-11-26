@@ -25,13 +25,11 @@
 from enum import Enum, unique, auto
 
 
-
 @unique
 class ConnectionState(Enum):
     CONNECTED           = auto()
     CONN_IN_PROGRESS    = auto()
     DISCONNECTED        = auto()
-
 
 
 class DeviceConnector():

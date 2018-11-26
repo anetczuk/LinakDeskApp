@@ -29,9 +29,7 @@ from enum import Enum, unique
 from .qt import qApp, QSystemTrayIcon, QMenu, QAction
 
 
-
 _LOGGER = logging.getLogger(__name__)
-
 
 
 @unique
@@ -75,7 +73,6 @@ class TrayIconTheme(Enum):
             index = index + 1
         return -1
 
-
     
 class TrayIcon(QSystemTrayIcon):
     def __init__(self, parent):
@@ -105,7 +102,7 @@ class TrayIcon(QSystemTrayIcon):
         self.setContextMenu( tray_menu )
     
     def attachConnector(self, connector):
-        if self.device != None:
+        if self.device is not None:
             ## disconnect old object
             self.device.connectionStateChanged.disconnect( self.updateFavMenu )
             self.device.favoritiesChanged.disconnect( self.updateFavMenu )
@@ -115,7 +112,7 @@ class TrayIcon(QSystemTrayIcon):
         self.updateFavMenu()
 
         ## connect new object
-        if self.device != None:
+        if self.device is not None:
             self.device.connectionStateChanged.connect( self.updateFavMenu )
             self.device.favoritiesChanged.connect( self.updateFavMenu )         
     
@@ -144,14 +141,14 @@ class TrayIcon(QSystemTrayIcon):
     
     def updateFavMenu(self):
         self.fav_menu.clear()
-        if self.device == None:
+        if self.device is None:
             return
-        if self.device.isConnected() == False:
+        if self.device.isConnected() is False:
             return
         positions = self.device.favPositions()
         for i in range( len(positions) ):
             fav = positions[i]
-            if fav == None:
+            if fav is None:
                 continue
             favAction = QAction( str(fav), self)
             favHandler = functools.partial(self.device.moveToFav, i)

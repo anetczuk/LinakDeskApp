@@ -17,9 +17,7 @@ except ImportError as e:
     exit(1)
 
 
-
 _LOGGER = logging.getLogger(__name__)
-
 
 
 class DynamicToolbar(NavigationToolbar):
@@ -32,15 +30,14 @@ class DynamicToolbar(NavigationToolbar):
         items = []
         for ii in self.toolitems:
             name = ii[0]
-            if name != None and name == buttonName:
+            if name is not None and name == buttonName:
                 continue
             items.append(ii)
         self.toolitems = tuple( items )
         
         self.clear()            ## remove previous buttons
         self._init_toolbar()    ## add current buttons
-    
-        
+            
     def home(self, *args):
         super().home(*args)
         self._restore_view()

@@ -27,13 +27,11 @@ from . import uiloader
 from linakdeskapp.gui.device_connector import ConnectionState
 
 
-
 UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
-
 class DeviceStatusWidget(QtBaseClass):
-    def __init__(self, parentWidget = None):
+    def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
         
         self.device = None
@@ -44,7 +42,7 @@ class DeviceStatusWidget(QtBaseClass):
         self._refreshWidget()
  
     def attachConnector(self, connector):
-        if self.device != None:
+        if self.device is not None:
             ## disconnect old object
             self.device.connectionStateChanged.disconnect( self._refreshWidget )
             self.device.settingChanged.disconnect( self._refreshWidget )
@@ -55,7 +53,7 @@ class DeviceStatusWidget(QtBaseClass):
         
         self._refreshWidget()
         
-        if self.device != None:
+        if self.device is not None:
             ## connect new object
             self.device.connectionStateChanged.connect( self._refreshWidget )
             self.device.settingChanged.connect( self._refreshWidget )
@@ -70,7 +68,7 @@ class DeviceStatusWidget(QtBaseClass):
             self.ui.deviceTypeLabel.setText( self.device.deviceType() )
             self.ui.userTypeLabel.setText( self.device.userType() )
             reminderSettings = self.device.reminderSettings()
-            if reminderSettings != None:
+            if reminderSettings is not None:
                 self.ui.reminderLabel.setText( reminderSettings.currentReminderInfo() )
             else:
                 self.ui.reminderLabel.setText( "None" )
@@ -92,7 +90,7 @@ class DeviceStatusWidget(QtBaseClass):
         self.ui.speedLabel.setText("")
         
     def getDeviceConnectionStatus(self):
-        if self.device == None:
+        if self.device is None:
             return ConnectionState.DISCONNECTED
         return self.device.getConnectionStatus()
 

@@ -48,14 +48,12 @@ from linakdeskapp.gui.qt import QApplication
 from linakdeskapp.gui.sigint import setup_interrupt_handling 
 
 
-
 logger.configure()
 _LOGGER = logging.getLogger(__name__)
 
 
-
 def runApp(args):
-    if args.scan == True:
+    if args.scan is True:
         _LOGGER.info( "Scanning for BT devices" )
         btConnector = BTDeviceConnector()
         devices = btConnector.scanDevices()
@@ -66,7 +64,7 @@ def runApp(args):
                 _LOGGER.info( "Found device: %s", dev )  
         return 0  
 
-    if args.desc == True:
+    if args.desc is True:
         BTDeviceConnector.printDescription( args.connect )
         return 0
 
@@ -82,7 +80,7 @@ def runApp(args):
     btConnector = BTDeviceConnector()
     window.attachConnector(btConnector, args.connect)
          
-    if args.minimized == False:
+    if args.minimized is False:
         window.show()
      
     setup_interrupt_handling()
@@ -103,49 +101,41 @@ def main():
     parser.add_argument('--desc', action='store_const', const=True, default=False, help='Print description of connected BT and exit' )
     parser.add_argument('--scan', action='store_const', const=True, default=False, help='Scan nearby BT devices' )
     parser.add_argument('--minimized', action='store_const', const=True, default=False, help='Start minimized' )
-     
-          
+               
     args = parser.parse_args()
 
-    
     _LOGGER.debug("\n\n")
     _LOGGER.debug("Starting the application")
-    
     _LOGGER.debug("Logger log file: %s" % logger.log_file)
-    
-    
     
     starttime = time.time()
     profiler = None
     
     exitCode = 0
     
-    
     try:
      
         profiler_outfile = args.pfile
-        if args.profile == True or profiler_outfile != None:
+        if args.profile is True or profiler_outfile is not None:
             print( "Starting profiler" )
             profiler = cProfile.Profile()
             profiler.enable()
     
-    
         exitCode = runApp(args)
-    
-    
+        
     # except BluetoothError as e:
     #     print "Error: ", e, " check if BT is powered on"
     
-    except:
+    except BaseException:
         exitCode = 1
         _LOGGER.exception("Exception occured")
         raise
     
     finally:
         _LOGGER.info( "" )                    ## print new line
-        if profiler != None:
+        if profiler is not None:
             profiler.disable()
-            if profiler_outfile == None:
+            if profiler_outfile is None:
                 _LOGGER.info( "Generating profiler data" )
                 profiler.print_stats(1)
             else:
@@ -153,7 +143,7 @@ def main():
                 profiler.dump_stats( profiler_outfile )
                 _LOGGER.info( "pyprof2calltree -k -i", profiler_outfile )
              
-        timeDiff = (time.time()-starttime)*1000.0
+        timeDiff = (time.time() - starttime) * 1000.0
         _LOGGER.info( "Calculation time: {:13.8f}ms".format(timeDiff) )
         
         sys.exit(exitCode)

@@ -13,9 +13,7 @@ import logging
 from .qt import QtCore, QApplication
 
 
-
 _LOGGER = logging.getLogger(__name__)
-
 
 
 # Define this as a global function to make sure it is not garbage

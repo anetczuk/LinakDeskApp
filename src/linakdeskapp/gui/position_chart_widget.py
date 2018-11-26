@@ -29,17 +29,15 @@ from . import uiloader
 from .mpl.mpl_toolbar import DynamicToolbar
 
 
-
 _LOGGER = logging.getLogger(__name__)
 
 
 UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
-
 class PositionChartWidget(QtBaseClass):
     
-    def __init__(self, parentWidget = None):
+    def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
 
         self.ui = UiTargetClass()
@@ -58,10 +56,9 @@ class PositionChartWidget(QtBaseClass):
         self.ui.toolbarLayout.addWidget( self.toolbar )
         
         self._refreshWidget()
-
     
     def attachConnector(self, connector):
-        if self.device != None:
+        if self.device is not None:
             ## disconnect old object
             self.device.connectionStateChanged.disconnect( self._refreshWidget )
             self.device.positionChanged.disconnect( self._updatePositionState )
@@ -70,7 +67,7 @@ class PositionChartWidget(QtBaseClass):
         
         self._refreshWidget()
         
-        if self.device != None:
+        if self.device is not None:
             ## connect new object
             self.device.connectionStateChanged.connect( self._refreshWidget )
             self.device.positionChanged.connect( self._updatePositionState )
@@ -91,7 +88,7 @@ class PositionChartWidget(QtBaseClass):
     def _refreshWidget(self):
         ## _LOGGER.info("setting enabled: %s", enabled)
         connected = self.isDeviceConnected()
-        if connected == True:
+        if connected is True:
             enabledChart = self.ui.enabledCB.isChecked()
             self.toolbar.setEnabled( enabledChart )
             self.ui.positionChart.setEnabled( enabledChart )
@@ -101,13 +98,13 @@ class PositionChartWidget(QtBaseClass):
             self.ui.positionChart.setEnabled( False )
         
     def isDeviceConnected(self):
-        if self.device == None:
+        if self.device is None:
             return False
         return self.device.isConnected()
 
     def _updatePositionState(self):
         enabledChart = self.ui.enabledCB.isChecked()
-        if enabledChart == False:
+        if enabledChart is False:
             return
         deskHeight = self.device.currentPosition()
         self.ui.positionChart.addData( deskHeight )

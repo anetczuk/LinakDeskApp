@@ -20,16 +20,14 @@ except ImportError as e:
 from ..qt import QtCore, QtWidgets
 
 
-
 _LOGGER = logging.getLogger(__name__)
-
 
 
 class MplCanvas(FigureCanvas):
     """Ultimately, this is a QWidget (as well as a FigureCanvasAgg, etc.)."""
 
-    def __init__(self, parent = None, width = 5, height = 4, dpi = 100):
-        self.fig = Figure(figsize=(width, height), dpi=dpi)
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        self.fig = Figure( figsize=(width, height), dpi=dpi )
         self.plot = self.fig.add_subplot(1, 1, 1)
         
         FigureCanvas.__init__(self, self.fig)
@@ -41,11 +39,11 @@ class MplCanvas(FigureCanvas):
         FigureCanvas.updateGeometry(self)
 
     def setBackgroundByRGB(self, r, g, b):
-        rgbColor = ( r/255, g/255, b/255, 1.0 )
+        rgbColor = ( r / 255, g / 255, b / 255, 1.0 )
         self.fig.patch.set_facecolor( rgbColor )
         
     def setBackgroundByQColor(self, bgcolor):
-        rgbColor = ( bgcolor.red()/255, bgcolor.green()/255, bgcolor.blue()/255, 1.0 )
+        rgbColor = ( bgcolor.red() / 255, bgcolor.green() / 255, bgcolor.blue() / 255, 1.0 )
         self.fig.patch.set_facecolor( rgbColor )
         ###_LOGGER.debug("setting background: %r", rgbColor)
 
@@ -68,7 +66,7 @@ class DynamicMplCanvas(MplCanvas):
         
     def setEnabled(self, enabled):
         super().setEnabled(enabled)
-        if enabled == True:
+        if enabled is True:
             self._update()
             self._setTimer(enabled)
         else:
@@ -85,7 +83,7 @@ class DynamicMplCanvas(MplCanvas):
         return False
         
     def drawFigure(self):
-        if self._hasData() == False:
+        if self._hasData() is False:
             ## no data - nothing to do
             self.showFigure( False )
             return
@@ -103,7 +101,7 @@ class DynamicMplCanvas(MplCanvas):
         self.drawFigure()
 
     def _setTimer(self, enabled):
-        if enabled == True:
+        if enabled is True:
             self.timer.start(1000)
         else:
             self.timer.stop()
