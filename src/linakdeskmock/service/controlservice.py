@@ -54,19 +54,19 @@ class ControlCharacteristic(WWCharacteristic):
         command = int(value[0])
 
         if command == 70:
-            print "MOVE_1_DOWN request received", command, hex(command)
+            print( "MOVE_1_DOWN request received", command, hex(command) )
             return
         if command == 71:
-            print "MOVE_1_UP request received", command, hex(command)
+            print( "MOVE_1_UP request received", command, hex(command) )
             return
         if command == 254:
-            print "UNDEFINED request received", command, hex(command)
+            print( "UNDEFINED request received", command, hex(command) )
             return
         if command == 255:
-            print "STOP_MOVEMENT request received", command, hex(command)
+            print( "STOP_MOVEMENT request received", command, hex(command) )
             return
 
-        print "Unknown CONTROL command code:", command, hex(command)
+        print( "Unknown CONTROL command code:", command, hex(command) )
 
 
 class ErrorCharacteristic(RNCharacteristic):

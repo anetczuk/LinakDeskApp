@@ -11,7 +11,7 @@ try:
     matplotlib.use('Qt5Agg')
 
     from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
-except ImportError as e:
+except ImportError:
     ### No module named <name>
     logging.exception("Exception while importing")
     exit(1)

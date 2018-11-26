@@ -24,7 +24,7 @@ try:
     from PyQt5 import QtGui
     from PyQt5.QtGui import QIcon
 #     from PyQt5 import uic
-except ImportError as e:
+except ImportError:
     ### No module named <name>
     logging.exception("Exception while importing")
     exit(1)

@@ -9,7 +9,7 @@ import logging
 import dbus.service
 import gobject
 
-from exception import *
+from exception import NotSupportedException, InvalidArgsException
 
 
 DBUS_OM_IFACE       = 'org.freedesktop.DBus.ObjectManager'
@@ -304,7 +304,7 @@ class RNCharacteristic(Characteristic):
             print('Already notifying, nothing to do')
             return
 
-        print 'Starting notifying', self.__class__.__name__
+        print( 'Starting notifying', self.__class__.__name__ )
         self.notifying = True
         self.notify()
 
@@ -313,7 +313,7 @@ class RNCharacteristic(Characteristic):
             print('Not notifying, nothing to do')
             return
 
-        print 'Stopping notifying', self.__class__.__name__
+        print( 'Stopping notifying', self.__class__.__name__ )
         self.notifying = False
 
 
@@ -355,7 +355,7 @@ class RWWNCharacteristic(Characteristic):
             return
         wrapped = self._wrap(self.value_lvl)
         message = { 'Value': wrapped }
-        print self.__class__.__name__, 'notify:', self.value_lvl
+        print( self.__class__.__name__, 'notify:', self.value_lvl )
         self.PropertiesChanged(GATT_CHRC_IFACE, message, [])
 
     def readValueHandler(self):
@@ -369,7 +369,7 @@ class RWWNCharacteristic(Characteristic):
             print('Already notifying, nothing to do')
             return
 
-        print 'Starting notifying', self.__class__.__name__
+        print( 'Starting notifying', self.__class__.__name__ )
         self.notifying = True
 
     def stopNotifyHandler(self):
@@ -377,7 +377,7 @@ class RWWNCharacteristic(Characteristic):
             print('Not notifying, nothing to do')
             return
 
-        print 'Stopping notifying', self.__class__.__name__
+        print( 'Stopping notifying', self.__class__.__name__ )
         self.notifying = False
 
 

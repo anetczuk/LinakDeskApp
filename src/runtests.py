@@ -98,7 +98,7 @@ if __name__ == '__main__':
                     break
                 print( "\n" )
         elif testsRepeats > 0:
-            for counter in xrange(1, testsRepeats + 1):
+            for counter in range(1, testsRepeats + 1):
                 print( "Tests iteration:", counter )
                 testResult = unittest.TextTestRunner().run(suite)
                 if testResult.wasSuccessful() is False:

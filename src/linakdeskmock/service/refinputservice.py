@@ -47,5 +47,5 @@ class Ctrl1Characteristic(WWCharacteristic):
 
     def writeValueHandler(self, value):
         WWCharacteristic.writeValueHandler(self, value)
-        print "MOVING_TO request received"
+        print( "MOVING_TO request received" )
 

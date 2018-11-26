@@ -12,7 +12,7 @@ try:
 
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     from matplotlib.figure import Figure
-except ImportError as e:
+except ImportError:
     ### No module named <name>
     logging.exception("Exception while importing")
     exit(1)
