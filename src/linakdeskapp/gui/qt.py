@@ -34,11 +34,10 @@ except ImportError as e:
 
 
 def clearLayout(layout):
-    for i in reversed(range(layout.count())): 
+    for i in reversed(range(layout.count())):
         item = layout.takeAt( i )
-        if item.widget() is not None: 
+        if item.widget() is not None:
             item.widget().deleteLater()
         if item.layout() is not None:
             clearLayout( item.layout() )
-    
-    
+

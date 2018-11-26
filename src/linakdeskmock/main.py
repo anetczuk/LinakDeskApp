@@ -15,7 +15,7 @@ sys.path.append(os.path.abspath( os.path.join(os.path.dirname(__file__), "../../
 
 import gobject
 import dbus.mainloop.glib
- 
+
 from advertisement import TestAdvertisement
 from service.service import DBUS_OM_IFACE, DBUS_PROP_IFACE
 

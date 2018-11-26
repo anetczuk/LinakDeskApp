@@ -1,19 +1,19 @@
 #!/usr/bin/python3
 #
 # MIT License
-# 
+#
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -50,7 +50,7 @@ import tempfile
 ## ============================= main section ===================================
 
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Test runner')
     parser.add_argument('-rt', '--runtest', action='store', required=False, default="", help='Module with tests, e.g. test.test_class' )
     parser.add_argument('-r', '--repeat', action='store', type=int, default=0, help='Repeat tests given number of times' )
@@ -58,10 +58,10 @@ if __name__ == '__main__':
     parser.add_argument('-cov', '--coverage', action="store_true", help='Measure code coverage' )
     parser.add_argument('--profile', action="store_true", help='Profile the code' )
     parser.add_argument('--pfile', action='store', default=None, help='Profile the code and output data to file' )
-    
+
     args = parser.parse_args()
-    
-    
+
+
     coverageData = None
     ## start code coverage
     if args.coverage is True:
@@ -70,13 +70,13 @@ if __name__ == '__main__':
         coverageData = coverage.Coverage(branch=True, omit=currScript)
         ##coverageData.load()
         coverageData.start()
-        
-        
+
+
     if len(args.runtest) > 0:
         suite = unittest.TestLoader().loadTestsFromName( args.runtest )
     else:
         suite = unittest.TestLoader().discover( script_dir )
-        
+
 
     testsRepeats = int(args.repeat)
 
@@ -89,7 +89,7 @@ if __name__ == '__main__':
             print( "Starting profiler" )
             profiler = cProfile.Profile()
             profiler.enable()
-            
+
         ## run proper tests
         if args.untilfailure is True:
             counter = 1
@@ -109,9 +109,9 @@ if __name__ == '__main__':
                 print( "\n" )
         else:
             unittest.TextTestRunner().run(suite)
-    
+
     finally:
-        ## stop profiler            
+        ## stop profiler
         if profiler is not None:
             profiler.disable()
             if profiler_outfile is None:
@@ -125,7 +125,7 @@ if __name__ == '__main__':
                 ##pyprof2calltree -i $PROF_FILE -k
                 print( "Launching: pyprof2calltree -i {} -k".format(profiler_outfile) )
                 subprocess.call(["pyprof2calltree", "-i", profiler_outfile, "-k"])
-        
+
         ## prepare coverage results
         if coverageData is not None:
             ## convert results to html
@@ -134,10 +134,9 @@ if __name__ == '__main__':
             if not os.path.exists(revCrcTmpDir):
                 os.makedirs(revCrcTmpDir)
             htmlcovdir=revCrcTmpDir+"/htmlcov"
-            
+
             coverageData.stop()
             coverageData.save()
             coverageData.html_report(directory=htmlcovdir)
             print( "\nCoverage HTML output:", (htmlcovdir+"/index.html") )
 
-        

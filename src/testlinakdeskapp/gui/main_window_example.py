@@ -1,19 +1,19 @@
 #!/usr/bin/python3
 #
 # MIT License
-# 
+#
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,7 +38,7 @@ import logging
 import linakdeskapp.logger as logger
 
 from linakdeskapp.gui.qt import QApplication
-from linakdeskapp.gui.sigint import setup_interrupt_handling 
+from linakdeskapp.gui.sigint import setup_interrupt_handling
 from linakdeskapp.gui.main_window import MainWindow
 
 from testlinakdeskapp.gui.device_connector_mock import DeviceConnectorMock
@@ -84,24 +84,24 @@ try:
     app.setApplicationName("LinakDeskApp")
     app.setOrganizationName("arnet")
     ### app.setOrganizationDomain("www.my-org.com")
-    
+
     window = MainWindow()
     window.loadSettings()
-    
+
     connector = DeviceConnectorMock()
-    
+
     window.attachConnector(connector, args.connect)
-    
+
     if args.minimized is False:
         window.show()
-    
+
     setup_interrupt_handling()
-    
+
     exitCode = app.exec_()
-    
+
     if exitCode == 0:
         window.saveSettings()
-    
+
     _LOGGER.info("Done with exit code: %s", exitCode)
 
 except:

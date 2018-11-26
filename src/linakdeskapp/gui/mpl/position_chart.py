@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,8 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
- 
- 
+
+
 import logging
 
 try:
@@ -30,7 +30,7 @@ except ImportError as e:
     ### No module named <name>
     logging.exception("Exception while importing")
     exit(1)
- 
+
 from .mpl_canvas import matplotlib, DynamicMplCanvas
 
 
@@ -38,18 +38,18 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class PositionChart(DynamicMplCanvas):
-     
+
     def __init__(self, parentWidget=None):
 #         super().__init__(parentWidget, 5, 4, 50)
         super().__init__(parentWidget, 10, 10, 50)
-        
+
         self.xdata = list()
         self.ydata = list()
-        
-        linesList = self.plot.plot_date( self.xdata, self.ydata, 'r', 
+
+        linesList = self.plot.plot_date( self.xdata, self.ydata, 'r',
                                          linewidth=3, antialiased=True)
         self.line = linesList[0]
-        
+
         formatter = matplotlib.dates.DateFormatter('%H:%M:%S')
         self.plot.xaxis.set_major_formatter( formatter )
 
@@ -61,12 +61,12 @@ class PositionChart(DynamicMplCanvas):
         self.fig.autofmt_xdate()
 
         self._set_plot_data()
-    
+
     def addData(self, deskHeight):
         currTime = self.getCurrTime()
         self.xdata.append(currTime)
         self.ydata.append(deskHeight)
-        
+
         self._set_plot_data()
 
     def clearData(self):
@@ -92,7 +92,7 @@ class PositionChart(DynamicMplCanvas):
         self.xdata[-1] = self.getCurrTime()
         self._set_plot_data()
         return True
-    
+
     def getCurrTime(self):
         currTime = pandas.Timestamp.now()
         return currTime
@@ -100,21 +100,21 @@ class PositionChart(DynamicMplCanvas):
     def _set_plot_data(self):
         if len(self.xdata) < 2:
             return
-        
+
         self.line.set_xdata( self.xdata )
         self.line.set_ydata( self.ydata )
-        
+
         ticks = self._generate_ticks(12)
         self.plot.set_xticks( ticks )
-    
+
         ### hide first and last major tick (next to plot edges)
         xticks = self.plot.xaxis.get_major_ticks()
         xticks[0].label1.set_visible(False)
         ##xticks[-1].label1.set_visible(False)
-    
+
         self.plot.relim(True)
         self.plot.autoscale_view()
-        
+
     def _generate_ticks(self, number):
         if number < 1:
             return list()
@@ -134,4 +134,3 @@ class PositionChart(DynamicMplCanvas):
             ts = pandas.Timestamp( currTs, unit="s" )
             ticks.append( ts )
         return ticks
-    

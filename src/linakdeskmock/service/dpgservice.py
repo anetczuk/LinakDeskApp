@@ -1,18 +1,18 @@
 #
 # MIT License
-# 
+#
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -48,7 +48,7 @@ class DpgCharacteristic(RWWNCharacteristic):
                 self, bus, index,
                 self.UUID,
                 service)
-    
+
     def writeValueHandler(self, value):
         command = value[1]
         if command == 10:
@@ -110,6 +110,5 @@ class DpgCharacteristic(RWWNCharacteristic):
             newVal = [0x01, 0x07, 0x01, 0xe1, 0x07, 0x8f, 0x87, 0x00, 0x00]
             self.notifyValue(newVal)
             return
-            
+
         print "Unknown DPG command code:", command, hex(command)
-        

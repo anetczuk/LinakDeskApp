@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,14 +33,14 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 class DeviceStatusWidget(QtBaseClass):
     def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
-        
+
         self.device = None
-        
+
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
-        
+
         self._refreshWidget()
- 
+
     def attachConnector(self, connector):
         if self.device is not None:
             ## disconnect old object
@@ -48,11 +48,11 @@ class DeviceStatusWidget(QtBaseClass):
             self.device.settingChanged.disconnect( self._refreshWidget )
             self.device.positionChanged.disconnect( self._refreshPosition )
             self.device.speedChanged.disconnect( self._refreshSpeed )
-            
+
         self.device = connector
-        
+
         self._refreshWidget()
-        
+
         if self.device is not None:
             ## connect new object
             self.device.connectionStateChanged.connect( self._refreshWidget )
@@ -75,7 +75,7 @@ class DeviceStatusWidget(QtBaseClass):
             self._refreshPosition()
             self._refreshSpeed()
             return
-        
+
         if status == ConnectionState.CONN_IN_PROGRESS:
             self.ui.statusLabel.setText("connecting...")
         else:
@@ -88,7 +88,7 @@ class DeviceStatusWidget(QtBaseClass):
         self.ui.reminderLabel.setText("")
         self.ui.positionLabel.setText("")
         self.ui.speedLabel.setText("")
-        
+
     def getDeviceConnectionStatus(self):
         if self.device is None:
             return ConnectionState.DISCONNECTED
@@ -96,7 +96,7 @@ class DeviceStatusWidget(QtBaseClass):
 
     def _refreshPosition(self):
         self.ui.positionLabel.setText( self.device.positionCm() )
-        
+
     def _refreshSpeed(self):
         currSpeed = self.device.currentSpeed()
         self.ui.speedLabel.setText( str(currSpeed) )

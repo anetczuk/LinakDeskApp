@@ -1,18 +1,18 @@
 #
 # MIT License
-# 
+#
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -51,8 +51,8 @@ class OneCharacteristic(RNCharacteristic):
                 self, bus, index,
                 self.UUID,
                 service)
-        
-        
+
+
 class SevenCharacteristic(RNCharacteristic):
     UUID = linak_service.Characteristic.SEVEN.uuid()
 
@@ -60,8 +60,8 @@ class SevenCharacteristic(RNCharacteristic):
         RNCharacteristic.__init__(
                 self, bus, index,
                 self.UUID,
-                service)  
-        
+                service)
+
 
 class EightCharacteristic(RNCharacteristic):
     UUID = linak_service.Characteristic.EIGHT.uuid()
@@ -70,8 +70,8 @@ class EightCharacteristic(RNCharacteristic):
         RNCharacteristic.__init__(
                 self, bus, index,
                 self.UUID,
-                service)        
-        
+                service)
+
 
 class MaskCharacteristic(RCharacteristic):
     UUID = linak_service.Characteristic.MASK.uuid()
@@ -82,5 +82,4 @@ class MaskCharacteristic(RCharacteristic):
                 self.UUID,
                 service)
         self.value_lvl = 1
-        
-        
+

@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -45,43 +45,43 @@ class MainWindow(QtBaseClass):
         self.device = None
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
-        
+
         self.settingsFilePath = None
-        
+
         self.statusBar().showMessage("Ready")
-        
+
         self.iconDict             = IconDictionary()
         self.currentTheme         = None
         self.currentPositionState = None
-        
+
         self.trayIcon = tray_icon.TrayIcon(self)
         self.trayIcon.setToolTip("Linak desk")
-        
+
         self.setIconTheme( tray_icon.TrayIconTheme.WHITE )
-        
+
         self.ui.appSettings.showMessage.connect( self.trayIcon.displayMessage )
         self.ui.appSettings.stateInfoChanged.connect( self.trayIcon.setInfo )
         self.ui.appSettings.iconThemeChanged.connect( self.setIconTheme )
         self.ui.appSettings.indicatePositionChange.connect( self._changePositionIcon )
-        
+
         self.trayIcon.show()
 
     def attachConnector(self, connector, address):
         if self.device is not None:
             ## disconnect old object
             self.device.connectionStateChanged.disconnect( self._updateConnectionInfo )
-            
+
         self.device = connector
-        
+
         self.ui.deviceControl.attachConnector( self.device )
         self.ui.deviceSettings.attachConnector( self.device )
         self.ui.appSettings.attachConnector( self.device )
         self.trayIcon.attachConnector( self.device )
-        
+
         if self.device is not None:
             ## connect new object
             self.device.connectionStateChanged.connect( self._updateConnectionInfo )
-        
+
         if address is not None:
             self.device.connectTo(address)
         else:
@@ -96,12 +96,12 @@ class MainWindow(QtBaseClass):
 
     def setIconTheme(self, theme: tray_icon.TrayIconTheme):
         _LOGGER.debug("setting tray theme: %r", theme)
-        
+
         self.currentTheme = theme
-        
+
         connectedIcon = self.iconDict.getIcon( self.currentTheme.connected )
         self.setWindowIcon( connectedIcon )
-        
+
         self._updateTrayIcon()
 
     def _changePositionIcon(self, state):
@@ -111,9 +111,9 @@ class MainWindow(QtBaseClass):
 
     def _updateConnectionInfo(self):
         ## whenever connection status changes then reset position status
-        self.currentPositionState = None    
+        self.currentPositionState = None
         self._updateTrayIcon()
-        
+
     def _updateTrayIcon(self):
         connection = self.getDeviceConnectionStatus()
         if connection != ConnectionState.CONNECTED:
@@ -137,7 +137,7 @@ class MainWindow(QtBaseClass):
         settings = self.getSettings()
         _LOGGER.debug( "loading app state from %s", settings.fileName() )
         self.ui.appSettings.loadSettings( settings )
-        
+
         ## restore widget state and geometry
         settings.beginGroup( self.objectName() )
         geometry = settings.value("geometry")
@@ -147,38 +147,38 @@ class MainWindow(QtBaseClass):
         if state is not None:
             self.restoreState( state )
         settings.endGroup()
-        
-#         ## store geometry of all widgets        
+
+#         ## store geometry of all widgets
 #         widgets = self.findChildren(QWidget)
 #         for w in widgets:
 #             wKey = getWidgetKey(w)
 #             settings.beginGroup( wKey )
 #             geometry = settings.value("geometry")
 #             if geometry is not None:
-#                 w.restoreGeometry( geometry );            
+#                 w.restoreGeometry( geometry );
 #             settings.endGroup()
-    
+
     def saveSettings(self):
         settings = self.getSettings()
         _LOGGER.debug( "saving app state to %s", settings.fileName() )
         self.ui.appSettings.saveSettings( settings )
-        
+
         ## store widget state and geometry
         settings.beginGroup( self.objectName() )
         settings.setValue("geometry", self.saveGeometry() )
         settings.setValue("windowState", self.saveState() )
         settings.endGroup()
 
-#         ## store geometry of all widgets        
+#         ## store geometry of all widgets
 #         widgets = self.findChildren(QWidget)
 #         for w in widgets:
 #             wKey = getWidgetKey(w)
 #             settings.beginGroup( wKey )
 #             settings.setValue("geometry", w.saveGeometry() );
 #             settings.endGroup()
-        
+
         ## force save to file
-        settings.sync()        
+        settings.sync()
 
     def getSettings(self):
 #         ## store in app directory
@@ -187,13 +187,13 @@ class MainWindow(QtBaseClass):
 # #             self.settingsFilePath = os.path.realpath( scriptDir + "../../../../tmp/settings.ini" )
 #             self.settingsFilePath = "settings.ini"
 #         settings = QtCore.QSettings(self.settingsFilePath, QtCore.QSettings.IniFormat, self)
-    
+
         ## store in home directory
         orgName = qApp.organizationName()
         appName = qApp.applicationName()
         settings = QtCore.QSettings(QtCore.QSettings.IniFormat, QtCore.QSettings.UserScope, orgName, appName, self)
         return settings
-    
+
     # ================================================================
 
     def closeApplication(self):
@@ -207,15 +207,15 @@ class MainWindow(QtBaseClass):
         deviceDialog = DevicesListDialog(self)
         deviceDialog.attachConnector(self.device)
         deviceDialog.exec_()                            ### modal mode
-    
+
     def reconnectDevice(self):
-        ## slot    
+        ## slot
         self.device.reconnect()
-    
+
     def disconnectFromDevice(self):
-        ## slot    
+        ## slot
         self.device.disconnect()
-        
+
     # ===============================================================
 
     def closeEvent(self, event):
@@ -223,19 +223,19 @@ class MainWindow(QtBaseClass):
         event.ignore()
         self.hide()
         self.trayIcon.show()
-    
+
     def showEvent(self, event):
         self.trayIcon.updateLabel()
-    
+
     def hideEvent(self, event):
         self.trayIcon.updateLabel()
 
 
 class IconDictionary():
-    
+
     def __init__(self):
         self.icons = dict()
-    
+
     def getIcon(self, fileName: str):
         if fileName in self.icons:
             return self.icons[fileName]

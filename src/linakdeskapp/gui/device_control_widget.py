@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,18 +34,18 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
 class DeviceControlWidget(QtBaseClass):
-    
+
     def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
-        
+
         self.device = None
         self.favButtons = list()
-        
+
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
-        
+
         self._refreshWidget()
-        
+
         self.ui.upPB.pressed.connect(self._goingUp)
         self.ui.upPB.released.connect(self._stopMoving)
         self.ui.downPB.pressed.connect(self._goingDown)
@@ -59,12 +59,12 @@ class DeviceControlWidget(QtBaseClass):
             ## disconnect old object
             self.device.connectionStateChanged.connect( self._refreshWidget )
             self.device.favoritiesChanged.disconnect( self._refreshFavLayout )
-            
+
         self.ui.deviceStatus.attachConnector(connector)
         self.device = connector
-        
+
         self._refreshWidget()
-            
+
         if self.device is not None:
             ## connect new object
             self.device.connectionStateChanged.connect( self._refreshWidget )
@@ -98,44 +98,44 @@ class DeviceControlWidget(QtBaseClass):
         if self.device is None:
             return
         self.device.moveUp()
-    
+
     def _goingDown(self):
         if self.device is None:
             return
         self.device.moveDown()
-    
+
     def _goingTop(self):
         if self.device is None:
             return
         self.device.moveToTop()
-    
+
     def _goingBottom(self):
         if self.device is None:
             return
         self.device.moveToBottom()
-        
+
     def _stopMoving(self):
         if self.device is None:
             return
         self.device.stopMoving()
-    
+
     def _moveToFav(self, favIndex):
         if self.device is None:
             return
         self.device.moveToFav( favIndex )
-        
+
     def _getFavList(self):
         if self.device is None:
-            return []        
+            return []
         return self.device.favValues()
-        
+
     def _clearFavLayout(self):
         clearLayout( self.ui.favLayout )
         self.favButtons.clear()
-            
+
     def _genFavButtons(self):
         self._clearFavLayout()
-        
+
         favourities = self._getFavList()
         for i in range( len(favourities) ):
             fav = favourities[i]
@@ -148,15 +148,15 @@ class DeviceControlWidget(QtBaseClass):
 
     def _refreshFavLayout(self, favIndex):
         self._refreshFavButton(favIndex)
-        
+
     def _refreshFavButton(self, favIndex):
         favourities = self._getFavList()
         if favIndex >= len(favourities):
-            return 
+            return
         favValue = favourities[ favIndex ]
         button = self.favButtons[ favIndex ]
         self._updateFavButton(button, favValue)
-    
+
     def _updateFavButton(self, button, favValue):
         label = str( favValue )
         button.setText( label )
@@ -164,5 +164,4 @@ class DeviceControlWidget(QtBaseClass):
             button.setEnabled( True )
         else:
             button.setEnabled( False )
-    
-        
+

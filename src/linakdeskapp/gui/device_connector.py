@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,23 +33,23 @@ class ConnectionState(Enum):
 
 
 class DeviceConnector():
-    
+
     def __init__(self):
         pass
-    
+
     def address(self):
         raise NotImplementedError('You need to define this method in derived class!')
-    
+
     def isConnected(self):
         status = self.getConnectionStatus()
         return status == ConnectionState.CONNECTED
-    
+
     def getConnectionStatus(self) -> ConnectionState:
         raise NotImplementedError('You need to define this method in derived class!')
-    
+
     def scanDevices(self):
         raise NotImplementedError('You need to define this method in derived class!')
-    
+
     def connectTo(self, deviceAddr):
         raise NotImplementedError('You need to define this method in derived class!')
 
@@ -61,17 +61,16 @@ class DeviceConnector():
 
 
 class ScanItem():
-    
+
     def __init__(self, name, address):
         self._name = name
         self._address = address
-    
+
     @property
     def name(self):
         return self._name
-    
+
     @property
     def address(self):
         return self._address
-    
-    
+

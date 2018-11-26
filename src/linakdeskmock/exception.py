@@ -22,4 +22,3 @@ class InvalidValueLengthException(dbus.exceptions.DBusException):
 
 class FailedException(dbus.exceptions.DBusException):
     _dbus_error_name = 'org.bluez.Error.Failed'
-    

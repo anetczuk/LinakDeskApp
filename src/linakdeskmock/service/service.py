@@ -95,14 +95,14 @@ class Service(dbus.service.Object):
         manager.RegisterService(self.get_path(), {},
                                 reply_handler=self._register_service_cb,
                                 error_handler=self._register_service_error_cb)
-    
+
     @classmethod
     def register_service(cls, manager, service):
         service.register(manager)
-    
+
     def _register_service_cb(self):
         print('GATT service registered: %s' % (self.__class__.__name__))
-        
+
     def _register_service_error_cb(self, error):
         print('Failed to register service: ' + str(error))
 
@@ -177,7 +177,7 @@ class Characteristic(dbus.service.Object):
     def WriteValue(self, value):
         try:
             unwrapped = self._unwrap(value)
-            print self.__class__.__name__, "received data:", repr(value), "->", repr(unwrapped), [hex(no) for no in unwrapped]        
+            print self.__class__.__name__, "received data:", repr(value), "->", repr(unwrapped), [hex(no) for no in unwrapped]
             self.writeValueHandler(unwrapped)
         except:
             logging.exception("Exception occured")
@@ -194,14 +194,14 @@ class Characteristic(dbus.service.Object):
             return dbus.Array( [dbus.Byte( int(value) )] )
         print('Unsupported type:', repr(value))
         return None
-    
+
     def _unwrap(self, value):
         if isinstance(value, dbus.Array):
             vallist = [self._unwrap(x) for x in value]
             return vallist
         if isinstance(value, dbus.Byte):
             return int(value)
-        print 'Unsupported type:', repr(value) 
+        print 'Unsupported type:', repr(value)
         return None
 
     @dbus.service.method(GATT_CHRC_IFACE)
@@ -223,15 +223,15 @@ class Characteristic(dbus.service.Object):
     def readValueHandler(self):
         print('Default ReadValue called, returning error')
         raise NotSupportedException()
-        
+
     def writeValueHandler(self, value):
         print('Default WriteValue called, returning error')
         raise NotSupportedException()
-        
+
     def startNotifyHandler(self):
         print('Default StartNotify called, returning error')
         raise NotSupportedException()
-        
+
     def stopNotifyHandler(self):
         print('Default StopNotify called, returning error')
         raise NotSupportedException()
@@ -268,7 +268,7 @@ class RWCharacteristic(Characteristic):
 
     def readValueHandler(self):
         return self.value_lvl
-    
+
     def writeValueHandler(self, value):
         self.value_lvl = value
 
@@ -284,7 +284,7 @@ class RNCharacteristic(Characteristic):
         self.notifying = False
         self.value_lvl = 100
         gobject.timeout_add(5000, self.change_value)
-        
+
     def notify(self):
         if not self.notifying:
             return
@@ -318,8 +318,8 @@ class RNCharacteristic(Characteristic):
 
         print 'Stopping notifying', self.__class__.__name__
         self.notifying = False
-        
-        
+
+
 class WWCharacteristic(Characteristic):
 
     def __init__(self, bus, index, uuid, service):
@@ -332,7 +332,7 @@ class WWCharacteristic(Characteristic):
 
     def readValueHandler(self):
         return self.value_lvl
- 
+
     def writeValueHandler(self, value):
         self.value_lvl = value
 
@@ -348,11 +348,11 @@ class RWWNCharacteristic(Characteristic):
         self.notifying = False
         self.value_lvl = 100
 #         gobject.timeout_add(5000, self.change_value)
-        
+
     def notifyValue(self, value):
         self.value_lvl = value
         self.notify()
-    
+
     def notify(self):
         if not self.notifying:
             return
@@ -363,7 +363,7 @@ class RWWNCharacteristic(Characteristic):
 
     def readValueHandler(self):
         return self.value_lvl
- 
+
     def writeValueHandler(self, value):
         self.value_lvl = value
 

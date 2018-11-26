@@ -6,10 +6,10 @@ import logging
 
 try:
     import matplotlib
-    
+
     # Make sure that we are using QT5
     matplotlib.use('Qt5Agg')
-    
+
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     from matplotlib.figure import Figure
 except ImportError as e:
@@ -29,7 +29,7 @@ class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         self.fig = Figure( figsize=(width, height), dpi=dpi )
         self.plot = self.fig.add_subplot(1, 1, 1)
-        
+
         FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)
 
@@ -41,7 +41,7 @@ class MplCanvas(FigureCanvas):
     def setBackgroundByRGB(self, r, g, b):
         rgbColor = ( r / 255, g / 255, b / 255, 1.0 )
         self.fig.patch.set_facecolor( rgbColor )
-        
+
     def setBackgroundByQColor(self, bgcolor):
         rgbColor = ( bgcolor.red() / 255, bgcolor.green() / 255, bgcolor.blue() / 255, 1.0 )
         self.fig.patch.set_facecolor( rgbColor )
@@ -57,13 +57,13 @@ class MplCanvas(FigureCanvas):
 
 class DynamicMplCanvas(MplCanvas):
     """A canvas that updates itself every second with a new plot."""
- 
+
     def __init__(self, *args, **kwargs):
         MplCanvas.__init__(self, *args, **kwargs)
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self._update)
         self._setTimer(True)
-        
+
     def setEnabled(self, enabled):
         super().setEnabled(enabled)
         if enabled is True:
@@ -73,15 +73,15 @@ class DynamicMplCanvas(MplCanvas):
             self._setTimer(enabled)
             self.clearData()
             self.drawFigure()
-    
+
     def clearData(self):
         ## implement if needed
         pass
-        
+
     def updateData(self):
         ## implement if needed
         return False
-        
+
     def drawFigure(self):
         if self._hasData() is False:
             ## no data - nothing to do
@@ -92,7 +92,7 @@ class DynamicMplCanvas(MplCanvas):
 
 #         self.fig.canvas.draw()
 #         self.fig.canvas.flush_events()
-        
+
         ##self.draw()                         ## QWidget draw
         self.draw_idle()
 
@@ -105,7 +105,7 @@ class DynamicMplCanvas(MplCanvas):
             self.timer.start(1000)
         else:
             self.timer.stop()
-    
+
     def _hasData(self):
         axes = self.figure.get_axes()
         if len(axes) < 1:
@@ -120,4 +120,4 @@ class DynamicMplCanvas(MplCanvas):
         if len(xdata) < 1:
             return False
         return True
-            
+

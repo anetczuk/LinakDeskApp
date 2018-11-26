@@ -78,6 +78,5 @@ class BatteryLevelCharacteristic(Characteristic):
 
         print('Stopping notifying')
         self.notifying = False
-        
-        
-    
+
+
