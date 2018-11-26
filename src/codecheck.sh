@@ -22,3 +22,18 @@ ignore_errors=E115,E126,E201,E202,E221,E262,E265,E266,E402,E501,W391
 
 
 pycodestyle --show-source --statistics --count --ignore=$ignore_errors $src_dir
+exit_code=$?
+
+if [ $exit_code -ne 0 ]; then
+    exit $exit_code
+fi
+
+echo "pep8 -- no warnings found"
+
+
+## F401 'PyQt5.QtCore' imported but unused
+ignore_errors=$ignore_errors,F401
+
+
+flake8 --show-source --statistics --count --ignore=$ignore_errors $src_dir
+
