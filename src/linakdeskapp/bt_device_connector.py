@@ -24,6 +24,7 @@
 
 import os
 import logging
+import threading
 
 try:
     from bluepy.btle import Scanner
@@ -31,6 +32,8 @@ except ImportError as e:
     ### No module named <name>
     print(e)
     exit(1)
+
+from .threadcounter import getThreadName
 
 from .gui.qt import QtCore
 
@@ -103,7 +106,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         if deviceAddr is None:
             return
         self._changeConnectionStatus(ConnectionState.CONN_IN_PROGRESS)
-        worker = ThreadWorker( self._initializeDevice )
+        worker = ThreadWorker( self._initializeDevice, namePrefix="Connect" )
         self.threadpool.start(worker)
 
     def _initializeDevice(self):
@@ -261,13 +264,18 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
 class ThreadWorker(QtCore.QRunnable):
     """Worker thread."""
 
-    def __init__(self, function):
+    def __init__(self, function, namePrefix=None):
         super().__init__()
+        if namePrefix is None:
+            namePrefix = "ThrdWrkr"
+        self.namePrefix = namePrefix
         self.setAutoDelete(True)
         self.call = function
 
     def run(self):
         """Your code goes in this function."""
+        thread = threading.current_thread()
+        thread.name = getThreadName( self.namePrefix )
         _LOGGER.debug("Worker start")
         self.call()
         _LOGGER.debug("Worker complete")
