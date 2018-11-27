@@ -12,11 +12,8 @@ from exception import NotPermittedException
 
 
 class ExampleService(Service):
-    """
-    Dummy test service that provides characteristics and descriptors that
-    exercise various API functionality.
+    """Dummy test service that provides characteristics and descriptors that exercise various API functionality."""
 
-    """
     TEST_SVC_UUID = '12345678-1234-5678-1234-56789abcdef0'
 
     def __init__(self, bus, index):
@@ -27,10 +24,12 @@ class ExampleService(Service):
 
 class ExampleCharacteristic(Characteristic):
     """
-    Dummy test characteristic. Allows writing arbitrary bytes to its value, and
-    contains "extended properties", as well as a test descriptor.
+    Dummy test characteristic.
 
+    Allows writing arbitrary bytes to its value, and
+    contains "extended properties", as well as a test descriptor.
     """
+
     TEST_CHRC_UUID = '12345678-1234-5678-1234-56789abcdef1'
 
     def __init__(self, bus, index, service):
@@ -54,10 +53,8 @@ class ExampleCharacteristic(Characteristic):
 
 
 class ExampleDescriptor(Descriptor):
-    """
-    Dummy test descriptor. Returns a static value.
+    """Dummy test descriptor. Returns a static value."""
 
-    """
     TEST_DESC_UUID = '12345678-1234-5678-1234-56789abcdef2'
 
     def __init__(self, bus, index, characteristic):
@@ -74,10 +71,8 @@ class ExampleDescriptor(Descriptor):
 
 
 class CharacteristicUserDescriptionDescriptor(Descriptor):
-    """
-    Writable CUD descriptor.
+    """Writable CUD descriptor."""
 
-    """
     CUD_UUID = '2901'
 
     def __init__(self, bus, index, characteristic):
@@ -100,10 +95,8 @@ class CharacteristicUserDescriptionDescriptor(Descriptor):
 
 
 class ExampleEncryptCharacteristic(Characteristic):
-    """
-    Dummy test characteristic requiring encryption.
+    """Dummy test characteristic requiring encryption."""
 
-    """
     TEST_CHRC_UUID = '12345678-1234-5678-1234-56789abcdef3'
 
     def __init__(self, bus, index, service):
@@ -127,10 +120,8 @@ class ExampleEncryptCharacteristic(Characteristic):
 
 
 class ExampleEncryptDescriptor(Descriptor):
-    """
-    Dummy test descriptor requiring encryption. Returns a static value.
+    """Dummy test descriptor requiring encryption. Returns a static value."""
 
-    """
     TEST_DESC_UUID = '12345678-1234-5678-1234-56789abcdef4'
 
     def __init__(self, bus, index, characteristic):

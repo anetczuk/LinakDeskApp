@@ -82,9 +82,7 @@ def createFormatter():
 
 
 class EmptyLineFormatter(logging.Formatter):
-    """
-    Special formatter storing empty lines without formatting.
-    """
+    """Special formatter storing empty lines without formatting."""
 
     ## override base class method
     def format(self, record):

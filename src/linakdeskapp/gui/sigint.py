@@ -1,10 +1,12 @@
-'''
+"""
+Handling Ctrl+C inside PyQt.
+
 The code is taken from:
                https://coldfix.eu/2016/11/08/pyqt-boilerplate/
 
 As stated on the website (https://coldfix.eu/about/), content and source code
 is published under CC BY and CC0 license respectively.
-'''
+"""
 
 
 import signal
@@ -26,8 +28,9 @@ def _interrupt_handler(signum, frame):
 
 def safe_timer(timeout, func, *args, **kwargs):
     """
-    Create a timer that is safe against garbage collection and overlapping
-    calls. See: http://ralsina.me/weblog/posts/BB974.html
+    Create a timer that is safe against garbage collection and overlapping calls.
+
+    See: http://ralsina.me/weblog/posts/BB974.html
     """
     def timer_event():
         try:
@@ -40,7 +43,7 @@ def safe_timer(timeout, func, *args, **kwargs):
 
 # Call this function in your main after creating the QApplication
 def setup_interrupt_handling():
-    """Setup handling of KeyboardInterrupt (Ctrl-C) for PyQt."""
+    """Set up handling of KeyboardInterrupt (Ctrl-C) for PyQt."""
     signal.signal(signal.SIGINT, _interrupt_handler)
     # Regularly run some (any) python code, so the signal handler gets a
     # chance to be executed:

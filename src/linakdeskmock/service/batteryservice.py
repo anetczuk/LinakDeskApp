@@ -12,10 +12,8 @@ from service import GATT_CHRC_IFACE
 
 
 class BatteryService(Service):
-    """
-    Fake Battery service that emulates a draining battery.
+    """Fake Battery service that emulates a draining battery."""
 
-    """
     BATTERY_UUID = '180f'
 
     def __init__(self, bus, index):
@@ -24,11 +22,8 @@ class BatteryService(Service):
 
 
 class BatteryLevelCharacteristic(Characteristic):
-    """
-    Fake Battery Level characteristic. The battery level is drained by 2 points
-    every 5 seconds.
+    """Fake Battery Level characteristic. The battery level is drained by 2 points every 5 seconds."""
 
-    """
     BATTERY_LVL_UUID = '2a19'
 
     def __init__(self, bus, index, service):

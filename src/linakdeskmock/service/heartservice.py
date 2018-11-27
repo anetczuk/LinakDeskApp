@@ -15,11 +15,8 @@ from exception import InvalidValueLengthException, FailedException
 
 
 class HeartRateService(Service):
-    """
-    Fake Heart Rate Service that simulates a fake heart beat and control point
-    behavior.
+    """Fake Heart Rate Service that simulates a fake heart beat and control point behavior."""
 
-    """
     HR_UUID = '0000180d-0000-1000-8000-00805f9b34fb'
 
     def __init__(self, bus, index):

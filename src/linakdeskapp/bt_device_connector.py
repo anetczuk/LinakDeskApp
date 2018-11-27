@@ -259,18 +259,15 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
 
 
 class ThreadWorker(QtCore.QRunnable):
-    '''
-    Worker thread
-    '''
+    """Worker thread."""
+
     def __init__(self, function):
         super().__init__()
         self.setAutoDelete(True)
         self.call = function
 
     def run(self):
-        '''
-        Your code goes in this function
-        '''
+        """Your code goes in this function."""
         _LOGGER.debug("Worker start")
         self.call()
         _LOGGER.debug("Worker complete")
