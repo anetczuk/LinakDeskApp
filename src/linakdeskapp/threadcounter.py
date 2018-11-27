@@ -12,6 +12,7 @@ def getThreadName(prefix=None):
     threadNum = getThreadNumber(prefix)
     return "%s-%d" % (prefix, threadNum)
 
+
 def getThreadNumber(prefix=None):
     currNum = 0
     if prefix in _threadCounter:
