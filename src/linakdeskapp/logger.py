@@ -67,6 +67,13 @@ def configure( logFile=None ):
 ##                        )
 
 
+def createStdOutHandler():
+    formatter = createFormatter()
+    consoleHandler = logging.StreamHandler( stream=sys.stdout )
+    consoleHandler.setFormatter( formatter )
+    return consoleHandler
+
+
 def createFormatter():
     loggerFormat   = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
     dateFormat     = '%Y-%m-%d %H:%M:%S'
