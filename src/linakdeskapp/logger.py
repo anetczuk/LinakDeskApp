@@ -39,12 +39,15 @@ def getLoggingOutputFile():
     return logFile
 
 
-def configure( logFile=None ):
+def configure( logFile=None, logLevel=None ):
     global log_file
 
     log_file = logFile
     if log_file is None:
         log_file = getLoggingOutputFile()
+
+    if logLevel is None:
+        logLevel = logging.DEBUG
 
     fileHandler    = logging.FileHandler( filename=log_file, mode="a+" )
     consoleHandler = logging.StreamHandler( stream=sys.stdout )
@@ -56,7 +59,7 @@ def configure( logFile=None ):
 
     logging.root.addHandler( consoleHandler )
     logging.root.addHandler( fileHandler )
-    logging.root.setLevel( logging.DEBUG )
+    logging.root.setLevel( logLevel )
 
 ##     loggerFormat   = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
 ##     dateFormat     = '%Y-%m-%d %H:%M:%S'
@@ -74,9 +77,11 @@ def createStdOutHandler():
     return consoleHandler
 
 
-def createFormatter():
-    loggerFormat   = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
-    dateFormat     = '%Y-%m-%d %H:%M:%S'
+def createFormatter(loggerFormat=None):
+    if loggerFormat is None:
+        ## loggerFormat = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
+        loggerFormat = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s %(name)s:%(funcName)s [%(filename)s:%(lineno)d] %(message)s'
+    dateFormat = '%Y-%m-%d %H:%M:%S'
     return EmptyLineFormatter( loggerFormat, dateFormat )
     ## return logging.Formatter( loggerFormat, dateFormat )
 

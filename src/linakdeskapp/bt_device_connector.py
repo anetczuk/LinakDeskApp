@@ -114,6 +114,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         ##self.desk.read_dpg_data()
         connected = device.initialize()
         if connected is False:
+            _LOGGER.debug("Could not connect to to device: %r", device)
             self.desk = None
             self._changeConnectionStatus(ConnectionState.DISCONNECTED)
             return
