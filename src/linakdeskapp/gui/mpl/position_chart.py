@@ -40,8 +40,7 @@ _LOGGER = logging.getLogger(__name__)
 class PositionChart(DynamicMplCanvas):
 
     def __init__(self, parentWidget=None):
-#         super().__init__(parentWidget, 5, 4, 50)
-        super().__init__(parentWidget, 10, 10, 50)
+        super().__init__(parentWidget, 10, 10, 80)
 
         self.xdata = list()
         self.ydata = list()
@@ -49,7 +48,11 @@ class PositionChart(DynamicMplCanvas):
         linesList = self.plot.plot_date( self.xdata, self.ydata, 'r',
                                          linewidth=3, antialiased=True)
         self.line = linesList[0]
-
+        
+#         self.fig.suptitle('Desk position', y=0.95, fontsize=18)
+        self.plot.set_xlabel('Time', fontsize=14)
+        self.plot.set_ylabel('Height', fontsize=14)
+        
         formatter = matplotlib.dates.DateFormatter('%H:%M:%S')
         self.plot.xaxis.set_major_formatter( formatter )
 
@@ -114,6 +117,8 @@ class PositionChart(DynamicMplCanvas):
 
         self.plot.relim(True)
         self.plot.autoscale_view()
+        self.fig.tight_layout()                 ## make space for labels of axis
+#         self.fig.subplots_adjust(top=0.82)      ## make space for suptitle
 
     def _generate_ticks(self, number):
         if number < 1:
