@@ -22,10 +22,24 @@
 #
 
 
+import abc
 from .qt import QObject, pyqtSignal
 
 
-class DeviceObject(QObject):
+QObjectMeta = type(QObject)
+
+
+class QAbstractMeta(QObjectMeta, abc.ABCMeta):
+    """
+    Shared meta class of QObject's meta and ABCMeta.
+
+    This is workaround of metaclass conflict:
+    TypeError: metaclass conflict: the metaclass of a derived class must be a (non-strict) subclass of the metaclasses of all its bases
+    """
+    pass
+
+
+class DeviceObject(QObject, metaclass=QAbstractMeta):
 
     connectionStateChanged  = pyqtSignal()
     positionChanged         = pyqtSignal()
@@ -36,90 +50,119 @@ class DeviceObject(QObject):
     def __init__(self):
         super().__init__()
 
+    @abc.abstractmethod
     def name(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def deviceType(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def userType(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def capabilities(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def sendDeskHeight(self, cmValue):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def reminder(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def reminderValues(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def reminderSettings(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def readCapabilities(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def readReminderState(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def sendReminderState(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def activateDisplay(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def currentPosition(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def currentSpeed(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def favorities(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def favPositions(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def setFavPosition(self, favIndex, newPosition):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def favSlotsNumber(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def favValues(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def readFavoritiesState(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def sendFavoriteState(self, favIndex):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def sendFavoritiesState(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def moveUp(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def moveDown(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def moveToTop(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def moveToBottom(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def moveToFav(self, favIndex):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def stopMoving(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def _setPositionRaw(self, newPosition):
         raise NotImplementedError('You need to define this method in derived class!')
 

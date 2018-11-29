@@ -23,6 +23,7 @@
 
 
 from enum import Enum, unique, auto
+import abc
 
 
 @unique
@@ -32,11 +33,12 @@ class ConnectionState(Enum):
     DISCONNECTED        = auto()
 
 
-class DeviceConnector():
+class DeviceConnector(metaclass=abc.ABCMeta):
 
     def __init__(self):
         pass
 
+    @abc.abstractmethod
     def address(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
@@ -44,18 +46,23 @@ class DeviceConnector():
         status = self.getConnectionStatus()
         return status == ConnectionState.CONNECTED
 
+    @abc.abstractmethod
     def getConnectionStatus(self) -> ConnectionState:
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def scanDevices(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def connectTo(self, deviceAddr):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def reconnect(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
+    @abc.abstractmethod
     def disconnect(self):
         raise NotImplementedError('You need to define this method in derived class!')
 

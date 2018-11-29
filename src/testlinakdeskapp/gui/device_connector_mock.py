@@ -252,6 +252,21 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
     def _setPositionRaw(self, newPosition):
         self.device.currPosition = newPosition
 
+    def sendDeskHeight(self, cmValue):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    def readFavoritiesState(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    def sendFavoriteState(self, favIndex):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    def sendFavoritiesState(self):
+        raise NotImplementedError('You need to define this method in derived class!')
+
+    def setFavPosition(self, favIndex, newPosition):
+        raise NotImplementedError('You need to define this method in derived class!')
+
 
 class ReminderSettingMock():
 
