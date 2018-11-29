@@ -249,8 +249,9 @@ class DeviceConnectorMock(DeviceConnector, DeviceObject):
     def stopMoving(self):
         self.stopCounter += 1
 
-    def _setPositionRaw(self, newPosition):
+    def setPosition(self, newPosition):
         self.device.currPosition = newPosition
+        self.positionChanged.emit()
 
     def sendDeskHeight(self, cmValue):
         raise NotImplementedError('You need to define this method in derived class!')

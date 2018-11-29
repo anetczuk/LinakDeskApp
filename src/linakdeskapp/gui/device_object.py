@@ -162,15 +162,7 @@ class DeviceObject(QObject, metaclass=QAbstractMeta):
     def stopMoving(self):
         raise NotImplementedError('You need to define this method in derived class!')
 
-    @abc.abstractmethod
-    def _setPositionRaw(self, newPosition):
-        raise NotImplementedError('You need to define this method in derived class!')
-
     def positionCm(self):
         currPos = self.currentPosition()
         return str(currPos) + " cm"
-
-    def setPosition(self, newPosition):
-        self._setPositionRaw(newPosition)
-        self.positionChanged.emit()
 
