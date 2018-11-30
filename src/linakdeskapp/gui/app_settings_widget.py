@@ -31,6 +31,7 @@ from .qt import QtCore
 from .qt import pyqtSignal
 from .tray_icon import TrayIconTheme
 from linakdeskapp.gui.device_connector import ConnectionState
+from linakdeskapp.gui.suspenddetector import QSuspendSingleton
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -106,6 +107,9 @@ class AppSettingsWidget(QtBaseClass):
         self.labelTimer = QtCore.QTimer()
         self.labelTimer.timeout.connect( self._updateStateInfo )
         self.labelTimer.setInterval(300)
+
+        suspDetector = QSuspendSingleton.instance()
+        suspDetector.resumed.connect( self._resumedFromSuspend )
 
         self.ui.autoReconnectCB.stateChanged.connect( self._tryAutoReconnect )
         self.ui.reconnectTimeSB.valueChanged.connect( self._toggleAutoReconnectTime )
@@ -369,6 +373,9 @@ class AppSettingsWidget(QtBaseClass):
         if self.positionTime is None:
             self.positionTime = time.time()
             return
+        if QSuspendSingleton.checkResumed():
+            self.positionTime = time.time()
+            return
         curr = time.time()
         diff = curr - self.positionTime
         passedTime = datetime.timedelta( seconds=diff )
@@ -377,6 +384,9 @@ class AppSettingsWidget(QtBaseClass):
             self.totalSit += passedTime
         else:
             self.totalStand += passedTime
+
+    def _resumedFromSuspend(self):
+        self.positionTime = None
 
     def _displayStateInfo(self):
         stateInfo = self._getStateInfo()
