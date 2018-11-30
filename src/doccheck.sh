@@ -14,8 +14,7 @@ src_dir=$SCRIPT_DIR
 ## D104: Missing docstring in public package
 ## D105: Missing docstring in magic method
 ## D107 Missing docstring in __init__
-## D204: 1 blank line required after class docstring (found 0)
-ignore_errors=D100,D101,D102,D103,D104,D105,D107,D204
+ignore_errors=D100,D101,D102,D103,D104,D105,D107
 
 
 # pydocstyle --count --ignore=$ignore_errors $src_dir

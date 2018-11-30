@@ -36,6 +36,7 @@ class QAbstractMeta(QObjectMeta, abc.ABCMeta):
     This is workaround of metaclass conflict:
     TypeError: metaclass conflict: the metaclass of a derived class must be a (non-strict) subclass of the metaclasses of all its bases
     """
+
     pass
 
 

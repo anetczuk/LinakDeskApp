@@ -48,11 +48,11 @@ class PositionChart(DynamicMplCanvas):
         linesList = self.plot.plot_date( self.xdata, self.ydata, 'r',
                                          linewidth=3, antialiased=True)
         self.line = linesList[0]
-        
+
 #         self.fig.suptitle('Desk position', y=0.95, fontsize=18)
         self.plot.set_xlabel('Time', fontsize=14)
         self.plot.set_ylabel('Height', fontsize=14)
-        
+
         formatter = matplotlib.dates.DateFormatter('%H:%M:%S')
         self.plot.xaxis.set_major_formatter( formatter )
 
