@@ -16,6 +16,7 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 - moving to favourite position
 - setting reminder, desk offset and favoritie positions
 - system tray icon
+- auto reconnecting to recent device
 - persisting application settings
 - drawing position chart over time
 - position statistics
