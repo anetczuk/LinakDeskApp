@@ -23,9 +23,9 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 
 ## Screens
 
-![Status of desk](doc/app-screen-status.png "Status of desk")
-![Application settings](doc/app-screen-settings.png "Application settings")
-![Device settings](doc/app-screen-device.png "Device settings")
+[![Status of desk](doc/app-screen-status-small.png "Status of desk")](doc/app-screen-status-big.png)
+[![Application settings](doc/app-screen-settings-small.png "Application settings")](doc/app-screen-settings-big.png)
+[![Device settings](doc/app-screen-device-small.png "Device settings")](doc/app-screen-device-big.png)
 
 
 ## Modules
@@ -80,7 +80,6 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 ## ToDo:
 - handle cm/inch unit switch
 - add fav buttons inside popup of system tray icon
-- handle hibernation/suspension
 - handle away from keyboard
 
 
