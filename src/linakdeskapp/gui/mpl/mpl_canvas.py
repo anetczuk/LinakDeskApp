@@ -27,6 +27,7 @@ class MplCanvas(FigureCanvas):
     """Ultimately, this is a QWidget (as well as a FigureCanvasAgg, etc.)."""
 
     def __init__(self, parent=None, width=5, height=4, dpi=100):
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
         self.fig = Figure( figsize=(width, height), dpi=dpi )
         self.plot = self.fig.add_subplot(1, 1, 1)
 
@@ -45,7 +46,7 @@ class MplCanvas(FigureCanvas):
     def setBackgroundByQColor(self, bgcolor):
         rgbColor = ( bgcolor.red() / 255, bgcolor.green() / 255, bgcolor.blue() / 255, 1.0 )
         self.fig.patch.set_facecolor( rgbColor )
-        ###_LOGGER.debug("setting background: %r", rgbColor)
+        ###self.logger.debug("setting background: %r", rgbColor)
 
     def showFigure(self, show):
         currVis = self.fig.get_visible()
@@ -60,6 +61,7 @@ class DynamicMplCanvas(MplCanvas):
 
     def __init__(self, *args, **kwargs):
         MplCanvas.__init__(self, *args, **kwargs)
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self._update)
         self._setTimer(True)
@@ -112,7 +114,7 @@ class DynamicMplCanvas(MplCanvas):
             return False
         ax = axes[0]
         lines = ax.get_lines()
-#         _LOGGER.info("data:\n%r", lines)
+#         self.logger.info("data:\n%r", lines)
         if len(lines) < 1:
             return False
         ll = lines[0]

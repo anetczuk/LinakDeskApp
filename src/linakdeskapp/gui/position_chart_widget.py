@@ -40,6 +40,8 @@ class PositionChartWidget(QtBaseClass):
     def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
 
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
+
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
 
@@ -86,7 +88,7 @@ class PositionChartWidget(QtBaseClass):
         settings.endGroup()
 
     def _refreshWidget(self):
-        ## _LOGGER.info("setting enabled: %s", enabled)
+        ## self.logger.info("setting enabled: %s", enabled)
         connected = self.isDeviceConnected()
         if connected is True:
             enabledChart = self.ui.enabledCB.isChecked()

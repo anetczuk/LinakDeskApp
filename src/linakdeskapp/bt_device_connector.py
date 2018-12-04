@@ -53,6 +53,8 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         DeviceConnector.__init__(self)
         DeviceObject.__init__(self)
 
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
+
         self.connectionStatus = ConnectionState.DISCONNECTED
         self.devList = []
 
@@ -66,10 +68,10 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         self.devList = []
 
         if os.getuid() != 0:
-            _LOGGER.debug( "Functionality needs root privileges" )
+            self.logger.debug( "Functionality needs root privileges" )
             return
 
-        _LOGGER.debug( "Scanning bluetooth devices" )
+        self.logger.debug( "Scanning bluetooth devices" )
 
         retList = []
 
@@ -85,7 +87,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
 #             for (adtype, desc, value) in dev.getScanData():
 #                 print( "  %s = %s" % (desc, value) )
 
-        _LOGGER.debug( "Scanning finished" )
+        self.logger.debug( "Scanning finished" )
 
         return retList
 
@@ -99,7 +101,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
 
     def connectTo(self, deviceAddr):
         if self.connectionStatus == ConnectionState.CONN_IN_PROGRESS:
-            _LOGGER.debug("unable to connect -- connection in progress")
+            self.logger.debug("unable to connect -- connection in progress")
             return
         self.disconnect()
         self.recentAddress = deviceAddr
@@ -114,7 +116,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         ##self.desk.read_dpg_data()
         connected = device.initialize()
         if connected is False:
-            _LOGGER.debug("Could not connect to to device: %r", device)
+            self.logger.debug("Could not connect to to device: %r", device)
             self.desk = None
             self._changeConnectionStatus(ConnectionState.DISCONNECTED)
             return
@@ -134,7 +136,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
 
     def disconnect(self):
         if self.connectionStatus == ConnectionState.CONN_IN_PROGRESS:
-            _LOGGER.debug("unable to disconnect -- connection in progress")
+            self.logger.debug("unable to disconnect -- connection in progress")
             return
         if self.desk is None:
             self._changeConnectionStatus(ConnectionState.DISCONNECTED)
@@ -145,7 +147,7 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
     def _changeConnectionStatus(self, newStatus):
         if self.connectionStatus == newStatus:
             return
-        _LOGGER.debug("changing connection state to %s", newStatus)
+        self.logger.debug("changing connection state to %s", newStatus)
         self.connectionStatus = newStatus
         self.connectionStateChanged.emit()
 
@@ -267,6 +269,7 @@ class ThreadWorker(QtCore.QRunnable):
 
     def __init__(self, function, namePrefix=None):
         super().__init__()
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
         if namePrefix is None:
             namePrefix = "ThrdWrkr"
         self.namePrefix = namePrefix
@@ -277,7 +280,7 @@ class ThreadWorker(QtCore.QRunnable):
         """Your code goes in this function."""
         thread = threading.current_thread()
         thread.name = getThreadName( self.namePrefix )
-        _LOGGER.debug("Worker start")
+        self.logger.debug("Worker start")
         self.call()
-        _LOGGER.debug("Worker complete")
+        self.logger.debug("Worker complete")
 

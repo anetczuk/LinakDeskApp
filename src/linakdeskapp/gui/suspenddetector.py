@@ -34,17 +34,18 @@ class QSuspendTimer( QtCore.QObject ):
 
     def __init__(self, parent):
         super().__init__(parent)
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
         self.lastTime = None
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect( self.checkResumed )
 
     def start(self):
-        _LOGGER.debug("starting suspension detector")
+        self.logger.debug("starting suspension detector")
         self.lastTime = None
         self.timer.start( 1000 )                            ## triggered every second
 
     def stop(self):
-        _LOGGER.debug("stopping suspension detector")
+        self.logger.debug("stopping suspension detector")
         self.timer.stop()
 
     def checkResumed(self):
@@ -57,7 +58,7 @@ class QSuspendTimer( QtCore.QObject ):
         self.lastTime = currTime
         if secDiff < 3.5:
             return False
-        _LOGGER.debug("resumed from suspend / hibernation after %s[s]", secDiff)
+        self.logger.debug("resumed from suspend / hibernation after %s[s]", secDiff)
         self.resumed.emit()
         return True
 
@@ -115,13 +116,14 @@ class QSuspendDetector( QtCore.QObject ):
 
     def __init__(self, parent):
         super().__init__( parent )
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
         self.detector = QSuspendSingleton()
 
     def start(self):
-        _LOGGER.debug("starting suspension detector")
+        self.logger.debug("starting suspension detector")
         self.detector.resumed.connect( self.resumed )
 
     def stop(self):
-        _LOGGER.debug("stopping suspension detector")
+        self.logger.debug("stopping suspension detector")
         self.detector.resumed.disconnect( self.resumed )
 

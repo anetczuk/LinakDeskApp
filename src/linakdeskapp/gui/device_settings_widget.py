@@ -41,6 +41,8 @@ class DeviceSettingsWidget(QtBaseClass):
     def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
 
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
+
         self.device = None
 
         self.ui = UiTargetClass()
@@ -308,7 +310,7 @@ class DeviceSettingsWidget(QtBaseClass):
         self.favGoToButtons = []
 
         favorities = self.device.favPositions()
-        #_LOGGER.info("got favs: %s", favorities)
+        #self.logger.info("got favs: %s", favorities)
         for i in range( len(favorities) ):
             fav = favorities[i]
             hLayout = self._genFavHLayout( i, fav )
@@ -389,7 +391,7 @@ class DeviceSettingsWidget(QtBaseClass):
             self.favSpinBoxes[favIndex].setEnabled(True)
 
     def _toggleFav(self, favIndex, value):
-        ##_LOGGER.info("type: %s %s", str( type(self.device.favoritiesChanged) ), dir(self.device.favoritiesChanged) )
+        ##self.logger.info("type: %s %s", str( type(self.device.favoritiesChanged) ), dir(self.device.favoritiesChanged) )
         self._enableFavSlot(False)
         self.device.setFavPosition( favIndex, value )
         self._enableFavSlot(True)

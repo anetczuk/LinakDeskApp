@@ -57,20 +57,21 @@ class ObjectA(object):
     counter = None
 
     def __init__(self):
-        # _LOGGER.warn("__init__: %r %r", self, ObjectA.counter)
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
+        # self.logger.warn("__init__: %r %r", self, ObjectA.counter)
         ObjectA.counter.constructor += 1
 
     def __enter__(self):
-        # _LOGGER.warn("__enter__: %r %r", self, ObjectA.counter)
+        # self.logger.warn("__enter__: %r %r", self, ObjectA.counter)
         ObjectA.counter.enter += 1
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        # _LOGGER.warn("__exit__: %r %r", self, ObjectA.counter)
+        # self.logger.warn("__exit__: %r %r", self, ObjectA.counter)
         ObjectA.counter.exit += 1
 
     def __del__(self):
-        # _LOGGER.warn("__del__: %r %r", self, ObjectA.counter)
+        # self.logger.warn("__del__: %r %r", self, ObjectA.counter)
         ObjectA.counter.destructor += 1
 
     def execute(self):
@@ -82,20 +83,21 @@ class ObjectGenerator(object):
     counter = None
 
     def __init__(self):
-        # _LOGGER.warn("__init__: %r %r", self, ObjectGenerator.counter)
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
+        # self.logger.warn("__init__: %r %r", self, ObjectGenerator.counter)
         ObjectGenerator.counter.constructor += 1
 
     def __enter__(self):
-        # _LOGGER.warn("__enter__: %r %r", self, ObjectGenerator.counter)
+        # self.logger.warn("__enter__: %r %r", self, ObjectGenerator.counter)
         ObjectGenerator.counter.enter += 1
         return ObjectA()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        # _LOGGER.warn("__exit__: %r %r", self, ObjectGenerator.counter)
+        # self.logger.warn("__exit__: %r %r", self, ObjectGenerator.counter)
         ObjectGenerator.counter.exit += 1
 
     def __del__(self):
-        # _LOGGER.warn("__del__: %r %r", self, ObjectGenerator.counter)
+        # self.logger.warn("__del__: %r %r", self, ObjectGenerator.counter)
         ObjectGenerator.counter.destructor += 1
 
     def execute(self):
@@ -103,11 +105,11 @@ class ObjectGenerator(object):
 
     @staticmethod
     def insideFunction():
-        # _LOGGER.warn("insideFunction before: %r", ObjectGenerator.counter)
+        # self.logger.warn("insideFunction before: %r", ObjectGenerator.counter)
         with ObjectGenerator() as obj:
-            # _LOGGER.warn("obj: %r", obj)
+            # self.logger.warn("obj: %r", obj)
             obj.execute()
-        # _LOGGER.warn("insideFunction after: %r", ObjectGenerator.counter)
+        # self.logger.warn("insideFunction after: %r", ObjectGenerator.counter)
 
 
 class SelfGenerator(object):
@@ -115,20 +117,21 @@ class SelfGenerator(object):
     counter = None
 
     def __init__(self):
-        # _LOGGER.warn("__init__: %r %r", self, SelfGenerator.counter)
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
+        # self.logger.warn("__init__: %r %r", self, SelfGenerator.counter)
         SelfGenerator.counter.constructor += 1
 
     def __enter__(self):
-        # _LOGGER.warn("__enter__: %r %r", self, SelfGenerator.counter)
+        # self.logger.warn("__enter__: %r %r", self, SelfGenerator.counter)
         SelfGenerator.counter.enter += 1
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        # _LOGGER.warn("__exit__: %r %r", self, SelfGenerator.counter)
+        # self.logger.warn("__exit__: %r %r", self, SelfGenerator.counter)
         SelfGenerator.counter.exit += 1
 
     def __del__(self):
-        # _LOGGER.warn("__del__: %r %r", self, SelfGenerator.counter)
+        # self.logger.warn("__del__: %r %r", self, SelfGenerator.counter)
         SelfGenerator.counter.destructor += 1
 
     def execute(self):
@@ -136,22 +139,26 @@ class SelfGenerator(object):
 
     @staticmethod
     def insideFunction():
-        # _LOGGER.warn("insideFunction before: %r", SelfGenerator.counter)
+        # self.logger.warn("insideFunction before: %r", SelfGenerator.counter)
         with SelfGenerator() as obj:
-            # _LOGGER.warn("obj: %r", obj)
+            # self.logger.warn("obj: %r", obj)
             obj.execute()
-        # _LOGGER.warn("insideFunction after: %r", SelfGenerator.counter)
+        # self.logger.warn("insideFunction after: %r", SelfGenerator.counter)
 
 
 class ObjectGeneratorTest(unittest.TestCase):
 
+    def __init__(self, methodName):
+        unittest.TestCase.__init__(self, methodName)
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
+
     def setUp(self):
         ObjectGenerator.counter = Counter()
         ObjectA.counter = Counter()
-        # _LOGGER.warn("setUp")
+        # self.logger.warn("setUp")
 
     def tearDown(self):
-        # _LOGGER.warn("tearDown")
+        # self.logger.warn("tearDown")
         pass
 
     def test_byConstructor(self):
@@ -192,13 +199,17 @@ class ObjectGeneratorTest(unittest.TestCase):
 
 class SelfGeneratorTest(unittest.TestCase):
 
+    def __init__(self, methodName):
+        unittest.TestCase.__init__(self, methodName)
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
+
     def setUp(self):
         SelfGenerator.counter = Counter()
         ObjectA.counter = Counter()
-        # _LOGGER.warn("setUp")
+        # self.logger.warn("setUp")
 
     def tearDown(self):
-        # _LOGGER.warn("tearDown")
+        # self.logger.warn("tearDown")
         pass
 
     def test_byConstructor(self):

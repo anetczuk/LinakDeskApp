@@ -42,6 +42,9 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 class MainWindow(QtBaseClass):
     def __init__(self):
         super().__init__()
+        
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
+        
         self.device = None
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
@@ -91,11 +94,11 @@ class MainWindow(QtBaseClass):
         reconnectAddress = self.ui.appSettings.startupReconnectAddress()
         if reconnectAddress is None:
             return
-        _LOGGER.debug("trying reconnect on startup")
+        self.logger.debug("trying reconnect on startup")
         self.device.connectTo( reconnectAddress )
 
     def setIconTheme(self, theme: tray_icon.TrayIconTheme):
-        _LOGGER.debug("setting tray theme: %r", theme)
+        self.logger.debug("setting tray theme: %r", theme)
 
         self.currentTheme = theme
 
@@ -135,7 +138,7 @@ class MainWindow(QtBaseClass):
 
     def loadSettings(self):
         settings = self.getSettings()
-        _LOGGER.debug( "loading app state from %s", settings.fileName() )
+        self.logger.debug( "loading app state from %s", settings.fileName() )
         self.ui.appSettings.loadSettings( settings )
 
         ## restore widget state and geometry
@@ -160,7 +163,7 @@ class MainWindow(QtBaseClass):
 
     def saveSettings(self):
         settings = self.getSettings()
-        _LOGGER.debug( "saving app state to %s", settings.fileName() )
+        self.logger.debug( "saving app state to %s", settings.fileName() )
         self.ui.appSettings.saveSettings( settings )
 
         ## store widget state and geometry

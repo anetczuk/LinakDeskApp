@@ -78,6 +78,8 @@ class AppSettingsWidget(QtBaseClass):
     def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
 
+        self.logger = _LOGGER.getChild(self.__class__.__name__)
+
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
 
@@ -160,23 +162,23 @@ class AppSettingsWidget(QtBaseClass):
         if self.device.getConnectionStatus() != ConnectionState.DISCONNECTED:
             return
         if self.ui.autoReconnectCB.isChecked():
-            _LOGGER.debug("starting auto reconnect timer" )
+            self.logger.debug("starting auto reconnect timer" )
             self.autoReconnectTimer.start()
         else:
             self.autoReconnectTimer.stop()
 
     def _autoReconnectTimeout(self):
         if self.device is None:
-            _LOGGER.debug("auto reconnect failed: no device")
+            self.logger.debug("auto reconnect failed: no device")
             return
         if self.device.isConnected() is True:
-            _LOGGER.debug("auto reconnect failed: device already connected")
+            self.logger.debug("auto reconnect failed: device already connected")
             return
-        _LOGGER.debug("triggering auto reconnect")
+        self.logger.debug("triggering auto reconnect")
         self.device.reconnect()
 
     def _toggleAutoReconnectTime(self, value):
-        _LOGGER.debug("setting auto reconnect timer to %s", value)
+        self.logger.debug("setting auto reconnect timer to %s", value)
         self.autoReconnectTimer.setInterval( value * 1000 )
 
     def _trayThemeChanged(self):
@@ -210,9 +212,9 @@ class AppSettingsWidget(QtBaseClass):
         self._displayStateInfo()
 
         if self.device is None:
-            _LOGGER.debug("device not attached -- do nothing")
+            self.logger.debug("device not attached -- do nothing")
             return
-        _LOGGER.debug("reminder timer timeout handler")
+        self.logger.debug("reminder timer timeout handler")
 
         if self.sitting is True:
             ## is sitting -- time to stand
@@ -313,7 +315,7 @@ class AppSettingsWidget(QtBaseClass):
     def _setCurrentTrayTheme( self, trayTheme: str ):
         themeIndex = TrayIconTheme.indexOf( trayTheme )
         if themeIndex < 0:
-            _LOGGER.warn("could not find index for theme: %r", trayTheme)
+            self.logger.warn("could not find index for theme: %r", trayTheme)
             return
         self.ui.trayThemeCB.setCurrentIndex( themeIndex )
 
@@ -356,12 +358,12 @@ class AppSettingsWidget(QtBaseClass):
             return
         if self.sitting is True:
             ## started sitting
-            _LOGGER.debug("sitting started")
+            self.logger.debug("sitting started")
             timeout = self.reminder.sitTime * 1000 * 60
             self.reminderTimer.setInterval( timeout )
         else:
             ## started standing
-            _LOGGER.debug("standing started")
+            self.logger.debug("standing started")
             timeout = self.reminder.standTime * 1000 * 60
             self.reminderTimer.setInterval( timeout )
 
