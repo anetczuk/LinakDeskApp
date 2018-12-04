@@ -42,9 +42,9 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 class MainWindow(QtBaseClass):
     def __init__(self):
         super().__init__()
-        
+
         self.logger = _LOGGER.getChild(self.__class__.__name__)
-        
+
         self.device = None
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
