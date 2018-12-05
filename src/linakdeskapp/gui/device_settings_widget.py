@@ -38,10 +38,11 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
 class DeviceSettingsWidget(QtBaseClass):
+
+    logger = None
+
     def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
-
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
 
         self.device = None
 
@@ -401,3 +402,7 @@ class DeviceSettingsWidget(QtBaseClass):
 
     def _updateFavorite(self, favIndex):
         self.device.sendFavoriteState( favIndex )
+
+
+DeviceSettingsWidget.logger = _LOGGER.getChild(DeviceSettingsWidget.__name__)
+

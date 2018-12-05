@@ -40,10 +40,11 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 
 class MainWindow(QtBaseClass):
+
+    logger = None
+
     def __init__(self):
         super().__init__()
-
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
 
         self.device = None
         self.ui = UiTargetClass()
@@ -232,6 +233,9 @@ class MainWindow(QtBaseClass):
 
     def hideEvent(self, event):
         self.trayIcon.updateLabel()
+
+
+MainWindow.logger = _LOGGER.getChild(MainWindow.__name__)
 
 
 class IconDictionary():

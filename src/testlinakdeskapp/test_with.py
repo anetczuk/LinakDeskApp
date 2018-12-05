@@ -54,10 +54,11 @@ class Counter(object):
 
 class ObjectA(object):
 
+    logger = None
+
     counter = None
 
     def __init__(self):
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
         # self.logger.warn("__init__: %r %r", self, ObjectA.counter)
         ObjectA.counter.constructor += 1
 
@@ -78,12 +79,16 @@ class ObjectA(object):
         ObjectA.counter.execute += 1
 
 
+ObjectA.logger = _LOGGER.getChild(ObjectA.__name__)
+
+
 class ObjectGenerator(object):
+
+    logger = None
 
     counter = None
 
     def __init__(self):
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
         # self.logger.warn("__init__: %r %r", self, ObjectGenerator.counter)
         ObjectGenerator.counter.constructor += 1
 
@@ -112,12 +117,16 @@ class ObjectGenerator(object):
         # self.logger.warn("insideFunction after: %r", ObjectGenerator.counter)
 
 
+ObjectGenerator.logger = _LOGGER.getChild(ObjectGenerator.__name__)
+
+
 class SelfGenerator(object):
+
+    logger = None
 
     counter = None
 
     def __init__(self):
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
         # self.logger.warn("__init__: %r %r", self, SelfGenerator.counter)
         SelfGenerator.counter.constructor += 1
 
@@ -146,19 +155,16 @@ class SelfGenerator(object):
         # self.logger.warn("insideFunction after: %r", SelfGenerator.counter)
 
 
-class ObjectGeneratorTest(unittest.TestCase):
+SelfGenerator.logger = _LOGGER.getChild(SelfGenerator.__name__)
 
-    def __init__(self, methodName):
-        unittest.TestCase.__init__(self, methodName)
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
+
+class ObjectGeneratorTest(unittest.TestCase):
 
     def setUp(self):
         ObjectGenerator.counter = Counter()
         ObjectA.counter = Counter()
-        # self.logger.warn("setUp")
 
     def tearDown(self):
-        # self.logger.warn("tearDown")
         pass
 
     def test_byConstructor(self):
@@ -199,17 +205,11 @@ class ObjectGeneratorTest(unittest.TestCase):
 
 class SelfGeneratorTest(unittest.TestCase):
 
-    def __init__(self, methodName):
-        unittest.TestCase.__init__(self, methodName)
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
-
     def setUp(self):
         SelfGenerator.counter = Counter()
         ObjectA.counter = Counter()
-        # self.logger.warn("setUp")
 
     def tearDown(self):
-        # self.logger.warn("tearDown")
         pass
 
     def test_byConstructor(self):

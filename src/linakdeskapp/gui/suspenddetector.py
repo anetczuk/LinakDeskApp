@@ -30,11 +30,12 @@ _LOGGER = logging.getLogger(__name__)
 
 class QSuspendTimer( QtCore.QObject ):
 
+    logger = None
+
     resumed = pyqtSignal()
 
     def __init__(self, parent):
         super().__init__(parent)
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
         self.lastTime = None
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect( self.checkResumed )
@@ -61,6 +62,9 @@ class QSuspendTimer( QtCore.QObject ):
         self.logger.debug("resumed from suspend / hibernation after %s[s]", secDiff)
         self.resumed.emit()
         return True
+
+
+QSuspendTimer.logger = _LOGGER.getChild(QSuspendTimer.__name__)
 
 
 class SingletonMeta(type):
@@ -112,11 +116,12 @@ class QSuspendSingleton( QtCore.QObject, metaclass=QSingletonMeta ):
 
 class QSuspendDetector( QtCore.QObject ):
 
+    logger = None
+
     resumed  = pyqtSignal()
 
     def __init__(self, parent):
         super().__init__( parent )
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
         self.detector = QSuspendSingleton()
 
     def start(self):
@@ -126,4 +131,7 @@ class QSuspendDetector( QtCore.QObject ):
     def stop(self):
         self.logger.debug("stopping suspension detector")
         self.detector.resumed.disconnect( self.resumed )
+
+
+QSuspendDetector.logger = _LOGGER.getChild(QSuspendDetector.__name__)
 

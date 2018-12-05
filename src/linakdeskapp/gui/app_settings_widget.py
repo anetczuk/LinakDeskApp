@@ -68,6 +68,8 @@ class Reminder():
 
 class AppSettingsWidget(QtBaseClass):
 
+    logger = None
+
     STAND_HEIGHT = 96
 
     showMessage             = pyqtSignal(str)
@@ -77,8 +79,6 @@ class AppSettingsWidget(QtBaseClass):
 
     def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
-
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
 
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
@@ -431,3 +431,7 @@ class AppSettingsWidget(QtBaseClass):
         else:
             ## standing
             return False
+
+
+AppSettingsWidget.logger = _LOGGER.getChild(AppSettingsWidget.__name__)
+

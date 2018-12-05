@@ -37,10 +37,10 @@ UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
 
 class PositionChartWidget(QtBaseClass):
 
+    logger = None
+
     def __init__(self, parentWidget=None):
         super().__init__(parentWidget)
-
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
 
         self.ui = UiTargetClass()
         self.ui.setupUi(self)
@@ -115,3 +115,7 @@ class PositionChartWidget(QtBaseClass):
         ## state: 0 -- unchecked
         ## state: 2 -- checked
         self._refreshWidget()
+
+
+PositionChartWidget.logger = _LOGGER.getChild(PositionChartWidget.__name__)
+

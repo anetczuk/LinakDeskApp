@@ -49,11 +49,11 @@ _LOGGER = logging.getLogger(__name__)
 
 class BTDeviceConnector(DeviceConnector, DeviceObject):
 
+    logger = None
+
     def __init__(self):
         DeviceConnector.__init__(self)
         DeviceObject.__init__(self)
-
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
 
         self.connectionStatus = ConnectionState.DISCONNECTED
         self.devList = []
@@ -264,12 +264,16 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
         return True
 
 
+BTDeviceConnector.logger = _LOGGER.getChild(BTDeviceConnector.__name__)
+
+
 class ThreadWorker(QtCore.QRunnable):
     """Worker thread."""
 
+    logger = None
+
     def __init__(self, function, namePrefix=None):
         super().__init__()
-        self.logger = _LOGGER.getChild(self.__class__.__name__)
         if namePrefix is None:
             namePrefix = "ThrdWrkr"
         self.namePrefix = namePrefix
@@ -283,4 +287,7 @@ class ThreadWorker(QtCore.QRunnable):
         self.logger.debug("Worker start")
         self.call()
         self.logger.debug("Worker complete")
+
+
+ThreadWorker.logger = _LOGGER.getChild(ThreadWorker.__name__)
 
