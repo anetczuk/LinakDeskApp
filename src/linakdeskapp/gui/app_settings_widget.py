@@ -46,7 +46,8 @@ def formatTimeDelta(timeDelta):
     minutes = int( timeDelta.seconds / 60 % 60 )
     hours   = int( timeDelta.seconds / 3600 )
     if timeDelta.days > 0:
-        ret += timeDelta.days + ","
+        ## ret += "%d, " % (timeDelta.days)
+        hours += timeDelta.days * 24
     if hours > 0:
         ret += "%02d:" % (hours)
     ret += "%02d:%02d" % (minutes, seconds)
