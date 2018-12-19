@@ -122,14 +122,17 @@ class MainWindow(QtBaseClass):
         connection = self.getDeviceConnectionStatus()
         if connection != ConnectionState.CONNECTED:
             currIcon = self.iconDict.getIcon( self.currentTheme.disconnected )
+            self.logger.debug( "setting tray icon %s %r", self.currentTheme.disconnected, currIcon )
             self.trayIcon.setIcon( currIcon )
             return
         ## connected -- normal or indicating
         if self.currentPositionState is True:
             indicIcon = self.iconDict.getIcon( self.currentTheme.indicating )
+            self.logger.debug( "setting tray icon %s %r", self.currentTheme.indicating, indicIcon )
             self.trayIcon.setIcon( indicIcon )
         else:
             connectedIcon = self.iconDict.getIcon( self.currentTheme.connected )
+            self.logger.debug( "setting tray icon %s %r", self.currentTheme.connected, connectedIcon )
             self.trayIcon.setIcon( connectedIcon )
 
     def getDeviceConnectionStatus(self):

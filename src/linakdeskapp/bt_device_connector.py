@@ -282,11 +282,15 @@ class ThreadWorker(QtCore.QRunnable):
 
     def run(self):
         """Your code goes in this function."""
-        thread = threading.current_thread()
-        thread.name = getThreadName( self.namePrefix )
-        self.logger.debug("Worker start")
-        self.call()
-        self.logger.debug("Worker complete")
+        try:
+            thread = threading.current_thread()
+            thread.name = getThreadName( self.namePrefix )
+            self.logger.debug("Worker start")
+            self.call()
+            self.logger.debug("Worker complete")
+        except BaseException:
+            self.logger.exception("Exception occurred")
+            raise
 
 
 ThreadWorker.logger = _LOGGER.getChild(ThreadWorker.__name__)

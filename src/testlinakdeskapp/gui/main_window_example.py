@@ -104,7 +104,7 @@ try:
 
 except BaseException:
     exitCode = 1
-    _LOGGER.exception("Exception occured")
+    _LOGGER.exception("Exception occurred")
     raise
 
 sys.exit(exitCode)
