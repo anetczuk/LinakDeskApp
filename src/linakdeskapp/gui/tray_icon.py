@@ -161,3 +161,11 @@ class TrayIcon(QSystemTrayIcon):
             self.toggle_window_action.setText("Show")
         else:
             self.toggle_window_action.setText("Hide")
+
+    def setIcon(self, icon):
+        super(TrayIcon, self).setIcon(icon)
+        ## there is bug under Linux X environment causing tray icon occasionally to disappear
+        ## it happened at least for xfce4 
+        self.hide()
+        self.show()
+    
