@@ -1,7 +1,8 @@
 #!/bin/bash
 
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+## works both under bash and sh
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
 
 src_dir=$SCRIPT_DIR
