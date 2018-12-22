@@ -79,6 +79,7 @@ class TrayIcon(QSystemTrayIcon):
         super().__init__(parent)
 
         self.device = None
+        self.recentToolTip = ""
 
         self.activated.connect( self._icon_activated )
 
@@ -123,7 +124,10 @@ class TrayIcon(QSystemTrayIcon):
         self.showMessage("Desk", message, QSystemTrayIcon.NoIcon, timeout)
 
     def setInfo(self, message):
-        self.setToolTip("Desk: " + message)
+        if self.recentToolTip == message:
+            return
+        self.recentToolTip = message
+        self.setToolTip("Desk: " + self.recentToolTip)
 
     def _icon_activated(self, reason):
 #         print("tray clicked, reason:", reason)
@@ -165,7 +169,6 @@ class TrayIcon(QSystemTrayIcon):
     def setIcon(self, icon):
         super(TrayIcon, self).setIcon(icon)
         ## there is bug under Linux X environment causing tray icon occasionally to disappear
-        ## it happened at least for xfce4 
+        ## it happened at least for xfce4
         self.hide()
         self.show()
-    
