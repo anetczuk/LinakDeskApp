@@ -65,6 +65,10 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 - pandas
 - bluepy
 
+Installation:
+`sudo apt install python3-matplotlib python3-pandas`
+`pip3 install --user bluepy`
+
 
 ## Examples of use of not obvious Python mechanisms:
 - use of *EnumMeta* class (*linak_service.py*)
