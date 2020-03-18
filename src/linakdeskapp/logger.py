@@ -24,6 +24,7 @@
 import os
 import sys
 import logging
+import logging.handlers as handlers
 
 
 script_dir = os.path.dirname(__file__)
@@ -49,7 +50,9 @@ def configure( logFile=None, logLevel=None ):
     if logLevel is None:
         logLevel = logging.DEBUG
 
-    fileHandler    = logging.FileHandler( filename=log_file, mode="a+" )
+    ## rotation of log files, 1048576 equals to 1MB
+    fileHandler    = handlers.RotatingFileHandler( filename=log_file, mode="a+", maxBytes=1048576, backupCount=999 )
+    ## fileHandler    = logging.FileHandler( filename=log_file, mode="a+" )
     consoleHandler = logging.StreamHandler( stream=sys.stdout )
 
     formatter = createFormatter()
