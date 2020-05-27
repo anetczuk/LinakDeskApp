@@ -35,6 +35,16 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 - testlinakdeskapp -- unit tests for the application
 
 
+## Permissions
+
+*Bluepy* package requires special privileges when scanning for nearby devices.
+It is recomended to solve it by adding capabilities to the package:
+`cd <PYTHON_PATH>/site-packages/bluepy
+sudo setcap 'cap_net_raw,cap_net_admin+eip' bluepy-helper
+`
+Go to directory where bluepy is installed (local user or system) and execute `setcap` as stated above.
+
+
 ## Running application
 
 To run application try one of:
