@@ -67,9 +67,9 @@ class BTDeviceConnector(DeviceConnector, DeviceObject):
     def scanDevices(self):
         self.devList = []
 
-        if os.getuid() != 0:
-            self.logger.debug( "Functionality needs root privileges" )
-            return
+#        if os.getuid() != 0:
+#            self.logger.debug( "Functionality needs root privileges" )
+#            return
 
         self.logger.debug( "Scanning bluetooth devices" )
 
