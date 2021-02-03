@@ -54,6 +54,8 @@ To run application try one of:
 
 Application can be run in profiler mode passing *--profile* as command line parameter. 
 
+Before first use make sure You have fetched *lib* submodule (see _Required libraries_ section).
+
 
 ### Running mock service
 
@@ -79,6 +81,9 @@ Installation:
 `sudo apt install python3-matplotlib python3-pandas`
 `pip3 install --user bluepy`
 
+In addition, application requires additional submodule located in *lib* directory.
+To fetch the module simply call *configure_submodules.sh* script placed in root directory tree.
+
 
 ## Examples of use of not obvious Python mechanisms:
 - use of *EnumMeta* class (*linak_service.py*)
@@ -103,14 +108,9 @@ Installation:
 device side, because even in Linak app it does not work.
 
 
-## Development
-If You are willing to work on this project, then after first clone You have to fetch submodule inside *lib*.
-To do this simply call *configure_submodules.sh* script placed in root directory tree.
-
-
 ## Support
 
-If You like the project or it is valuable to You then feel free to support my work.
+If You like the project or if it is valuable to You then feel free to support my work.
 
 [![Donate with PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif "Donate with PayPal")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EZZ5S8DE3RHW4&source=url)
 
