@@ -50,6 +50,16 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="webserverTab">
+       <attribute name="title">
+        <string>WebServer</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="WebServerSettingsWidget" name="webServerSettings" native="true"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -114,6 +124,11 @@
    <extends>QWidget</extends>
    <header>linakdeskapp.gui.app_settings_widget</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>WebServerSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>linakdeskapp.gui.webserver_settings_widget</header>
   </customwidget>
  </customwidgets>
  <resources/>

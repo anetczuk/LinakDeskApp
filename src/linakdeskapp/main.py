@@ -73,6 +73,7 @@ def runApp(args):
     app.setApplicationName("LinakDeskApp")
     app.setOrganizationName("arnet")
     ### app.setOrganizationDomain("www.my-org.com")
+    app.setQuitOnLastWindowClosed(False)
 
     window = MainWindow()
     window.loadSettings()

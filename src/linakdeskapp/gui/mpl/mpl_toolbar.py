@@ -36,7 +36,7 @@ class DynamicToolbar(NavigationToolbar):
         self.toolitems = tuple( items )
 
         self.clear()            ## remove previous buttons
-        self._init_toolbar()    ## add current buttons
+        #self._init_toolbar()    ## add current buttons
 
     def home(self, *args):
         super().home(*args)
