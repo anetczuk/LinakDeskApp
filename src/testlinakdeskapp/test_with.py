@@ -30,7 +30,7 @@ import linakdeskapp.logger as logger
 
 
 _LOGGER = logging.getLogger(__name__)
-consoleHandler = logger.createStdOutHandler()
+consoleHandler = logger.create_stdout_handler()
 _LOGGER.addHandler( consoleHandler )
 
 
