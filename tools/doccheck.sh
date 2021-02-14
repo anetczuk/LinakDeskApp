@@ -5,7 +5,7 @@
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
 
-src_dir=$SCRIPT_DIR
+src_dir=$SCRIPT_DIR/../src
 
 
 ## D100: Missing docstring in public module

@@ -1,11 +1,14 @@
 #!/bin/bash
 
+#set -eu
+set -u
+
 
 ## works both under bash and sh
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
 
-src_dir=$SCRIPT_DIR
+src_dir=$SCRIPT_DIR/../src
 
 
 ## E115 intend of comment
