@@ -64,7 +64,7 @@ To run mock simply execute *linakdeskmock/main.py* file.
 
 ### Running tests
 
-To run tests execute *src/runtests.py*. It can be run with code profiling 
+To run tests execute *src/testlinakdeskapp/runtests.py*. It can be run with code profiling 
 and code coverage options.
 
 In addition there is demo application not requiring Bluetooth connection. It 
