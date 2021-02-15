@@ -78,11 +78,25 @@ can be run by *testlinakdeskapp/gui/main_window_example.py*.
 - bluepy
 
 Installation:
-`sudo apt install python3-matplotlib python3-pandas`
-`pip3 install --user bluepy`
+- `sudo apt install python3-pyqt5`
+- `pip3 install -r ./src/requirements.txt`
+
+Following instructions can be executed by once by script `./src/install_reqs.sh`
 
 In addition, application requires additional submodule located in *lib* directory.
 To fetch the module simply call *configure_submodules.sh* script placed in root directory tree.
+
+
+## Working with venv
+
+There are two scripts that make it easy to work with *venv*:
+- `tools/installvenv.sh`
+- `tools/startvenv.sh`
+
+They prepare and start virtual environment respectively.
+
+In addition following package is required (installed from within venv):
+- `pip3 install --user vext.pyqt5`
 
 
 ## Examples of use of not obvious Python mechanisms:
