@@ -56,6 +56,7 @@ Following instructions can be executed once by script `./src/install_reqs.sh`
 It is recomended to solve it by adding capabilities to the package:
 
 `cd <PYTHON_PATH>/site-packages/bluepy
+
 sudo setcap 'cap_net_raw,cap_net_admin+eip' bluepy-helper
 `
 
