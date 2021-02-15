@@ -47,16 +47,18 @@ Installation:
 - `sudo apt install python3-pyqt5`
 - `pip3 install -r ./src/requirements.txt`
 
-Following instructions can be executed by once by script `./src/install_reqs.sh`
+Following instructions can be executed once by script `./src/install_reqs.sh`
 
 
 ### Bluepy permissions
 
 *Bluepy* package requires special privileges when scanning for nearby devices.
 It is recomended to solve it by adding capabilities to the package:
+
 `cd <PYTHON_PATH>/site-packages/bluepy
 sudo setcap 'cap_net_raw,cap_net_admin+eip' bluepy-helper
 `
+
 Go to directory where bluepy is installed (local user or system) and execute `setcap` as stated above.
 
 
@@ -109,11 +111,11 @@ They prepare and start virtual environment respectively.
 In addition following package is required (installed from within venv):
 - `pip3 install --user vext.pyqt5`
 
-Moreover for unknown reason fixing bluepy permissions inside virtual environment can be ineffective leading
+Moreover for unknown reason fixing *bluepy* permissions inside virtual environment can be ineffective leading
 to problems with scanning for nearby bluetooth devices.
 
 This problem can be worked arround by:
-1. executong application with `sudo` (highly not recomended)
+1. executing application with `sudo` (not recomended)
 2. passing device's address by command-line argument `./src/linakdeskctl --connect {device_mac_address}`
 
 
