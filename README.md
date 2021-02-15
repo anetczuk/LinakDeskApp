@@ -55,10 +55,9 @@ Following instructions can be executed once by script `./src/install_reqs.sh`
 *Bluepy* package requires special privileges when scanning for nearby devices.
 It is recomended to solve it by adding capabilities to the package:
 
-`cd <PYTHON_PATH>/site-packages/bluepy
+`cd <PYTHON_PATH>/site-packages/bluepy`
 
-sudo setcap 'cap_net_raw,cap_net_admin+eip' bluepy-helper
-`
+`sudo setcap 'cap_net_raw,cap_net_admin+eip' bluepy-helper`
 
 Go to directory where bluepy is installed (local user or system) and execute `setcap` as stated above.
 
