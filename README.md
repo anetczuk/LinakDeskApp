@@ -29,13 +29,28 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 [![Device settings](doc/app-screen-device-small.png "Device settings")](doc/app-screen-device-big.png)
 
 
-## Modules
-- linakdeskapp.main -- entry point for the application
-- linakdeskmock -- Bluetooth service mocking Linak desk service
-- testlinakdeskapp -- unit tests for the application
+## Requirements
+
+Before first run there is few things to configure. All steps can be run by calling 
+`configure_all.sh` script.
+
+If for any reason script fails then go through following steps.
 
 
-## Permissions
+### Required libraries
+- PyQt5
+- matplotlib
+- pandas
+- bluepy
+
+Installation:
+- `sudo apt install python3-pyqt5`
+- `pip3 install -r ./src/requirements.txt`
+
+Following instructions can be executed by once by script `./src/install_reqs.sh`
+
+
+### Bluepy permissions
 
 *Bluepy* package requires special privileges when scanning for nearby devices.
 It is recomended to solve it by adding capabilities to the package:
@@ -43,6 +58,12 @@ It is recomended to solve it by adding capabilities to the package:
 sudo setcap 'cap_net_raw,cap_net_admin+eip' bluepy-helper
 `
 Go to directory where bluepy is installed (local user or system) and execute `setcap` as stated above.
+
+
+### Git submodules
+
+In addition, application requires additional submodule located in *lib* directory.
+To fetch the module simply call *configure_submodules.sh* script placed in root directory tree.
 
 
 ## Running application
@@ -71,20 +92,10 @@ In addition there is demo application not requiring Bluetooth connection. It
 can be run by *testlinakdeskapp/gui/main_window_example.py*.
 
 
-## Required libraries
-- PyQt5
-- matplotlib
-- pandas
-- bluepy
-
-Installation:
-- `sudo apt install python3-pyqt5`
-- `pip3 install -r ./src/requirements.txt`
-
-Following instructions can be executed by once by script `./src/install_reqs.sh`
-
-In addition, application requires additional submodule located in *lib* directory.
-To fetch the module simply call *configure_submodules.sh* script placed in root directory tree.
+## Modules
+- linakdeskapp.main -- entry point for the application
+- linakdeskmock -- Bluetooth service mocking Linak desk service
+- testlinakdeskapp -- unit tests for the application
 
 
 ## Working with venv
@@ -97,6 +108,13 @@ They prepare and start virtual environment respectively.
 
 In addition following package is required (installed from within venv):
 - `pip3 install --user vext.pyqt5`
+
+Moreover for unknown reason fixing bluepy permissions inside virtual environment can be ineffective leading
+to problems with scanning for nearby bluetooth devices.
+
+This problem can be worked arround by:
+1. executong application with `sudo` (highly not recomended)
+2. passing device's address by command-line argument `./src/linakdeskctl --connect {device_mac_address}`
 
 
 ## Examples of use of not obvious Python mechanisms:
