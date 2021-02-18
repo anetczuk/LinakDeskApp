@@ -34,7 +34,7 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 Before first run there is few things to configure. All steps can be run by calling 
 `configure_all.sh` script.
 
-If for any reason script fails then go through following steps.
+If the script fails for any reason then go through steps described in subsections below.
 
 
 ### Required libraries
@@ -75,14 +75,27 @@ To run application try one of:
 - run *src/linakdeskapp/main.py* 
 - execute *cd src; python3 -m linakdeskapp*
 
-Application can be run in profiler mode passing *--profile* as command line parameter. 
-
 Before first use make sure You have fetched *lib* submodule (see _Required libraries_ section).
 
 
-### Running mock service
+## Development
 
-To run mock simply execute *linakdeskmock/main.py* file.
+Project contains several tools and features that facilitate development and maintenance of the project.
+
+
+### Static code check
+
+In *tools* directory there can be found following scripts:
+- *notrailingwhitespaces.sh* -- as name states removes trailing whitespaces from _*.py*_ files
+- *rmpyc.sh* -- remove all _*.pyc_ files
+- *codecheck.sh* -- static code check using *pycodestyle* and *flake8* against defined set of rules
+- *doccheck.sh* -- run *pydocstyle* with defined configuration
+- *checkall.sh* -- execute *codecheck.sh* and *doccheck.sh* at once
+
+
+### Profiling
+
+Application can be run in profiler mode passing *--profile* as command line parameter. 
 
 
 ### Running tests
@@ -94,13 +107,23 @@ In addition there is demo application not requiring Bluetooth connection. It
 can be run by *testlinakdeskapp/gui/main_window_example.py*.
 
 
-## Modules
-- linakdeskapp.main -- entry point for the application
-- linakdeskmock -- Bluetooth service mocking Linak desk service
-- testlinakdeskapp -- unit tests for the application
+### Running mock service
+
+To some extent there is possibility to test the application without physical device. *linakdeskmock* package was made
+for this purpose.
+
+To run mock simply execute *linakdeskmock/main.py* file.
 
 
-## Working with venv
+### Reversing communication protocol
+
+Some of dynamic properties of communication protocol of the desk was 
+discovered by dedicated tool: [BluetoothGattMitm](https://github.com/anetczuk/BluetoothGattMitm).
+
+The tool allows to intercept all BLE messages passed between the device and it's original Android application.
+
+
+### Working with venv
 
 There are two scripts that make it easy to work with *venv*:
 - `tools/installvenv.sh`
