@@ -75,7 +75,7 @@ To run application try one of:
 - run *src/linakdeskapp/main.py* 
 - execute *cd src; python3 -m linakdeskapp*
 
-Before first use make sure You have fetched *lib* submodule (see _Required libraries_ section).
+Before first use make sure You have fetched *lib* submodule (see _Requirements_ section).
 
 
 ## Development
@@ -113,6 +113,15 @@ To some extent there is possibility to test the application without physical dev
 for this purpose.
 
 To run mock simply execute *linakdeskmock/main.py* file.
+
+
+### Analysing Bluetooth device
+
+Directory *test/gatttool* contains several scripts providing information about near devices such as:
+- near LE devices,
+- services, characteristics and descriptors of desired device,
+- basic characteristics of desired device (name, manufacturer, version etc),
+- listening to desk notifications
 
 
 ### Reversing communication protocol
