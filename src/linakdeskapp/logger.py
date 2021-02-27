@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2017 Arkadiusz Netczuk <dev.arnet@gmail.com>
+# Copyright (c) 2020 Arkadiusz Netczuk <dev.arnet@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -31,8 +31,9 @@ script_dir = os.path.dirname(__file__)
 log_file = None
 
 
-def getLoggingOutputFile():
-    logDir = os.path.join(script_dir, "../../tmp")
+def get_logging_output_file():
+    logDir = os.path.join(script_dir, "../../tmp/log")
+    logDir = os.path.abspath( logDir )
     if os.path.isdir( logDir ) is False:
         logDir = os.getcwd()
 
@@ -41,11 +42,12 @@ def getLoggingOutputFile():
 
 
 def configure( logFile=None, logLevel=None ):
+    # pylint: disable=W0603
     global log_file
 
     log_file = logFile
     if log_file is None:
-        log_file = getLoggingOutputFile()
+        log_file = get_logging_output_file()
 
     if logLevel is None:
         logLevel = logging.DEBUG
@@ -55,7 +57,7 @@ def configure( logFile=None, logLevel=None ):
     ## fileHandler    = logging.FileHandler( filename=log_file, mode="a+" )
     consoleHandler = logging.StreamHandler( stream=sys.stdout )
 
-    formatter = createFormatter()
+    formatter = create_formatter()
 
     fileHandler.setFormatter( formatter )
     consoleHandler.setFormatter( formatter )
@@ -63,6 +65,8 @@ def configure( logFile=None, logLevel=None ):
     logging.root.addHandler( consoleHandler )
     logging.root.addHandler( fileHandler )
     logging.root.setLevel( logLevel )
+
+    logging.getLogger('matplotlib').setLevel(logging.WARNING)
 
 ##     loggerFormat   = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
 ##     dateFormat     = '%Y-%m-%d %H:%M:%S'
@@ -73,17 +77,32 @@ def configure( logFile=None, logLevel=None ):
 ##                        )
 
 
-def createStdOutHandler():
-    formatter = createFormatter()
+def configure_console( logLevel=None ):
+    if logLevel is None:
+        logLevel = logging.DEBUG
+
+    consoleHandler = logging.StreamHandler( stream=sys.stdout )
+
+    formatter = create_formatter()
+
+    consoleHandler.setFormatter( formatter )
+
+    logging.root.addHandler( consoleHandler )
+    logging.root.setLevel( logLevel )
+
+
+def create_stdout_handler():
+    formatter = create_formatter()
     consoleHandler = logging.StreamHandler( stream=sys.stdout )
     consoleHandler.setFormatter( formatter )
     return consoleHandler
 
 
-def createFormatter(loggerFormat=None):
+def create_formatter(loggerFormat=None):
     if loggerFormat is None:
         ## loggerFormat = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s [%(filename)s:%(lineno)d] %(message)s'
-        loggerFormat = '%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s %(name)s:%(funcName)s [%(filename)s:%(lineno)d] %(message)s'
+        loggerFormat = ('%(asctime)s,%(msecs)-3d %(levelname)-8s %(threadName)s %(name)s:%(funcName)s '
+                        '[%(filename)s:%(lineno)d] %(message)s')
     dateFormat = '%Y-%m-%d %H:%M:%S'
     return EmptyLineFormatter( loggerFormat, dateFormat )
     ## return logging.Formatter( loggerFormat, dateFormat )
@@ -97,7 +116,7 @@ class EmptyLineFormatter(logging.Formatter):
         msg = record.getMessage()
         clearMsg = msg.replace('\n', '')
         clearMsg = clearMsg.replace('\r', '')
-        if len(clearMsg) == 0:
+        if not clearMsg:
+            # empty
             return msg
         return super().format( record )
-

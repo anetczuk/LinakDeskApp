@@ -3,6 +3,5 @@
 /.pydevproject
 *.pyc
 /tmp
-log.txt*
 .idea/
-lib/
+/venv/

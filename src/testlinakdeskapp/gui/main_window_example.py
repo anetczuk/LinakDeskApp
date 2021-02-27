@@ -62,7 +62,7 @@ parser.add_argument('--minimized', action='store_const', const=True, default=Fal
 args = parser.parse_args()
 
 
-logFile = logger.getLoggingOutputFile()
+logFile = logger.get_logging_output_file()
 logger.configure( logFile )
 
 
