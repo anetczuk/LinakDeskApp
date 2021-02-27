@@ -1,3 +1,7 @@
+##
+##
+##
+
 import logging
 
 from . import uiloader
@@ -5,9 +9,12 @@ from .qt import pyqtSignal
 from .tray_icon import TrayIconTheme
 from ..httpserver import LinakHTTPServer
 
+
 _LOGGER = logging.getLogger(__name__)
 
+
 UiTargetClass, QtBaseClass = uiloader.loadUiFromClassName( __file__ )
+
 
 class WebServerSettingsWidget(QtBaseClass):
 
@@ -77,5 +84,6 @@ class WebServerSettingsWidget(QtBaseClass):
         settings.setValue("webServerEnabled", self.ui.enabledCheck.isChecked())
 
         settings.endGroup()
+
 
 WebServerSettingsWidget.logger = _LOGGER.getChild(WebServerSettingsWidget.__name__)

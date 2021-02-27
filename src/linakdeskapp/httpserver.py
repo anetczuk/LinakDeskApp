@@ -1,3 +1,6 @@
+##
+##
+##
 
 import threading
 import logging
@@ -5,7 +8,9 @@ import logging
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib import parse
 
+
 _LOGGER = logging.getLogger(__name__)
+
 
 class LinakHTTPServer:
 
@@ -37,6 +42,7 @@ class LinakHTTPServer:
         if self.http_server is not None:
             self.http_server.shutdown()
             self.http_server.socket.close()
+
 
 class DeskHTTPRequestHandler(BaseHTTPRequestHandler):
 
