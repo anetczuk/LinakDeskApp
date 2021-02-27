@@ -3,4 +3,5 @@
 /.pydevproject
 *.pyc
 /tmp
+.idea/
 /venv/

@@ -80,6 +80,7 @@ class MainWindow(QtBaseClass):
         self.ui.deviceControl.attachConnector( self.device )
         self.ui.deviceSettings.attachConnector( self.device )
         self.ui.appSettings.attachConnector( self.device )
+        self.ui.webServerSettings.attachConnector( self.device )
         self.trayIcon.attachConnector( self.device )
 
         if self.device is not None:
@@ -144,6 +145,7 @@ class MainWindow(QtBaseClass):
         settings = self.getSettings()
         self.logger.debug( "loading app state from %s", settings.fileName() )
         self.ui.appSettings.loadSettings( settings )
+        self.ui.webServerSettings.loadSettings(settings)
 
         ## restore widget state and geometry
         settings.beginGroup( self.objectName() )
@@ -169,6 +171,7 @@ class MainWindow(QtBaseClass):
         settings = self.getSettings()
         self.logger.debug( "saving app state to %s", settings.fileName() )
         self.ui.appSettings.saveSettings( settings )
+        self.ui.webServerSettings.saveSettings( settings )
 
         ## store widget state and geometry
         settings.beginGroup( self.objectName() )
