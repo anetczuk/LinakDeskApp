@@ -34,7 +34,9 @@ log_file = None
 def get_logging_output_file():
     logDir = os.path.join(script_dir, "../../tmp/log")
     logDir = os.path.abspath( logDir )
+    os.makedirs( logDir, exist_ok=True )
     if os.path.isdir( logDir ) is False:
+        ## something bad happened (or unable to create directory)
         logDir = os.getcwd()
 
     logFile = os.path.join(logDir, "log.txt")
