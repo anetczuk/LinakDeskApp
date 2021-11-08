@@ -56,20 +56,51 @@ class DeskHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         _LOGGER.info("HTTP Server get called with " + str(self.path))
         instruction = parse.urlparse(self.path)
-        self.__parse_instruction(instruction)
-        self.__set_response()
-        self.wfile.write(b'Called with instructions')
+        self.__parse_instruction( instruction )
 
     def __parse_instruction(self, instruction):
+        if instruction.path == "/":
+            self.__set_response()
+            self.__print_info()
+            return True
+
         parts = instruction.path.split('/')
         if len(parts) != 3:
-            raise ValueError('Expected two parts')
+            self.__set_response()
+            self.__print_error( instruction )
+            return False
+            #raise ValueError('Expected two parts')
 
-        if 'fave' == parts[1]:
-            self.__do_execute_favourite(parts[2])
-            return True
-        else:
-            raise ValueError('Unknown instruction ' + parts[0])
+        if 'fave' != parts[1]:
+            self.__set_response()
+            self.__print_error( instruction )
+            return False
+            #raise ValueError('Unknown instruction ' + parts[0])
+
+        try:
+            self.__do_execute_favourite( parts[2] )
+        except:
+            _LOGGER.exception( "exception occur, investigate log file for more information" )
+            self.__set_response()
+            self.__print_error( instruction, "exception raised" )
+            return False
+        
+        self.__set_response()
+        self.wfile.write(b'Called with instructions')
+        return True
+
+    def __print_error(self, instruction, message="Invalid command"):
+        message = '{} ({})<br/><br/>'.format( message, instruction.path )
+        rawData = message.encode('utf-8')
+        self.wfile.write( rawData )
+        self.__print_info()
+        
+    def __print_info(self):
+        self.wfile.write( b'Following commands (GET requests) are supported:<br/>' )
+        self.wfile.write( b'<a href="/fave/1">/fave/1</a><br/>' )
+        self.wfile.write( b'<a href="/fave/2">/fave/2</a><br/>' )
+        self.wfile.write( b'<a href="/fave/3">/fave/3</a><br/>' )
+        self.wfile.write( b'<a href="/fave/4">/fave/4</a><br/>' )
 
     def __do_execute_favourite(self, fave):
         _LOGGER.info("Favourite called with index " + str(fave))
