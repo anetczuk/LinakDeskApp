@@ -27,6 +27,7 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 [![Status of desk](doc/app-screen-status-small.png "Status of desk")](doc/app-screen-status-big.png)
 [![Application settings](doc/app-screen-settings-small.png "Application settings")](doc/app-screen-settings-big.png)
 [![Device settings](doc/app-screen-device-small.png "Device settings")](doc/app-screen-device-big.png)
+[![WebServer settings](doc/app-screen-webserver-small.png "WebServer settings")](doc/app-screen-webserver-big.png)
 
 
 ## Requirements
@@ -76,6 +77,12 @@ To run application try one of:
 - execute *cd src; python3 -m linakdeskapp*
 
 Before first use make sure You have fetched *lib* submodule (see _Requirements_ section).
+
+### Web server
+
+Desk position can be operated through http GET requests. Before sending a requests 
+the web server have to be started. It can be done by activating chekcbox from `WebServer`. 
+Then `http://localhost:8000` will be accessible from web browser. Visit the web page for possible commands.
 
 
 ## Development
