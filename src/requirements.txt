@@ -1,3 +1,5 @@
+PyQt5
+
 matplotlib
 pandas
 bluepy

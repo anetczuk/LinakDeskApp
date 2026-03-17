@@ -44,11 +44,7 @@ If the script fails for any reason then go through steps described in subsection
 - pandas
 - bluepy
 
-Installation:
-- `sudo apt install python3-pyqt5`
-- `pip3 install -r ./src/requirements.txt`
-
-Following instructions can be executed once by script `./src/install_reqs.sh`
+Following depndencies can be installed by running script `./src/install_reqs.sh`
 
 
 ### Bluepy permissions
@@ -61,6 +57,8 @@ It is recomended to solve it by adding capabilities to the package:
 `sudo setcap 'cap_net_raw,cap_net_admin+eip' bluepy-helper`
 
 Go to directory where bluepy is installed (local user or system) and execute `setcap` as stated above.
+
+This setting can be also done by executing script `./src/configure_bluepy.sh`.
 
 
 ### Git submodules
@@ -153,7 +151,7 @@ In addition following package is required (installed from within venv):
 Moreover for unknown reason fixing *bluepy* permissions inside virtual environment can be ineffective leading
 to problems with scanning for nearby bluetooth devices.
 
-This problem can be worked arround by:
+This problem can solved by one of two workarounds:
 1. executing application with `sudo` (not recomended)
 2. passing device's address by command-line argument `./src/linakdeskctl --connect {device_mac_address}`
 
