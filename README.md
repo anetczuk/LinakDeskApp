@@ -30,6 +30,21 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 [![WebServer settings](doc/app-screen-webserver-small.png "WebServer settings")](doc/app-screen-webserver-big.png)
 
 
+## Installation
+
+Installation of package can be done by:
+ - to install package from downloaded ZIP file execute: `pip3 install --user -I file:LinakDeskApp-master.zip#subdirectory=src`
+ - to install package directly from GitHub execute: `pip3 install --user -I git+https://github.com/anetczuk/LinakDeskApp.git#subdirectory=src`
+ - installation from local repository root directory: `pip3 install --user ./src`
+ 
+To uninstall run: `pip3 uninstall linakdeskapp`
+
+Installation for development:
+ - `install-deps.sh` to install package dependencies only (`requirements.txt`)
+ - `install-package.sh` to install package in standard way through `pip` (with dependencies)
+ - `install-devel.sh` to install package in developer mode using `pip` (with dependencies)
+
+
 ## Requirements
 
 Before first run there is few things to configure. All steps can be run by calling 
@@ -39,6 +54,7 @@ If the script fails for any reason then go through steps described in subsection
 
 
 ### Required libraries
+
 - PyQt5
 - matplotlib
 - pandas
@@ -86,6 +102,10 @@ Then `http://localhost:8000` will be accessible from web browser. Visit the web 
 ## Development
 
 Project contains several tools and features that facilitate development and maintenance of the project.
+
+All tests, linters and content generators can be executed by simple script `./process-all.sh`.
+
+In case of pull requests please run `process-all.sh` before the request.
 
 
 ### Static code check
