@@ -79,12 +79,12 @@ class DeskHTTPRequestHandler(BaseHTTPRequestHandler):
 
         try:
             self.__do_execute_favourite( parts[2] )
-        except:
+        except Exception:
             _LOGGER.exception( "exception occur, investigate log file for more information" )
             self.__set_response()
             self.__print_error( instruction, "exception raised" )
             return False
-        
+
         self.__set_response()
         self.wfile.write(b'Called with instructions')
         return True
@@ -94,7 +94,7 @@ class DeskHTTPRequestHandler(BaseHTTPRequestHandler):
         rawData = message.encode('utf-8')
         self.wfile.write( rawData )
         self.__print_info()
-        
+
     def __print_info(self):
         self.wfile.write( b'Following commands (GET requests) are supported:<br/>' )
         self.wfile.write( b'<a href="/fave/1">/fave/1</a><br/>' )
