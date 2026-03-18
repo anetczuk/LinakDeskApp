@@ -3,3 +3,5 @@ PyQt5
 matplotlib
 pandas
 bluepy
+
+git+https://github.com/anetczuk/linak_bt_desk

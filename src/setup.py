@@ -29,6 +29,9 @@ packages_list = find_packages(include=["linakdeskapp", "linakdeskapp.*"])
 
 ## additional data to install
 packages_data: dict[str, Any] = {"linakdeskapp": []}
+packages_data = {"linakdeskapp": ["ui/*.ui",
+                                  "gui/img/*.png"
+                                  ]}
 
 ## additional scripts to install
 additional_scripts: list[str] = []

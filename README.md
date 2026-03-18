@@ -90,6 +90,7 @@ To run application try one of:
 - run *src/linakdeskctl*
 - run *src/linakdeskapp/main.py* 
 - execute *cd src; python3 -m linakdeskapp*
+- execute *python3 -m linakdeskapp* (when installed)
 
 Before first use make sure You have fetched *lib* submodule (see _Requirements_ section).
 
