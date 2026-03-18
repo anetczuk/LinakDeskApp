@@ -10,7 +10,7 @@ SRC_DIR=$SCRIPT_DIR/src
 
 
 echo "Installing dependencies"
-$SRC_DIR/install_reqs.sh
+$SRC_DIR/install-deps.sh --break-system-packages
 
 echo "Configuring bluepy"
 $SRC_DIR/configure_bluepy.sh

@@ -60,7 +60,8 @@ If the script fails for any reason then go through steps described in subsection
 - pandas
 - bluepy
 
-Following depndencies can be installed by running script `./src/install_reqs.sh`
+Following depndencies can be installed by running script `./src/install-deps.sh` or directly by 
+`pip3 install -r "./src/requirements.txt"`.
 
 
 ### Bluepy permissions
