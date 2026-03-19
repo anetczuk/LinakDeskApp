@@ -33,16 +33,20 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 ## Installation
 
 Installation of package can be done by:
- - to install package from downloaded ZIP file execute: `pip3 install --user -I file:LinakDeskApp-master.zip#subdirectory=src`
- - to install package directly from GitHub execute: `pip3 install --user -I git+https://github.com/anetczuk/LinakDeskApp.git#subdirectory=src`
- - installation from local repository root directory: `pip3 install --user ./src`
- 
+  - to install package from downloaded ZIP file execute: `pip3 install --user -I file:LinakDeskApp-master.zip`
+  - to install package directly from GitHub execute: `pip3 install --user -I git+https://github.com/anetczuk/LinakDeskApp.git`
+  - installation from local repository root directory: `pip3 install --user .`
+
 To uninstall run: `pip3 uninstall linakdeskapp`
 
 Installation for development:
- - `install-deps.sh` to install package dependencies only (`requirements.txt`)
- - `install-package.sh` to install package in standard way through `pip` (with dependencies)
- - `install-devel.sh` to install package in developer mode using `pip` (with dependencies)
+  - `python3 -m venv .venv`
+  - `source .venv/bin/activate`
+  - `python -m pip install --upgrade pip`
+  - `python -m pip install -e '.[dev]'` to install runtime and development dependencies from `pyproject.toml`
+  - `src/install-deps.sh` to install runtime dependencies declared in `pyproject.toml`
+  - `src/install-package.sh` to install the package from the repository root through `pip`
+  - `src/install-devel.sh` to install the package in editable mode and install development tooling
 
 
 ## Requirements
@@ -61,7 +65,30 @@ If the script fails for any reason then go through steps described in subsection
 - bluepy
 
 Following depndencies can be installed by running script `./src/install-deps.sh` or directly by 
-`pip3 install -r "./src/requirements.txt"`.
+`python -m pip install .`.
+
+
+### System requirements
+
+Python dependencies are managed through `pyproject.toml`, but the application still needs native Linux packages for
+building `bluepy` and loading the Qt platform plugins at runtime.
+
+Required system packages:
+
+- Python 3.12
+- `git`, `gcc`, `make`, `pkg-config`
+- GLib and D-Bus development/runtime libraries
+- OpenGL libraries
+- Font and FreeType libraries
+- X11/XCB libraries used by the Qt `xcb` platform plugin
+- Wayland client libraries
+- `zlib`
+
+On Debian or Ubuntu the package list is roughly:
+
+`python3.12 python3.12-venv git build-essential pkg-config libglib2.0-dev libdbus-1-dev libgl1 libfontconfig1 libfreetype6 libx11-6 libx11-xcb1 libxext6 libxrender1 libxcb1 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render0 libxcb-render-util0 libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 libxcb-util1 libxcb-ewmh2 libxkbcommon0 libxkbcommon-x11-0 libwayland-client0 zlib1g`
+
+Package names vary by distribution, so use the list above as the dependency checklist rather than assuming exact names.
 
 
 ### Bluepy permissions
@@ -105,19 +132,31 @@ Then `http://localhost:8000` will be accessible from web browser. Visit the web 
 
 Project contains several tools and features that facilitate development and maintenance of the project.
 
-All tests, linters and content generators can be executed by simple script `./process-all.sh`.
+The recommended development workflow is based on `pip`, virtual environments and `pyproject.toml`.
+
+- `python3 -m venv .venv`
+- `source .venv/bin/activate`
+- `python -m pip install --upgrade pip`
+- `python -m pip install -e '.[dev]'` installs the application, runtime dependencies and development tooling into `.venv`
+- `python src/testlinakdeskapp/runtests.py` runs the test suite
+- `pycodestyle --show-source --statistics --count --ignore=E115,E126,E201,E202,E221,E241,E262,E265,E266,E402,E501,W391,D src`
+- `flake8 --show-source --statistics --count --ignore=E115,E126,E201,E202,E221,E241,E262,E265,E266,E402,E501,W391,D,F401 src`
+- `pydocstyle --count --convention=numpy --add-ignore=D100,D101,D102,D103,D104,D105,D107 src`
+- `./process-all.sh` creates or reuses `.venv`, installs `.[dev]`, then runs the same test and lint flow
 
 In case of pull requests please run `process-all.sh` before the request.
 
 
 ### Static code check
 
-In *tools* directory there can be found following scripts:
+In *tools* directory there can be found following legacy helper scripts:
 - *notrailingwhitespaces.sh* -- as name states removes trailing whitespaces from _*.py*_ files
 - *rmpyc.sh* -- remove all _*.pyc_ files
 - *codecheck.sh* -- static code check using *pycodestyle* and *flake8* against defined set of rules
 - *doccheck.sh* -- run *pydocstyle* with defined configuration
 - *checkall.sh* -- execute *codecheck.sh* and *doccheck.sh* at once
+
+They are kept for older local workflows, but the preferred commands are the plain `pip` and `.venv` variants listed above.
 
 
 ### Profiling
@@ -161,11 +200,13 @@ The tool allows to intercept all BLE messages passed between the device and it's
 
 ### Working with venv
 
-There are two scripts that make it easy to work with *venv*:
-- `tools/installvenv.sh`
-- `tools/startvenv.sh`
+Use standard Python tooling to manage the local virtual environment:
 
-They prepare and start virtual environment respectively.
+- `python3 -m venv .venv`
+- `source .venv/bin/activate`
+- `python -m pip install -e '.[dev]'`
+
+The scripts in `tools/` are legacy wrappers and are no longer required for the normal development flow.
 
 In addition following package is required (installed from within venv):
 - `pip3 install --user vext.pyqt5`
@@ -213,4 +254,3 @@ If You like the project or if it is valuable to You then feel free to support my
 - https://www.linak.com/products/controls/desk-control-apps/
 - https://ianharvey.github.io/bluepy-doc/index.html
 - https://github.com/Vudentz/BlueZ/tree/master/doc
-
