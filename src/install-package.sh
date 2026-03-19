@@ -8,16 +8,11 @@ set -eu
 
 ## works both under bash and sh
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+ROOT_DIR=$(realpath "$SCRIPT_DIR/..")
 
-
-## creates "*.egg-info" and "build" directory along package dir
 
 if [[ $* == *--system* ]]; then
-    pip3 install "$SCRIPT_DIR" 
+    pip3 install "$ROOT_DIR"
 else
-    pip3 install --user "$SCRIPT_DIR" 
+    pip3 install --user "$ROOT_DIR"
 fi
-
-echo "Removing $SCRIPT_DIR/build direcotry"
-rm -r "$SCRIPT_DIR/build"
-rm -r "$SCRIPT_DIR"/*.egg-info

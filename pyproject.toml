@@ -1,0 +1,51 @@
+[project]
+name = "linakdeskapp"
+version = "1.0.1"
+description = "Desktop application that allows control of Linak office desks under Linux"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Arkadiusz Netczuk" }
+]
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "PyQt5",
+    "matplotlib",
+    "pandas",
+    "bluepy>=1.0.5",
+    "LinakDPGBt @ git+https://github.com/anetczuk/linak_bt_desk.git",
+]
+
+[project.optional-dependencies]
+dev = [
+    "coverage",
+    "flake8",
+    "pycodestyle",
+    "pydocstyle",
+    "pyprof2calltree",
+]
+
+[project.urls]
+Repository = "https://github.com/anetczuk/LinakDeskApp"
+
+[project.scripts]
+linakdeskapp = "linakdeskapp.main:main"
+linakdeskctl = "linakdeskapp.main:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["linakdeskapp*", "linakdeskmock*"]
+
+[tool.setuptools.package-data]
+linakdeskapp = [
+    "ui/*.ui",
+    "gui/img/*.png",
+]
+
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
