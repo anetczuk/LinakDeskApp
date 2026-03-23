@@ -1,4 +1,5 @@
 # Linak Desk Application
+
 This is desktop application controlling Linak office desks. Application functionality is 
 similar to application provided by Linak. 
 One of the goals of this project is to allow the desk control under Linux operating 
@@ -11,6 +12,7 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 
 
 ## Features
+
 - scanning for nearby devices
 - moving up/down
 - moving to favourite position
@@ -32,40 +34,21 @@ reverse engineered mostly by mocking *DPG1C* Bluetooth service.
 
 ## Installation
 
-Installation of package can be done by:
+Installation of package for use can be done by:
   - to install package from downloaded ZIP file execute: `pip3 install --user -I file:LinakDeskApp-master.zip`
   - to install package directly from GitHub execute: `pip3 install --user -I git+https://github.com/anetczuk/LinakDeskApp.git`
   - installation from local repository root directory: `pip3 install --user .`
 
 To uninstall run: `pip3 uninstall linakdeskapp`
 
-Installation for development:
-  - `python3 -m venv .venv`
-  - `source .venv/bin/activate`
-  - `python -m pip install --upgrade pip`
-  - `python -m pip install -e '.[dev]'` to install runtime and development dependencies from `pyproject.toml`
-  - `src/install-deps.sh` to install runtime dependencies declared in `pyproject.toml`
-  - `src/install-package.sh` to install the package from the repository root through `pip`
-  - `src/install-devel.sh` to install the package in editable mode and install development tooling
+To install project under virtual environment use `tools/installvenv.sh` (also see [Working with venv](#-working-with-venv) section).
+
+Development installation is covered in [Development](#development) section.
 
 
 ## Requirements
 
-Before first run there is few things to configure. All steps can be run by calling 
-`configure_all.sh` script.
-
-If the script fails for any reason then go through steps described in subsections below.
-
-
-### Required libraries
-
-- PyQt5
-- matplotlib
-- pandas
-- bluepy
-
-Following depndencies can be installed by running script `./src/install-deps.sh` or directly by 
-`python -m pip install .`.
+Before first run there are few things to configure.
 
 
 ### System requirements
@@ -104,22 +87,16 @@ Go to directory where bluepy is installed (local user or system) and execute `se
 
 This setting can be also done by executing script `./src/configure_bluepy.sh`.
 
-
-### Git submodules
-
-In addition, application requires additional submodule located in *lib* directory.
-To fetch the module simply call *configure_submodules.sh* script placed in root directory tree.
+This solution might not work for virtual environment. See [Working with venv](#-working-with-venv) section for workarounds.
 
 
 ## Running application
 
 To run application try one of:
-- run *src/linakdeskctl*
-- run *src/linakdeskapp/main.py* 
-- execute *cd src; python3 -m linakdeskapp*
-- execute *python3 -m linakdeskapp* (when installed)
+- execute `linakdeskapp` or `python3 -m linakdeskapp` when installed
+- run `./src/linakdeskctl` from local directory or `linakdeskctl` when installed
+- execute `cd src && python3 -m linakdeskapp` from local directory
 
-Before first use make sure You have fetched *lib* submodule (see _Requirements_ section).
 
 ### Web server
 
@@ -132,36 +109,37 @@ Then `http://localhost:8000` will be accessible from web browser. Visit the web 
 
 Project contains several tools and features that facilitate development and maintenance of the project.
 
-The recommended development workflow is based on `pip`, virtual environments and `pyproject.toml`.
-
-- `python3 -m venv .venv`
-- `source .venv/bin/activate`
-- `python -m pip install --upgrade pip`
-- `python -m pip install -e '.[dev]'` installs the application, runtime dependencies and development tooling into `.venv`
-- `python src/testlinakdeskapp/runtests.py` runs the test suite
-- `pycodestyle --show-source --statistics --count --ignore=E115,E126,E201,E202,E221,E241,E262,E265,E266,E402,E501,W391,D src`
-- `flake8 --show-source --statistics --count --ignore=E115,E126,E201,E202,E221,E241,E262,E265,E266,E402,E501,W391,D,F401 src`
-- `pydocstyle --count --convention=numpy --add-ignore=D100,D101,D102,D103,D104,D105,D107 src`
-- `./process-all.sh` creates or reuses `.venv`, installs `.[dev]`, then runs the same test and lint flow
-
-In case of pull requests please run `process-all.sh` before the request.
+In case of pull requests please run `process-all.sh --release` before the request to check installation, run tests and
+validate source code.
 
 
-### Static code check
+### Installation
 
-In *tools* directory there can be found following legacy helper scripts:
-- *notrailingwhitespaces.sh* -- as name states removes trailing whitespaces from _*.py*_ files
-- *rmpyc.sh* -- remove all _*.pyc_ files
-- *codecheck.sh* -- static code check using *pycodestyle* and *flake8* against defined set of rules
-- *doccheck.sh* -- run *pydocstyle* with defined configuration
-- *checkall.sh* -- execute *codecheck.sh* and *doccheck.sh* at once
+Installation for development without venv:
+  - `src/install-app.sh --dev` to install dependencies, the package in editable mode and install development tooling.
 
-They are kept for older local workflows, but the preferred commands are the plain `pip` and `.venv` variants listed above.
+Installation for development (in virtual environment):
+  - `tools/installvenv.sh --dev` to install dependencies, the package in editable mode and install development tooling.
+
+Virtual environmnt can be also configured manually by:
+  - `python3 -m venv .venv`
+  - `source .venv/bin/activate`
+  - `python -m pip install --upgrade pip`
+  - `src/install-app.sh --dev` to install dependencies, the package in editable mode and install development tooling
+or `python -m pip install -e '.[dev]'` to install project by hand.
+
+There is also possibility to work on the project without installation. In this case project will run from local repository 
+directory. This configuration requires installation of dependencies: `./src/install-deps.sh --dev`.
 
 
-### Profiling
+### Working with venv
 
-Application can be run in profiler mode passing *--profile* as command line parameter. 
+For unknown reason fixing *bluepy* permissions inside virtual environment can be ineffective leading
+to problems with scanning for nearby bluetooth devices.
+
+This problem can solved by one of two workarounds:
+1. executing application with `sudo` (not recomended)
+2. passing device's (desk) address by command-line argument `./src/linakdeskctl --connect {device_mac_address}`
 
 
 ### Running tests
@@ -173,12 +151,29 @@ In addition there is demo application not requiring Bluetooth connection. It
 can be run by *testlinakdeskapp/gui/main_window_example.py*.
 
 
+### Code check scripts
+
+In *tools* directory there can be found following helper scripts:
+- *codecheck.sh* -- static code check using *pycodestyle* and *flake8* against defined set of rules
+- *doccheck.sh* -- run *pydocstyle* with defined configuration
+- *checkall.sh* -- execute *codecheck.sh* and *doccheck.sh* at once
+- *notrailingwhitespaces.sh* -- as name states removes trailing whitespaces from _*.py*_ files
+- *rmpyc.sh* -- remove all _*.pyc_ files
+
+Those scripts can be run also from within virtual environment.
+
+
+### Profiling
+
+Application can be run in profiler mode passing *--profile* as command line parameter. 
+
+
 ### Running mock service
 
-To some extent there is possibility to test the application without physical device. *linakdeskmock* package was made
+To some extent there is possibility to test the application without physical device. `linakdeskmock` package was made
 for this purpose.
 
-To run mock simply execute *linakdeskmock/main.py* file.
+To run mock simply execute `./src/linakdeskmock/main.py` file.
 
 
 ### Analysing Bluetooth device
@@ -198,28 +193,8 @@ discovered by dedicated tool: [BluetoothGattMitm](https://github.com/anetczuk/Bl
 The tool allows to intercept all BLE messages passed between the device and it's original Android application.
 
 
-### Working with venv
-
-Use standard Python tooling to manage the local virtual environment:
-
-- `python3 -m venv .venv`
-- `source .venv/bin/activate`
-- `python -m pip install -e '.[dev]'`
-
-The scripts in `tools/` are legacy wrappers and are no longer required for the normal development flow.
-
-In addition following package is required (installed from within venv):
-- `pip3 install --user vext.pyqt5`
-
-Moreover for unknown reason fixing *bluepy* permissions inside virtual environment can be ineffective leading
-to problems with scanning for nearby bluetooth devices.
-
-This problem can solved by one of two workarounds:
-1. executing application with `sudo` (not recomended)
-2. passing device's address by command-line argument `./src/linakdeskctl --connect {device_mac_address}`
-
-
 ## Examples of use of not obvious Python mechanisms:
+
 - use of *EnumMeta* class (*linak_service.py*)
 - defining method decorators (*synchronied.py*)
 - use of threading: *Thread*, *Event*, *Timer*
@@ -232,12 +207,14 @@ This problem can solved by one of two workarounds:
 
 
 ## ToDo:
+
 - handle cm/inch unit switch
 - add fav buttons inside popup of system tray icon
 - handle away from keyboard
 
 
 ## Issues:
+
 - disabling light guidance does not seem to work. It seems to be problem on 
 device side, because even in Linak app it does not work.
 
@@ -250,6 +227,7 @@ If You like the project or if it is valuable to You then feel free to support my
 
 
 ## References:
+
 - https://www.linak.com/products/controls/dpg-with-reminder/
 - https://www.linak.com/products/controls/desk-control-apps/
 - https://ianharvey.github.io/bluepy-doc/index.html

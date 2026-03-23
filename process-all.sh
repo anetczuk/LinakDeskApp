@@ -1,47 +1,80 @@
 #!/bin/bash
 
+##
+## Run all tests and code check tool.
+## Pass --release to use fresh venv installation.
+##
+
 set -eu
 
 
-## works both under bash and sh
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-SRC_DIR="$SCRIPT_DIR/src"
+
 VENV_DIR="$SCRIPT_DIR/.venv"
-PYTHON_BIN="$VENV_DIR/bin/python"
-PIP_BIN="$VENV_DIR/bin/pip"
 
 
-PYCODSTYLE_IGNORE=E115,E126,E201,E202,E221,E241,E262,E265,E266,E402,E501,W391,D
-FLAKE8_IGNORE=$PYCODSTYLE_IGNORE,F401
-PYDOCSTYLE_IGNORE=D100,D101,D102,D103,D104,D105,D107
+ARGS=()
+RELEASE_RUN=false
 
-echo "preparing virtual environment"
-if [ ! -x "$PYTHON_BIN" ]; then
-    python3 -m venv "$VENV_DIR"
-fi
+while :; do
+    if [ -z "${1+x}" ]; then
+        ## end of arguments (prevents unbound argument error)
+        break
+    fi
 
-echo "installing dependencies"
-"$PYTHON_BIN" -m pip install --upgrade pip
-"$PIP_BIN" install -e ".[dev]"
+    case "$1" in
+      -r|--release)      RELEASE_RUN=true 
+                         shift ;;
 
-echo "running tests"
-for test_runner in "$SCRIPT_DIR"/src/test*/runtests.py; do
-    "$PYTHON_BIN" "$test_runner"
+      *)  ARGS+=("$1")
+          shift ;;
+    esac
 done
 
-# echo "running tests under venv"
-# # run tests in venv (it verifies required packages)
-# "$SCRIPT_DIR"/venv/runtests.py
+
+ACTIVATE_VENV_PATH="$VENV_DIR/activatevenv.sh"
+
+
+if [ "$RELEASE_RUN" = false ]; then
+    PYTHON_BIN="$VENV_DIR/bin/python"
+    if [ ! -x "$PYTHON_BIN" ]; then
+        ## install venv
+        echo "Preparing virtual environment"
+        "$SCRIPT_DIR"/tools/installvenv.sh --dev --no-prompt
+    else
+        echo "Skipping venv installation"
+        echo
+    fi
+else
+    VENV_NAME=".venv_release"
+
+    "$SCRIPT_DIR"/tools/installvenv.sh --no-prompt "../${VENV_NAME}"
+
+    VENV_DIR="$SCRIPT_DIR/${VENV_NAME}"
+    ACTIVATE_VENV_PATH="$VENV_DIR/activatevenv.sh"
+
+    ## install development tools (e.g. for static code checks)
+    $ACTIVATE_VENV_PATH "${SCRIPT_DIR}/src/install-deps.sh --dev"
+fi
+
+
+# run tests in venv (it verifies required packages)
+echo
+echo "Running tests"
+"$VENV_DIR"/runtests.py
+
 
 if [ -f "$SCRIPT_DIR/examples/generate-all.sh" ]; then
     echo "generating examples results"
     "$SCRIPT_DIR"/examples/generate-all.sh --venv
 fi
 
-echo "checking code"
-"$VENV_DIR/bin/pycodestyle" --show-source --statistics --count --ignore="$PYCODSTYLE_IGNORE" "$SRC_DIR"
-"$VENV_DIR/bin/flake8" --show-source --statistics --count --ignore="$FLAKE8_IGNORE" "$SRC_DIR"
-"$VENV_DIR/bin/pydocstyle" --count --convention=numpy --add-ignore="$PYDOCSTYLE_IGNORE" "$SRC_DIR"
+
+echo
+echo
+echo "Checking code"
+$ACTIVATE_VENV_PATH "$SCRIPT_DIR/tools/checkall.sh"
 
 
-echo "processing completed"
+echo
+echo "Processing completed"

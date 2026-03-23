@@ -10,6 +10,7 @@ SRC_DIR=$(realpath "$SCRIPT_DIR/../src")
 
 ARGS=()
 NO_PROMPT=false
+DEV_MODE=false
 
 while :; do
     if [ -z "${1+x}" ]; then
@@ -19,6 +20,8 @@ while :; do
 
     case "$1" in
       --no-prompt)  NO_PROMPT=true 
+                    shift ;;
+      --dev)        DEV_MODE=true 
                     shift ;;
       *)  ARGS+=("$1")
           shift ;;
@@ -31,7 +34,7 @@ if [ "${#ARGS[@]}" -gt 0 ]; then
     VENV_SUBDIR=${ARGS[0]}
 fi
 
-VENV_DIR="$SCRIPT_DIR/../venv/$VENV_SUBDIR"
+VENV_DIR="$SCRIPT_DIR/../.venv/$VENV_SUBDIR"
 
 
 ### if directory exists then prompt to delete
@@ -59,8 +62,6 @@ VENV_DIR=$(realpath "$VENV_DIR")
 echo "Creating virtual environment in $VENV_DIR"
 
 python3 -m venv "$VENV_DIR"
-# python3.8 -m venv "$VENV_DIR"
-# python2 -m virtualenv "$VENV_DIR"
 
 
 ### creating venv start script
@@ -83,7 +84,7 @@ START_COMMAND=
 if [ "$#" -ge 1 ]; then
     START_COMMAND=$(cat <<EOL
 ## executing command
-echo "executing: $@"
+echo "Executing inside venv: $@"
 eval "$@"
 EOL
 )
@@ -95,6 +96,8 @@ tmpfile=$(mktemp venv.run.XXXXXX.sh --tmpdir)
 
 ### write content to temporary
 cat > $tmpfile <<EOL
+set -e
+
 source $VENV_DIR/bin/activate
 if [ \$? -ne 0 ]; then
     echo -e "Unable to activate virtual environment, exiting"
@@ -107,9 +110,14 @@ exec </dev/tty
 EOL
 
 
-echo "Starting virtual env"
-
-bash -i <<< "source $tmpfile"
+if [[ "${START_COMMAND}" == "" ]]; then
+    ## command not given - run in interactive mode
+    echo "Starting virtual env"
+    bash -i <<< "source ${tmpfile}"
+else
+    ## just run the command and exit
+    bash -c "source ${tmpfile}"
+fi
 
 
 rm $tmpfile
@@ -157,17 +165,20 @@ if [[ ${TEST_DIRS_NUM} -ne 1 ]]; then
     exit 1
 fi
 TEST_SCRIPT="${SRC_DIR}/${TEST_DIRS}runtests.py"
-create_venv_shortcut "$VENV_DIR/activatevenv.sh \"set -eu; ${TEST_SCRIPT} \$@; exit\"" "$VENV_DIR/runtests.py"
+create_venv_shortcut "$VENV_DIR/activatevenv.sh \"set -eu; ${TEST_SCRIPT} \$@\"" "$VENV_DIR/runtests.py"
 
 
 ### install required packages
 
-#### installing package does not work - fails running tests under nodejs 
-##echo "Installing package"
-##$ACTIVATE_VENV_PATH "$SCRIPT_DIR/../src/install-package.sh --system; exit"
+echo "Installing project and dependencies"
 
-echo "Installing dependencies"
-$ACTIVATE_VENV_PATH "$SCRIPT_DIR/../src/install-deps.sh; exit"
+$ACTIVATE_VENV_PATH "python3 -m pip install --upgrade pip"
+
+if [ "$DEV_MODE" = false ]; then
+    $ACTIVATE_VENV_PATH "$SCRIPT_DIR/../src/install-app.sh"
+else
+    $ACTIVATE_VENV_PATH "$SCRIPT_DIR/../src/install-app.sh --dev"
+fi
 
 
-echo "to activate environment run: $VENV_DIR/activatevenv.sh"
+echo "To activate environment run: $VENV_DIR/activatevenv.sh"

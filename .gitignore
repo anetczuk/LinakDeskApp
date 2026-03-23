@@ -5,6 +5,8 @@
 /tmp
 .idea/
 /venv/
+/.venv/
+/.venv_release/
 
 /src/linakdeskapp.egg-info/
 /src/build/
