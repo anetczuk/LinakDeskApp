@@ -167,17 +167,19 @@ if __name__ == '__main__':
                 counter += 1
                 testResult = unittest.TextTestRunner(verbosity=verbosity).run(suite)
                 if testResult.wasSuccessful() is False:
-                    break
+                    sys.exit(1)
                 print( "\n" )
         elif testsRepeats > 0:
             for counter in range(1, testsRepeats + 1):
                 print( "Tests iteration:", counter )
                 testResult = unittest.TextTestRunner(verbosity=verbosity).run(suite)
                 if testResult.wasSuccessful() is False:
-                    break
+                    sys.exit(1)
                 print( "\n" )
         else:
-            unittest.TextTestRunner(verbosity=verbosity).run(suite)
+            test_result = unittest.TextTestRunner(verbosity=verbosity).run(suite)
+            if test_result.wasSuccessful() is False:
+                sys.exit(1)
 
     finally:
         ## stop profiler
