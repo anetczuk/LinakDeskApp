@@ -80,47 +80,37 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 VENV_DIR="$VENV_ROOT_DIR"
 
 
-START_COMMAND=
-if [ "$#" -ge 1 ]; then
-    START_COMMAND=$(cat <<EOL
-## executing command
-echo "Executing inside venv: $@"
-eval "$@"
-EOL
-)
+if [ "$#" -eq 0 ]; then
+    ##
+    ## command not given - start virtual environment in interactive mode
+    ##
+
+    set +e      ## prevent closing interactive session in case of error of any command
+    echo "Starting virtual env"
+    ## `exec < /dev/tty` prevents immediate exit from interactive mode
+    bash -i <<< "source $VENV_DIR/bin/activate && exec < /dev/tty"
+    exit 0
 fi
 
 
-### create temporary file
-tmpfile=$(mktemp venv.run.XXXXXX.sh --tmpdir)
+##
+## running given command inside virtual environment
+##
 
-### write content to temporary
-cat > $tmpfile <<EOL
-set -e
-
+bash <<EOL
 source $VENV_DIR/bin/activate
 if [ \$? -ne 0 ]; then
     echo -e "Unable to activate virtual environment, exiting"
     exit 1
 fi
 
-$START_COMMAND
+set -e
 
-exec </dev/tty 
+## executing command
+echo "Executing inside venv: $@"
+eval "$@"
+
 EOL
-
-
-if [[ "${START_COMMAND}" == "" ]]; then
-    ## command not given - run in interactive mode
-    echo "Starting virtual env"
-    bash -i <<< "source ${tmpfile}"
-else
-    ## just run the command and exit
-    bash -c "source ${tmpfile}"
-fi
-
-
-rm $tmpfile
 '
 
 # shellcheck disable=SC2016
@@ -139,7 +129,7 @@ create_venv_shortcut() {
     
     local SCRIPT_CONTENT='#!/bin/bash
 ##
-## File was generated automatically. Any change will be lost. 
+## File was generated automatically using "installvenv.sh" script. Any change will be lost. 
 ##
 
 set -eu
