@@ -25,6 +25,7 @@ dev = [
     "pydocstyle",
     "pyprof2calltree",
     "mdlinkscheck @ git+https://github.com/anetczuk/mdlinkscheck.git#subdirectory=src",
+    "xmltodict"
 ]
 
 [project.urls]

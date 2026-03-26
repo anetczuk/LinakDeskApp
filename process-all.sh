@@ -62,6 +62,11 @@ echo "generating docs"
 "$SCRIPT_DIR"/doc/generate-doc.sh
 
 
+echo
+echo "update README"
+$ACTIVATE_VENV_PATH "$SCRIPT_DIR"/tools/mdpreproc.py "$SCRIPT_DIR/README.md"
+
+
 # run tests in venv (it verifies required packages)
 echo
 echo "Running tests"

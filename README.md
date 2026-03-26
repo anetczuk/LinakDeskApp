@@ -97,6 +97,27 @@ To run application try one of:
 - run `./src/linakdeskctl` from local directory or `linakdeskctl` when installed
 - execute `cd src && python3 -m linakdeskapp` from local directory
 
+Application accepts following arguments:
+
+<!-- insertstart include="doc/cmdargs.txt" pre="\n" post="" -->
+```
+usage: linakdeskapp [-h] [--profile] [--pfile PFILE] [--connect CONNECT]
+                    [--desc] [--scan] [--minimized]
+
+Linak desk application
+
+options:
+  -h, --help         show this help message and exit
+  --profile          Profile the code (default: False)
+  --pfile PFILE      Profile the code and output data to file (default: None)
+  --connect CONNECT  BT address to connect to (default: None)
+  --desc             Print description of connected BT and exit (default:
+                     False)
+  --scan             Scan nearby BT devices (default: False)
+  --minimized        Start minimized (default: False)
+```
+<!-- insertend -->
+
 
 ### Web server
 
