@@ -41,7 +41,7 @@ Installation of package for use can be done by:
 
 To uninstall run: `pip3 uninstall linakdeskapp`
 
-To install project under virtual environment use `tools/installvenv.sh` (also see [Working with venv](#-working-with-venv) section).
+To install project under virtual environment use `tools/installvenv.sh` (also see [Working with venv](#working-with-venv) section).
 
 Development installation is covered in [Development](#development) section.
 
@@ -87,7 +87,7 @@ Go to directory where bluepy is installed (local user or system) and execute `se
 
 This setting can be also done by executing script `./src/configure_bluepy.sh`.
 
-This solution might not work for virtual environment. See [Working with venv](#-working-with-venv) section for workarounds.
+This solution might not work for virtual environment. See [Working with venv](#working-with-venv) section for workarounds.
 
 
 ## Running application

@@ -13,3 +13,5 @@ cd $SCRIPT_DIR
 #./typecheck.sh
 ./codecheck.sh
 ./doccheck.sh
+
+./mdcheck.sh
