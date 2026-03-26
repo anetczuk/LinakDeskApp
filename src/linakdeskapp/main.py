@@ -95,7 +95,11 @@ def runApp(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Linak desk application')
+    parser = argparse.ArgumentParser(
+        prog="linakdeskapp",
+        description='Linak desk application',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
     parser.add_argument('--profile', action='store_const', const=True, default=False, help='Profile the code' )
     parser.add_argument('--pfile', action='store', default=None, help='Profile the code and output data to file' )
     parser.add_argument('--connect', action='store', default=None, help='BT address to connect to' )

@@ -58,6 +58,10 @@ else
 fi
 
 
+echo "generating docs"
+"$SCRIPT_DIR"/doc/generate-doc.sh
+
+
 # run tests in venv (it verifies required packages)
 echo
 echo "Running tests"
