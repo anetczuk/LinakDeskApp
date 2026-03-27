@@ -23,190 +23,148 @@
 # SOFTWARE.
 #
 
-try:
+# ruff: noqa: T201
+
+import contextlib
+
+with contextlib.suppress(ImportError):
     ## following import success only when file is directly executed from command line
     ## otherwise will throw exception when executing as parameter for "python -m"
-    # pylint: disable=W0611
+    # pylint: disable=E0401,W0611
+    # ruff: noqa: F401
     import __init__
-except ImportError:
+
     ## when import fails then it means that the script was executed indirectly
     ## in this case __init__ is already loaded
-    pass
 
-
-import sys
-import os
-
-import logging
-import unittest
-import re
 import argparse
-import cProfile
-import subprocess
+import logging
+import os
+import re
+import sys
+import unittest
 
-import tempfile
 
-import linakdeskapp.logger as logger
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
-script_dir = os.path.dirname(os.path.abspath(__file__))
-
-src_dir = os.path.abspath(os.path.join(script_dir, ".."))
-sys.path.insert(0, src_dir)
+# src_dir = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+# sys.path.insert(0, src_dir)
 
 
 _LOGGER = logging.getLogger(__name__)
 
 
-def match_tests( pattern: str ):
+def match_tests(pattern: str):
     if pattern.find("*") < 0:
         ## regular module
         loader = unittest.TestLoader()
-        return loader.loadTestsFromName( pattern )
+        return loader.loadTestsFromName(pattern)
 
     ## wildcarded
-    rePattern = pattern
+    re_pattern = pattern
     # pylint: disable=W1401
-    rePattern = rePattern.replace(".", r"\.")
-    rePattern = rePattern.replace("*", ".*")
-    ## rePattern = "^" + rePattern + "$"
-    _LOGGER.info( "searching test cases with pattern: %s", rePattern )
+    re_pattern = re_pattern.replace("/", ".")
+    re_pattern = re_pattern.replace(".", r"\.")
+    re_pattern = re_pattern.replace("*", ".*")
+    ## re_pattern = "^" + re_pattern + "$"
+    _LOGGER.info("searching test cases with pattern: %s", re_pattern)
     loader = unittest.TestLoader()
-    testsSuite = loader.discover( script_dir )
-    return match_test_suites(testsSuite, rePattern)
+    tests_suite = loader.discover(SCRIPT_DIR)
+    return match_test_suites(tests_suite, re_pattern)
 
 
-def match_test_suites( testsList, rePattern: str ):
-    retSuite = unittest.TestSuite()
-    for testObject in testsList:
-        if isinstance(testObject, unittest.TestSuite):
-            subTests = match_test_suites( testObject, rePattern )
-            retSuite.addTest( subTests )
+def match_test_suites(tests_list, re_pattern: str):
+    ret_suite = unittest.TestSuite()
+    for test_object in tests_list:
+        if isinstance(test_object, unittest.TestSuite):
+            sub_tests = match_test_suites(test_object, re_pattern)
+            ret_suite.addTest(sub_tests)
             continue
-        if isinstance(testObject, unittest.TestCase):
-            classobj         = testObject.__class__
+        if isinstance(test_object, unittest.TestCase):
+            classobj = test_object.__class__
             # pylint: disable=W0212,
-            testCaseFullName = ".".join([ classobj.__module__, classobj.__name__,
-                                          testObject._testMethodName ] )
-            matched = re.search(rePattern, testCaseFullName)
+            # ruff: noqa: SLF001
+            test_case_full_name = f"{classobj.__module__}.{classobj.__name__}.{test_object._testMethodName}"
+            matched = re.search(re_pattern, test_case_full_name)
             if matched is not None:
-                ## _LOGGER.info("test case matched: %s", testCaseFullName )
-                retSuite.addTest( testObject )
+                ## _LOGGER.info("test case matched: %s", test_case_full_name )
+                ret_suite.addTest(test_object)
             continue
-        _LOGGER.warning("unknown type: %s", type( testObject ))
-    return retSuite
+        _LOGGER.warning("unknown type: %s", type(test_object))
+    return ret_suite
+
+
+def get_test_cases(run_test):
+    if run_test:
+        ## not empty
+        return match_tests(run_test)
+    tests_loader = unittest.TestLoader()
+    return tests_loader.discover(SCRIPT_DIR)
 
 
 ## ============================= main section ===================================
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Test runner')
-    parser.add_argument('-la', '--logall', action='store_true', help='Log all messages' )
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Test runner")
+    parser.add_argument("-la", "--logall", action="store_true", help="Log all messages")
     # pylint: disable=C0301
-    parser.add_argument('-rt', '--runtest', action='store', required=False, default="",
-                        help='Module with tests, e.g. module.submodule.test_file.test_class.test_method, wildcard * allowed' )
-    parser.add_argument('-r', '--repeat', action='store', type=int, default=0, help='Repeat tests given number of times' )
-    parser.add_argument('-ut', '--untilfailure', action="store_true", help='Run tests in loop until failure' )
-    parser.add_argument('-v', '--verbose', action="store_true", help='Verbose output' )
-    parser.add_argument('-cov', '--coverage', action="store_true", help='Measure code coverage' )
-    parser.add_argument('--profile', action="store_true", help='Profile the code' )
-    parser.add_argument('--pfile', action='store', default=None, help='Profile the code and output data to file' )
+    parser.add_argument(
+        "-rt",
+        "--run_test",
+        action="store",
+        required=False,
+        default="",
+        help="Module with tests, e.g. module.submodule.test_file.test_class.test_method, wildcard * allowed",
+    )
+    parser.add_argument(
+        "-r",
+        "--repeat",
+        action="store",
+        type=int,
+        default=0,
+        help="Repeat tests given number of times",
+    )
+    parser.add_argument("-uf", "--untilfailure", action="store_true", help="Run tests in loop until failure")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
 
     args = parser.parse_args()
 
+    logging.basicConfig()
     if args.logall is True:
-        logger.configure_console( logging.DEBUG )
+        logging.getLogger().setLevel(logging.DEBUG)
     else:
-        logger.configure_console( logging.ERROR )
-
-    coverageData = None
-    ## start code coverage
-    if args.coverage is True:
-        try:
-            import coverage
-        except ImportError:
-            print( "Missing coverage module. Try running 'pip install coverage'" )
-            print( "Python info:", sys.version )
-            raise
-
-        print( "Executing code coverage" )
-        currScript = os.path.realpath(__file__)
-        coverageData = coverage.Coverage(branch=True, omit=currScript)
-        ##coverageData.load()
-        coverageData.start()
+        logging.getLogger().setLevel(logging.ERROR)
 
     verbosity = 1
     if args.verbose:
         verbosity = 2
 
-    if args.runtest:
-        ## not empty
-        suite = match_tests( args.runtest )
-    else:
-        testsLoader = unittest.TestLoader()
-        suite = testsLoader.discover( script_dir )
+    tests_repeats = int(args.repeat)
 
-    testsRepeats = int(args.repeat)
-
-    profiler = None
-
-    try:
-        ## start code profiler
-        profiler_outfile = args.pfile
-        if args.profile is True or profiler_outfile is not None:
-            print( "Starting profiler" )
-            profiler = cProfile.Profile()
-            profiler.enable()
-
-        ## run proper tests
-        if args.untilfailure is True:
-            counter = 1
-            while True:
-                print( "Tests iteration:", counter )
-                counter += 1
-                testResult = unittest.TextTestRunner(verbosity=verbosity).run(suite)
-                if testResult.wasSuccessful() is False:
-                    sys.exit(1)
-                print( "\n" )
-        elif testsRepeats > 0:
-            for counter in range(1, testsRepeats + 1):
-                print( "Tests iteration:", counter )
-                testResult = unittest.TextTestRunner(verbosity=verbosity).run(suite)
-                if testResult.wasSuccessful() is False:
-                    sys.exit(1)
-                print( "\n" )
-        else:
+    ## run proper tests
+    if args.untilfailure is True:
+        counter = 1
+        while True:
+            print("Tests iteration:", counter)
+            counter += 1
+            suite = get_test_cases(args.run_test)
             test_result = unittest.TextTestRunner(verbosity=verbosity).run(suite)
             if test_result.wasSuccessful() is False:
                 sys.exit(1)
+            print("\n")
 
-    finally:
-        ## stop profiler
-        if profiler is not None:
-            profiler.disable()
-            if profiler_outfile is None:
-                print( "Generating profiler data" )
-                profiler.print_stats(1)
-            else:
-                print( "Storing profiler data to", profiler_outfile )
-                profiler.dump_stats( profiler_outfile )
+    elif tests_repeats > 0:
+        for counter in range(1, tests_repeats + 1):
+            print("Tests iteration:", counter)
+            suite = get_test_cases(args.run_test)
+            test_result = unittest.TextTestRunner(verbosity=verbosity).run(suite)
+            if test_result.wasSuccessful() is False:
+                sys.exit(1)
+            print("\n")
 
-            if profiler_outfile is not None:
-                ##pyprof2calltree -i $PROF_FILE -k
-                print( "Launching: pyprof2calltree -i {} -k".format(profiler_outfile) )
-                subprocess.call(["pyprof2calltree", "-i", profiler_outfile, "-k"])
-
-        ## prepare coverage results
-        if coverageData is not None:
-            ## convert results to html
-            tmprootdir = tempfile.gettempdir()
-            revCrcTmpDir = tmprootdir + "/revcrc"
-            if not os.path.exists(revCrcTmpDir):
-                os.makedirs(revCrcTmpDir)
-            htmlcovdir = revCrcTmpDir + "/htmlcov"
-
-            coverageData.stop()
-            coverageData.save()
-            coverageData.html_report(directory=htmlcovdir)
-            print( "\nCoverage HTML output:", (htmlcovdir + "/index.html") )
+    else:
+        suite = get_test_cases(args.run_test)
+        test_result = unittest.TextTestRunner(verbosity=verbosity).run(suite)
+        if test_result.wasSuccessful() is False:
+            sys.exit(1)

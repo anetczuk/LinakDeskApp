@@ -169,13 +169,14 @@ In addition there is demo application not requiring Bluetooth connection. It
 can be run by *testlinakdeskapp/gui/main_window_example.py*.
 
 
-### Code check scripts
+### Tools scripts
 
 In *tools* directory there can be found following helper scripts:
 - *codecheck.sh* -- static code check using *pycodestyle* and *flake8* against defined set of rules
 - *doccheck.sh* -- run *pydocstyle* with defined configuration
 - *checkall.sh* -- execute *codecheck.sh* and *doccheck.sh* at once
 - *profiler.sh* -- profile Python scripts, e.g. *./tools/profiler.sh --cprofile ./src/linakdeskapp/main.py*
+- *coverage.sh* -- measure code coverate, e.g. *./tools/coverage.sh ./src/testlinakdeskapp/runtests.py*
 - *notrailingwhitespaces.sh* -- as name states removes trailing whitespaces from _*.py*_ files
 - *rmpyc.sh* -- remove all _*.pyc_ files
 
