@@ -1,14 +1,11 @@
 ## <a name="main_help"></a> linakdeskapp --help
 ```
-usage: linakdeskapp [-h] [--profile] [--pfile PFILE] [--connect CONNECT]
-                    [--desc] [--scan] [--minimized]
+usage: linakdeskapp [-h] [--connect CONNECT] [--desc] [--scan] [--minimized]
 
 Linak desk application
 
 options:
   -h, --help         show this help message and exit
-  --profile          Profile the code (default: False)
-  --pfile PFILE      Profile the code and output data to file (default: None)
   --connect CONNECT  BT address to connect to (default: None)
   --desc             Print description of connected BT and exit (default:
                      False)

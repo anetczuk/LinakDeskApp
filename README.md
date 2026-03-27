@@ -101,15 +101,12 @@ Application accepts following arguments:
 
 <!-- insertstart include="doc/cmdargs.txt" pre="\n" post="" -->
 ```
-usage: linakdeskapp [-h] [--profile] [--pfile PFILE] [--connect CONNECT]
-                    [--desc] [--scan] [--minimized]
+usage: linakdeskapp [-h] [--connect CONNECT] [--desc] [--scan] [--minimized]
 
 Linak desk application
 
 options:
   -h, --help         show this help message and exit
-  --profile          Profile the code (default: False)
-  --pfile PFILE      Profile the code and output data to file (default: None)
   --connect CONNECT  BT address to connect to (default: None)
   --desc             Print description of connected BT and exit (default:
                      False)
@@ -178,15 +175,11 @@ In *tools* directory there can be found following helper scripts:
 - *codecheck.sh* -- static code check using *pycodestyle* and *flake8* against defined set of rules
 - *doccheck.sh* -- run *pydocstyle* with defined configuration
 - *checkall.sh* -- execute *codecheck.sh* and *doccheck.sh* at once
+- *profiler.sh* -- profile Python scripts, e.g. *./tools/profiler.sh --cprofile ./src/linakdeskapp/main.py*
 - *notrailingwhitespaces.sh* -- as name states removes trailing whitespaces from _*.py*_ files
 - *rmpyc.sh* -- remove all _*.pyc_ files
 
 Those scripts can be run also from within virtual environment.
-
-
-### Profiling
-
-Application can be run in profiler mode passing *--profile* as command line parameter. 
 
 
 ### Running mock service

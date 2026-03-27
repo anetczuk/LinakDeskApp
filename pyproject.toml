@@ -24,8 +24,15 @@ dev = [
     "pycodestyle",
     "pydocstyle",
     "pyprof2calltree",
+    
+    ## for Markdown files analysis
     "mdlinkscheck @ git+https://github.com/anetczuk/mdlinkscheck.git#subdirectory=src",
-    "xmltodict"
+    "xmltodict",
+    
+    ## for profiling (tools/profiler.sh)
+    "snakeviz",
+    "mtprof",
+    "viztracer",
 ]
 
 [project.urls]

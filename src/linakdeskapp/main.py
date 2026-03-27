@@ -37,7 +37,6 @@ sys.path.append(os.path.abspath( os.path.join(script_dir, "../../lib/linak_bt_de
 import time
 import argparse
 import logging
-import cProfile
 
 import linakdeskapp.logger as logger
 
@@ -100,8 +99,6 @@ def main():
         description='Linak desk application',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument('--profile', action='store_const', const=True, default=False, help='Profile the code' )
-    parser.add_argument('--pfile', action='store', default=None, help='Profile the code and output data to file' )
     parser.add_argument('--connect', action='store', default=None, help='BT address to connect to' )
     parser.add_argument('--desc', action='store_const', const=True, default=False, help='Print description of connected BT and exit' )
     parser.add_argument('--scan', action='store_const', const=True, default=False, help='Scan nearby BT devices' )
@@ -114,44 +111,25 @@ def main():
     _LOGGER.debug("Logger log file: %s" % logger.log_file)
 
     starttime = time.time()
-    profiler = None
-
-    exitCode = 0
 
     try:
 
-        profiler_outfile = args.pfile
-        if args.profile is True or profiler_outfile is not None:
-            print( "Starting profiler" )
-            profiler = cProfile.Profile()
-            profiler.enable()
-
         exitCode = runApp(args)
+
+        sys.exit(exitCode)
 
     # except BluetoothError as e:
     #     print "Error: ", e, " check if BT is powered on"
 
     except BaseException:
-        exitCode = 1
         _LOGGER.exception("Exception occurred")
         raise
 
     finally:
         _LOGGER.info( "" )                    ## print new line
-        if profiler is not None:
-            profiler.disable()
-            if profiler_outfile is None:
-                _LOGGER.info( "Generating profiler data" )
-                profiler.print_stats(1)
-            else:
-                _LOGGER.info( "Storing profiler data to", profiler_outfile )
-                profiler.dump_stats( profiler_outfile )
-                _LOGGER.info( "pyprof2calltree -k -i", profiler_outfile )
 
         timeDiff = (time.time() - starttime) * 1000.0
         _LOGGER.info( "Calculation time: {:13.8f}ms".format(timeDiff) )
-
-        sys.exit(exitCode)
 
 
 if __name__ == '__main__':
