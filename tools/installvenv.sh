@@ -155,7 +155,16 @@ if [[ ${TEST_DIRS_NUM} -ne 1 ]]; then
     exit 1
 fi
 TEST_SCRIPT="${SRC_DIR}/${TEST_DIRS}runtests.py"
-create_venv_shortcut "$VENV_DIR/activatevenv.sh \"set -eu; ${TEST_SCRIPT} \$@\"" "$VENV_DIR/runtests.py"
+create_venv_shortcut "$VENV_DIR/activatevenv.sh \"set -eu; ${TEST_SCRIPT} \$@\"" "$VENV_DIR/runtests.sh"
+
+## create package starter
+for dir in ${SRC_DIR}/*/; do
+    if [[ -f "${dir}__main__.py" ]]; then
+        package_name=$(basename ${dir})
+        starter_path="${VENV_DIR}/start${package_name}.sh"
+        create_venv_shortcut "$VENV_DIR/activatevenv.sh \"set -eu; python3 -m ${package_name} \$@\"" "$VENV_DIR/start${package_name}.sh"
+    fi
+done
 
 
 ### install required packages

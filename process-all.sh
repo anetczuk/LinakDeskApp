@@ -10,7 +10,7 @@ set -eu
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
-VENV_DIR="$SCRIPT_DIR/.venv"
+VENV_DIR="$SCRIPT_DIR/venv"
 
 
 ARGS=()

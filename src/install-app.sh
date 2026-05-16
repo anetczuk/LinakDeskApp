@@ -60,7 +60,7 @@ if [ "$DEV_MODE" = false ]; then
     ## install in standard mode
     ##
 
-    python3 -m pip install "$PIP_ARGS" -e '.'
+    python3 -m pip install "$PIP_ARGS" '.'
 
 else
     ##

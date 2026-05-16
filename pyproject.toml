@@ -2,13 +2,15 @@
 name = "linakdeskapp"
 version = "1.0.1"
 description = "Desktop application that allows control of Linak office desks under Linux"
+keywords = ["Linak", "electric desk", "Bluetooth"]
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
-    { name = "Arkadiusz Netczuk" }
+    ## separate 'name' and 'email' hack to fill "Author:" and "Author-email:" fields
+    { name = "Arkadiusz Netczuk" }, { email = "dev.arnet@gmail.com" }
 ]
-requires-python = ">=3.12,<3.14"
+requires-python = ">=3.12"
 dependencies = [
     "PyQt5",
     "matplotlib",
@@ -17,26 +19,28 @@ dependencies = [
     "LinakDPGBt @ git+https://github.com/anetczuk/linak_bt_desk.git",
 ]
 
+[project.urls]
+Homepage = "https://github.com/anetczuk/LinakDeskApp"
+Repository = "https://github.com/anetczuk/LinakDeskApp"
+
 [project.optional-dependencies]
 dev = [
-    "coverage",
-    "flake8",
+    ### dependencies for "tools" scripts
+
+    "xmltodict",    ## for mdpreproc.py
+
     "pycodestyle",
+    "flake8",
     "pydocstyle",
-    "pyprof2calltree",
-    
-    ## for Markdown files analysis
-    "mdlinkscheck @ git+https://github.com/anetczuk/mdlinkscheck.git#subdirectory=src",
-    "xmltodict",
-    
+    "coverage",             ## for coverage.sh
+    "mdlinkscheck",
+
     ## for profiling (tools/profiler.sh)
+    "pyprof2calltree",   
     "snakeviz",
     "mtprof",
     "viztracer",
 ]
-
-[project.urls]
-Repository = "https://github.com/anetczuk/LinakDeskApp"
 
 [project.scripts]
 linakdeskapp = "linakdeskapp.main:main"
