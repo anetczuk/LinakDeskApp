@@ -45,8 +45,10 @@ class PositionChart(DynamicMplCanvas):
         self.xdata = list()
         self.ydata = list()
 
-        linesList = self.plot.plot_date( self.xdata, self.ydata, 'r',
-                                         linewidth=3, antialiased=True)
+        ## matplotlib >=3.11 removed Axes.plot_date; use plot() and mark x-axis as dates
+        linesList = self.plot.plot( self.xdata, self.ydata, 'r',
+                                    linewidth=3, antialiased=True)
+        self.plot.xaxis_date()
         self.line = linesList[0]
 
 #         self.fig.suptitle('Desk position', y=0.95, fontsize=18)
