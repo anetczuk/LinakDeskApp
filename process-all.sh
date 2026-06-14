@@ -10,8 +10,6 @@ set -eu
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
-VENV_DIR="$SCRIPT_DIR/venv"
-
 
 ARGS=()
 RELEASE_RUN=false
@@ -32,6 +30,9 @@ while :; do
 done
 
 
+VENV_NAME=".venv"
+VENV_DIR="$SCRIPT_DIR/${VENV_NAME}"
+
 ACTIVATE_VENV_PATH="$VENV_DIR/activatevenv.sh"
 
 
@@ -40,18 +41,18 @@ if [ "$RELEASE_RUN" = false ]; then
     if [ ! -x "$PYTHON_BIN" ]; then
         ## install venv
         echo "Preparing virtual environment"
-        "$SCRIPT_DIR"/tools/installvenv.sh --dev --no-prompt
+        "$SCRIPT_DIR"/tools/installvenv.sh --dev --no-prompt "../${VENV_NAME}"
     else
         echo "Skipping venv installation"
         echo
     fi
 else
     VENV_NAME=".venv_release"
+    VENV_DIR="$SCRIPT_DIR/${VENV_NAME}"
+
+    ACTIVATE_VENV_PATH="$VENV_DIR/activatevenv.sh"
 
     "$SCRIPT_DIR"/tools/installvenv.sh --no-prompt "../${VENV_NAME}"
-
-    VENV_DIR="$SCRIPT_DIR/${VENV_NAME}"
-    ACTIVATE_VENV_PATH="$VENV_DIR/activatevenv.sh"
 
     ## install development tools (e.g. for static code checks)
     $ACTIVATE_VENV_PATH "${SCRIPT_DIR}/src/install-deps.sh --dev"
@@ -70,7 +71,7 @@ $ACTIVATE_VENV_PATH "$SCRIPT_DIR"/tools/mdpreproc.py "$SCRIPT_DIR/README.md"
 # run tests in venv (it verifies required packages)
 echo
 echo "Running tests"
-"$VENV_DIR"/runtests.py
+"$VENV_DIR"/runtests.sh
 
 
 if [ -f "$SCRIPT_DIR/examples/generate-all.sh" ]; then

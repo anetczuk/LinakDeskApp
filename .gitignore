@@ -2,11 +2,13 @@
 /.project
 /.pydevproject
 *.pyc
-/tmp
+/tmp/
 .idea/
 /venv/
 /.venv/
 /.venv_release/
 
-/src/linakdeskapp.egg-info/
+/build/
+/dist/
 /src/build/
+/src/linakdeskapp.egg-info/
