@@ -8,7 +8,11 @@
 /.venv/
 /.venv_release/
 
+.ruff_cache/
+.complexipy_cache/
+
+## ignore directories created during installation of packages
 /build/
 /dist/
 /src/build/
-/src/linakdeskapp.egg-info/
+/src/*.egg-info/
