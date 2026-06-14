@@ -59,8 +59,10 @@ else
 fi
 
 
-echo "generating docs"
-"$SCRIPT_DIR"/doc/generate-doc.sh
+if [ -f "$SCRIPT_DIR/doc/generate-doc.sh" ]; then
+    echo "generating docs"
+    $ACTIVATE_VENV_PATH "$SCRIPT_DIR"/doc/generate-doc.sh
+fi
 
 
 echo

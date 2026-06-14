@@ -19,6 +19,13 @@ fi
 src_dir=$SCRIPT_DIR/../src
 
 
+
+## ============================================
+
+
+echo
+echo "running pycodestyle"
+
 ## E115 intend of comment
 ## E126 continuation line over-indented for hanging indent
 ## E201 whitespace after '('
@@ -37,9 +44,13 @@ ignore_errors=E115,E126,E201,E202,E221,E241,E262,E265,E266,E402,E501,W391,D
 
 "${COMMAND_PATH}"pycodestyle --show-source --statistics --count --ignore=$ignore_errors $src_dir
 echo "pep8 -- no warnings found"
+
+
+## ============================================
+
+
 echo
-
-
+echo "running flake8"
 ## F401 'PyQt5.QtCore' imported but unused
 ignore_errors=$ignore_errors,F401
 
